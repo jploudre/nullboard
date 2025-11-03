@@ -73,7 +73,6 @@
 		--ff: 'Espy Sans Revived Ten', sans-serif;
 
 		--fs: 11;                        /* font-size   */
-		--lh: calc( var(--fs) * 1.25 );  /* line-height */
 		--fs-head: 13.6;                 /* font-size of board heading */
 		--fs-nops: 9;                    /* font-size of the note ops */
 		--lw: calc(20 * var(--fs) + 30); /* .list width */
@@ -82,7 +81,7 @@
 	html, body, input, textarea {
 		font-family: var(--ff);
 		font-size: calc( var(--fs) * 1px );
-		line-height: calc( var(--lh) * 1px );
+		line-height: 13pt;
 	}
 
 	/***/
@@ -185,7 +184,6 @@
 		position: relative;
 		top: 2px;
 		font-size: calc(16rem / 11);
-		line-height: calc(10 / 17);
 		font-weight: 400;
 	}
 
@@ -200,7 +198,6 @@
 	.board .head .edit {
 		font-weight: bold;
 		font-size: calc( var(--fs-head) / 11 * 1rem );
-		line-height: calc( 20 / var(--fs-head) );
 		padding: 0 5px 2px;
 		border: none;
 	}
@@ -218,7 +215,6 @@
 	.board .head .edit::placeholder {
 		font-weight: 400;
 		font-size: calc(10rem / 11);
-		line-height: calc(22 / 10);
 		text-transform: uppercase;
 		color: #1489db;
 		opacity: 0.8;
@@ -240,7 +236,6 @@
 		height: 20px;
 		padding: 5px 6px 7px 30px;
 		background: linear-gradient(to right, #EAEDF000, #EAEDF0 10px);
-		line-height: calc(20 / 11);
 	}
 
 	.board .menu a,
@@ -415,7 +410,7 @@
 	.board .note .text {
 		white-space: pre-wrap;
 		overflow-wrap: anywhere;
-		min-height: calc( var(--lh) * 1px );
+		min-height: 13pt;
 	}
 
 	/***/
@@ -554,7 +549,6 @@
 		position: absolute;
 		top: 9px;
 		left: 9px;
-		line-height: calc(19 / 11);
 		padding: 6px 12px;
 		z-index: 3;
 		opacity: 0.6;
@@ -627,7 +621,6 @@
 		position: absolute;
 		top: 10px;
 		right: 21px;
-		line-height: calc(19 / 11);
 		z-index: 3;
 		background: #f8f9fb;
 	}
@@ -717,7 +710,6 @@
 		z-index: 10;
 		position: absolute;
 		opacity: 0;
-		line-height: calc(19 / 11);
 		padding-left: 5px;
 		background: #fff;
 		color: #000;
@@ -876,7 +868,6 @@
 	}
 
 	.fs-set .config .bulk .ui-prefs .f-prefs tr.ui-fs td.val,
-	.lh-set .config .bulk .ui-prefs .f-prefs tr.ui-lh td.val,
 	.lw-set .config .bulk .ui-prefs .f-prefs tr.ui-lw td.val {
 		color: #1489db;
 		cursor: pointer;
@@ -942,7 +933,6 @@
 
 	.overlay > div {
 		font-size: calc(12rem / 11);
-		line-height: calc(16 / 12);
 		background: #fff;
 		align-self: start;
 		margin-top: 100px;
@@ -1105,7 +1095,6 @@
 		display: inline-block;
 		width: 170px;
 		padding: 0 5px;
-		line-height: calc(20 / 11);
 		margin-bottom: 3px;
 		border: 1px solid #ccc;
 	}
@@ -1117,7 +1106,6 @@
 	.overlay .backup-conf .etc input::placeholder {
 		font-weight: 400;
 		font-size: calc(10rem / 11);
-		line-height: calc(20 / 10);
 		text-transform: uppercase;
 		color: #000;
 		opacity: 0.4;
@@ -1228,8 +1216,7 @@
 					<div class='f-prefs break'>
 						<table>
 						<tr class='ui-fs'><td class=name>Font size:</td>  <td><a href=# class=less>&lt;</a></td><td class=val></td><td><a href=# class=more>&gt;</a></td></tr>
-						<tr class='ui-lh'><td class=name>Line height:</td><td><a href=# class=less>&lt;</a></td><td class=val></td><td><a href=# class=more>&gt;</a></td></tr>
-						<tr class='ui-lw'><td class=name>List width:</td> <td><a href=# class=less>&lt;</a></td><td class=val></td><td><a href=# class=more>&gt;</a></td></tr>
+							<tr class='ui-lw'><td class=name>List width:</td> <td><a href=# class=less>&lt;</a></td><td class=val></td><td><a href=# class=more>&gt;</a></td></tr>
 						</table>
 					</div>
 				</div>
@@ -1371,7 +1358,6 @@
 		this.maxUndo      = 50;             // board revisions to keep
 		this.fontName     = null;           // font-family
 		this.fontSize     = null;           // font-size
-		this.lineHeight   = null;           // line-height
 		this.listWidth    = null;           // list-width
 
 		this.fileLinks    = false;          // mark up `foo` as <a href=file:///foo>...</a>
@@ -1477,13 +1463,6 @@
 		{
 			if (this.conf.fontSize == fs) return;
 			this.conf.fontSize = fs;
-			return this.saveConfig();
-		}
-
-		setLineHeight(lh)
-		{
-			if (this.conf.lineHeight == lh) return;
-			this.conf.lineHeight = lh;
 			return this.saveConfig();
 		}
 
@@ -1926,8 +1905,7 @@
 				if (this.getItem('fsize') == 'z1')
 				{
 					this.conf.fontSize   = 13;
-					this.conf.lineHeight = 17;
-				}
+					}
 
 				if (! this.setJson('config', this.conf))
 				{
@@ -4060,9 +4038,6 @@
 			if (conf.fontSize)
 				setFontSize(conf.fontSize);
 
-			if (conf.lineHeight)
-				setLineHeight(conf.lineHeight);
-
 			if (conf.listWidth)
 				setListWidth(conf.listWidth);
 
@@ -4127,11 +4102,6 @@
 		return getVar('--fs');
 	}
 
-	function getLineHeight()
-	{
-		return getVar('--lh');;
-	}
-
 	function getListWidth()
 	{
 		return parseInt( getVar('--lw') );
@@ -4145,13 +4115,6 @@
 		return val;
 	}
 
-	function updateLineHeight()
-	{
-		var val = getLineHeight();
-		$('.config .f-prefs .ui-lh .val').html( val.toFixed(1) );
-		return val;
-	}
-
 	function updateListWidth()
 	{
 		var val = getListWidth();
@@ -4162,7 +4125,6 @@
 	function updateVarsAndLayout()
 	{
 		updateFontSize();
-		updateLineHeight();
 		updateListWidth();
 		adjustLayout();
 	}
@@ -4175,23 +4137,7 @@
 		$('html').css('--fs', fs + '').addClass('fs-set');
 		updateVarsAndLayout();
 
-		if (getLineHeight() < fs)
-			setLineHeight(fs);
-
 		return getFontSize();
-	}
-
-	function setLineHeight(lh)
-	{
-		var fs = getFontSize();
-
-		lh = parseInt(10*lh) / 10.; // trim to a single decimal digit
-		lh  = lh.clamp(fs, 3*fs);
-
-		$('html').css('--lh', lh + '').addClass('lh-set');
-		updateVarsAndLayout();
-
-		return getLineHeight();
 	}
 
 	function setListWidth(lw)
@@ -4211,13 +4157,6 @@
 		return updateFontSize();
 	}
 
-	function resetLineHeight()
-	{
-		$('html').css('--lh', '').removeClass('lh-set');
-		updateVarsAndLayout();
-		return updateLineHeight();
-	}
-
 	function resetListWidth()
 	{
 		$('html').css('--lw', '').removeClass('lw-set');
@@ -4230,7 +4169,6 @@
 	{
 		var $html = $('html');
 		NB.storage.setFontSize   ( $html.hasClass('fs-set') ? getFontSize()   : null );
-		NB.storage.setLineHeight ( $html.hasClass('lh-set') ? getLineHeight() : null );
 		NB.storage.setListWidth  ( $html.hasClass('lw-set') ? getListWidth()  : null );
 	}
 
@@ -4457,11 +4395,6 @@
 		NB.varAdjust.start(ev, function(delta){ setFontSize( org + delta/50. ); }, saveUiPrefs);
 	});
 
-	$('.config').on('mousedown', '.ui-lh .val', function(ev){
-		var org = getLineHeight();
-		NB.varAdjust.start(ev, function(delta){ setLineHeight( org + delta/50. ); }, saveUiPrefs);
-	});
-
 	$('.config').on('mousedown', '.ui-lw .val', function(ev){
 		var org = getListWidth();
 		NB.varAdjust.start(ev, function(delta){ setListWidth( org + delta/5. ); }, saveUiPrefs);
@@ -4527,35 +4460,13 @@
 
 	$('.config .f-prefs .ui-fs .val').on('click', function(){
 		if (NB.varAdjust.used) return false;
-		var fs = resetFontSize();
-		if (getLineHeight() < fs) setLineHeight(fs);
+		resetFontSize();
 		saveUiPrefs();
 		return false;
 	});
 
 	$('.config .f-prefs .ui-fs .more').on('click', function(){
 		setFontSize( parseInt(10*getFontSize()) / 10. + 0.5 );
-		saveUiPrefs();
-		return false;
-	});
-
-	//
-	$('.config .f-prefs .ui-lh .less').on('click', function(){
-		setLineHeight( parseInt(10*getLineHeight()) / 10. - 0.1 );
-		saveUiPrefs();
-		return false;
-	});
-
-	$('.config .f-prefs .ui-lh .val').on('click', function(){
-		if (NB.varAdjust.used) return false;
-		var lh = resetLineHeight();
-		if (lh < getFontSize()) setFontSize(lh);
-		saveUiPrefs();
-		return false;
-	});
-
-	$('.config .f-prefs .ui-lh .more').on('click', function(){
-		setLineHeight( parseInt(10*getLineHeight()) / 10. + 0.1 );
 		saveUiPrefs();
 		return false;
 	});
@@ -4664,7 +4575,7 @@
 	var conf = NB.storage.getConfig();
 
 	console.log( `Active:    [${conf.board}]` );
-	console.log( `Font:      [${conf.fontName}], size [${conf.fontSize || '-'}], line-height [${conf.lineHeight || '-'}]` );
+	console.log( `Font:      [${conf.fontName}], size [${conf.fontSize || '-'}]` );
 	console.log( `FileLinks: [${conf.fileLinks}]` );
 	console.log( 'Backups:   ', conf.backups);
 
