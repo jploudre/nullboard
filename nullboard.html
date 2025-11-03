@@ -1279,7 +1279,6 @@
 		this.verSeen      = null;           // latest codeVersion they saw the changelog for
 
 		this.maxUndo      = 50;             // board revisions to keep
-		this.fontName     = null;           // font-family
 
 		this.fileLinks    = false;          // mark up `foo` as <a href=file:///foo>...</a>
 
@@ -1370,13 +1369,6 @@
 				return true;
 
 			this.conf.board = board_id;
-			return this.saveConfig();
-		}
-
-		setFontName(fname)
-		{
-			if (this.conf.fontName == fname) return;
-			this.conf.fontName = fname;
 			return this.saveConfig();
 		}
 
@@ -3907,87 +3899,6 @@
 		}
 	}
 
-	/*
-	 *	fonts
-	 */
-	function initFonts()
-	{
-		var toGo = 0;
-		var loaded = [];
-		var failed = [];
-
-		NB.font = null; // current font
-
-		//
-		function isUsable(f)
-		{
-			return ! failed.includes(f) && loaded.includes(f);
-		}
-
-		function onFontsLoaded()
-		{
-			var conf = NB.storage.getConfig();
-
-			$('.config .switch-font').each(function(){
-				if (! isUsable($(this).attr('font')))
-					$(this).remove();
-			});
-
-			if (conf.fontName && ! isUsable(conf.fontName))
-			{
-				NB.storage.setFontName(null);
-				selectFont(null);
-			}
-
-			selectFont(conf.fontName || 'barlow');
-
-			updateVarsAndLayout();
-		}
-
-		function onFontLoaded(f, ok)
-		{
-			var m = f.family.match(/["']?f-([^"']*)/);
-			var f_name = m ? m[1] : ''; /* ios safari will set 'family' to 'weight' on failure ! */
-			if (! ok)
-			{
-				console.log( `! Failed to load ${f.family} ${f.weight}` );
-				failed.push(f_name);
-			}
-			else
-			{
-				loaded.push(f_name);
-			}
-
-			if (! --toGo)
-				onFontsLoaded();
-		}
-
-		document.fonts.forEach(function(f){
-
-			if (f.status == 'loaded')
-				return;
-
-			console.log( `Loading ${f.family} ${f.weight} ...` );
-			toGo++;
-			f.load()
-			 .then(function(){ onFontLoaded(f, true); })
-			 .catch(function(){ onFontLoaded(f, false); });
-		});
-	}
-
-	function selectFont(font)
-	 {
-		var $html = $('html');
-		$html.removeClass('f-' + NB.font).addClass('f-' + font);
-		NB.font = font;
-
-		var $list = $('.config .switch-font');
-		$list.removeClass('active');
-		$list.filter('[font="' + font + '"]').addClass('active');
-
-		updateVarsAndLayout();
-	}
-
 	//
 	function getVar(name)
 	{
@@ -4264,13 +4175,6 @@
 		return false;
 	});
 
-	$('.config').on('click', '.switch-font', function(){
-		var font = $(this).attr('font');
-		selectFont(font);
-		NB.storage.setFontName(font);
-		return false;
-	});
-
 	//
 	//
 	//
@@ -4356,7 +4260,6 @@
 	var conf = NB.storage.getConfig();
 
 	console.log( `Active:    [${conf.board}]` );
-	console.log( `Font:      [${conf.fontName}]` );
 	console.log( `FileLinks: [${conf.fileLinks}]` );
 	console.log( 'Backups:   ', conf.backups);
 
@@ -4371,8 +4274,6 @@
 	/*
 	 *	the ui
 	 */
-	initFonts();
-
 	initDragAndDrop();
 
 	NB.varAdjust = new VarAdjust()
