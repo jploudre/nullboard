@@ -71,8 +71,6 @@
 	/***/
 	html {
 		--ff: 'Espy Sans Revived Ten', sans-serif;
-
-		--lw: 250; /* .list width */
 	}
 
 	html, body, input, textarea {
@@ -151,7 +149,7 @@
 
 	/***/
 	.board {
-		min-width: calc( var(--lw) * 1px );
+		min-width: 240pt;
 
 		width: -moz-max-content;    /* firefox */
 		width: -webkit-max-content; /* chrome  */
@@ -295,7 +293,7 @@
 	.board .list {
 		display: inline-block;
 		vertical-align: top;
-		width: calc( var(--lw) * 1px );
+		width: 240pt;
 		margin: 0 5px 10px;
 		background: linear-gradient(#EAEDF0 30px, #DDE1E5 90px);
 		border-radius: 2px;
@@ -836,55 +834,6 @@
 	}
 
 	/***/
-	.config .bulk .ui-prefs .f-prefs table {
-		width: 10px; /* mobile safari */
-		padding: 0;
-		margin: 0;
-		border-collapse: collapse;
-	}
-
-	.config .bulk .ui-prefs .f-prefs td {
-		margin: 0;
-		padding: 0 0 0 5px;
-	}
-
-	.config .bulk .ui-prefs .f-prefs td.name {
-		width: 100%;
-		white-space: pre;
-		padding-left: 0;
-	}
-
-	.config .bulk .ui-prefs .f-prefs tr td.val {
-		text-align: center;
-	}
-
-	.lw-set .config .bulk .ui-prefs .f-prefs tr.ui-lw td.val {
-		color: #1489db;
-		cursor: pointer;
-	}
-
-	.config .bulk .ui-prefs .f-prefs a {
-		display: inline-block;
-		padding: 0 2px;
-		transition: padding 250ms;
-	}
-
-	.config .bulk .ui-prefs .f-prefs a.less:hover {
-		padding: 0 4px 0 0;
-		transition: padding 250ms;
-	}
-
-	.config .bulk .ui-prefs .f-prefs a.more:hover {
-		padding: 0 0 0 4px;
-		transition: padding 250ms;
-	}
-
-	.config .bulk .ui-prefs .f-prefs a.more:hover {
-		padding: 0 0 0 4px;
-		transition: padding 250ms;
-	}
-
-	/***/
 	.config .bulk {
 		display: none;
 		opacity: 0;
@@ -1195,16 +1144,6 @@
 
 			<a href=# class=auto-backup>Auto-backup...</a>
 
-			<div class="section ui-prefs break">
-				<a href=# class=title>UI preferences<u>...</u></a>
-				<div class=details>
-					<div class='f-prefs break'>
-						<table>
-								<tr class='ui-lw'><td class=name>List width:</td> <td><a href=# class=less>&lt;</a></td><td class=val></td><td><a href=# class=more>&gt;</a></td></tr>
-						</table>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 	</div>
@@ -1341,7 +1280,6 @@
 
 		this.maxUndo      = 50;             // board revisions to keep
 		this.fontName     = null;           // font-family
-		this.listWidth    = null;           // list-width
 
 		this.fileLinks    = false;          // mark up `foo` as <a href=file:///foo>...</a>
 
@@ -1439,13 +1377,6 @@
 		{
 			if (this.conf.fontName == fname) return;
 			this.conf.fontName = fname;
-			return this.saveConfig();
-		}
-
-		setListWidth(lw)
-		{
-			if (this.conf.listWidth == lw) return;
-			this.conf.listWidth = lw;
 			return this.saveConfig();
 		}
 
@@ -3838,7 +3769,7 @@
 		if (! $board.length)
 			return;
 
-		var list_w = getListWidth();
+		var list_w = 240;
 
 		var lists = $board.find('.list').length;
 		var lists_w = (lists < 2) ? list_w : (list_w + 10) * lists - 10;
@@ -4010,9 +3941,6 @@
 
 			selectFont(conf.fontName || 'barlow');
 
-			if (conf.listWidth)
-				setListWidth(conf.listWidth);
-
 			updateVarsAndLayout();
 		}
 
@@ -4069,49 +3997,11 @@
 		return parseFloat( v );
 	}
 
-	function getListWidth()
-	{
-		return parseInt( getVar('--lw') );
-	}
-
-	//
-	function updateListWidth()
-	{
-		var val = getListWidth();
-		$('.config .f-prefs .ui-lw .val').html( val.toFixed(0) );
-		return val;
-	}
-
 	function updateVarsAndLayout()
 	{
-		updateListWidth();
 		adjustLayout();
 	}
 
-	//
-	function setListWidth(lw)
-	{
-		lw = lw.clamp(200, 400);
-
-		$('html').css('--lw', lw + '').addClass('lw-set');
-		updateVarsAndLayout();
-		return getListWidth();
-	}
-
-	//
-	function resetListWidth()
-	{
-		$('html').css('--lw', '').removeClass('lw-set');
-		updateVarsAndLayout();
-		return updateListWidth();
-	}
-
-	//
-	function saveUiPrefs()
-	{
-		var $html = $('html');
-		NB.storage.setListWidth  ( $html.hasClass('lw-set') ? getListWidth()  : null );
-	}
 
 	/*
 	 *	event handlers
@@ -4331,12 +4221,6 @@
 	});
 
 	//
-	$('.config').on('mousedown', '.ui-lw .val', function(ev){
-		var org = getListWidth();
-		NB.varAdjust.start(ev, function(delta){ setListWidth( org + delta/5. ); }, saveUiPrefs);
-	});
-
-	//
 	$(document).on('mouseup', function(ev){
 		NB.noteDrag.end();
 		NB.loadDrag.end();
@@ -4388,25 +4272,6 @@
 	});
 
 	//
-	$('.config .f-prefs .ui-lw .less').on('click', function(){
-		setListWidth( getListWidth() - 5 );
-		saveUiPrefs();
-		return false;
-	});
-
-	$('.config .f-prefs .ui-lw .val').on('click', function(){
-		if (NB.varAdjust.used) return false;
-		resetListWidth();
-		saveUiPrefs();
-		return false;
-	});
-
-	$('.config .f-prefs .ui-lw .more').on('click', function(){
-		setListWidth( getListWidth() + 5 );
-		saveUiPrefs();
-		return false;
-	});
-
 	//
 	//
 	$('.overlay').click(function(ev){
