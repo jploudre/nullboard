@@ -637,17 +637,6 @@
 		position: relative;
 	}
 
-	.config .teaser i {
-		/* backups off */
-		font-style: normal;
-	}
-
-	.config .teaser u {
-		/* backups on */
-		display: none;
-		text-decoration: none;
-	}
-
 	.config .bulk {
 		margin-right: 20px;
 		padding: 5px 0 0 22px;
@@ -731,55 +720,6 @@
 		width: 1px;
 		height: 1px;
 		visibility: hidden;
-	}
-
-	/***/
-	.config.backups-on .teaser i {
-		display: none;
-	}
-
-	.config.backups-on .teaser u {
-		display: inline-block;
-		color: #555;
-	}
-
-	.config.backups-on.backing-up .teaser u {
-		opacity: 0.4;
-	}
-
-	.config.backups-on .bulk .auto-backup:before {
-		content: '\2713 ';
-		display: inline-block;
-		width: 15px;
-		margin-left: -15px;
-	}
-
-	/***/
-	.config.backups-on.backup-err .teaser i {
-		display: inline-block;
-	}
-
-	.config.backups-on.backup-err .teaser u {
-		display: inline-block;
-		position: absolute;
-		width: 4px;
-		height: 4px;
-		border-radius: 10px;
-		top: 13px;
-		right: -4px;
-		background: #d20;
-		color: transparent;
-	}
-
-	.config.backups-on.backup-err .bulk .auto-backup {
-		color: #d20;
-	}
-
-	.config.backups-on.backup-err .bulk .auto-backup:before {
-		content: '! ';
-		color: #d20;
-		width: 13px;
-		margin-left: -13px;
 	}
 
 	/***/
@@ -929,160 +869,6 @@
 
 	/***/
 
-	.overlay .backup-conf {
-		padding: 20px 40px;
-		min-width: 300px;
-		position: relative;
-	}
-
-	.overlay .backup-conf .close {
-		position: absolute;
-		top: 0px;
-		right: 12px;
-		color: #000;
-		opacity: 0.3;
-		transition: opacity 300ms;
-	}
-
-	.overlay .backup-conf .close:hover {
-		opacity: 1;
-		transition: opacity 300ms;
-	}
-
-	.overlay .backup-conf h3 {
-		font-weight: bold;
-		text-align: center;
-		margin: 20px 0 0 0;
-	}
-
-	.overlay .backup-conf .what {
-		display: block;
-		text-align: center;
-		border-bottom: 1px solid #888;
-		margin: 0 -10px 20px;
-		padding: 0 10px 30px;
-	}
-
-	.overlay .backup-conf .what a {
-		color: #1489db;
-	}
-
-	.overlay .backup-conf .opt {
-		margin-top: 5px;
-	}
-
-	.overlay .backup-conf .opt:before {
-		--col: #333;
-
-		content: ' ';
-		display: inline-block;
-		margin-top: -1px;
-
-		display: inline-block;
-		content: ' ';
-		width: calc(9rem / 11);
-		height: calc(9rem / 11);
-		margin-right: 8px;
-
-		position: relative;
-		top: 1px;
-		background: var(--col);
-		border: 1px solid var(--col);
-		border-radius: 1px;
-		box-shadow: 0 2px 0 #fff inset, 0 -2px 0 #fff inset, 2px 0 0 #fff inset, -2px 0 0 #fff inset;
-	}
-
-	.overlay .backup-conf .opt:hover:before {
-		--col: #1489db;
-	}
-
-	.overlay .backup-conf .off .opt:before {
-		background: #fff;
-	}
-
-	.overlay .backup-conf .opt:hover {
-		color: #1489db;
-	}
-
-	.overlay .backup-conf .opt {
-		cursor: pointer;
-	}
-
-	.overlay .backup-conf .etc {
-		margin-top: 3px;
-		margin-bottom: 10px;
-		margin-left: calc( 9rem / 22 );
-		padding: 2px 0 0 14px;
-		border-left: 1px solid #888;
-	}
-
-	.overlay .backup-conf .off .etc {
-		display: none;
-	}
-
-	.overlay .backup-conf .etc span {
-		display: inline-block;
-		min-width: 80px;
-		margin-right: 11px;
-	}
-
-	.overlay .backup-conf .etc input {
-		display: inline-block;
-		width: 170px;
-		padding: 0 5px;
-		margin-bottom: 3px;
-		border: 1px solid #ccc;
-	}
-
-	.overlay .backup-conf .etc input:focus {
-		border-bottom: 1px solid #888;
-	}
-
-	.overlay .backup-conf .etc input::placeholder {
-		font-weight: 400;
-		text-transform: uppercase;
-		color: #000;
-		opacity: 0.4;
-	}
-
-	.overlay .backup-conf .etc .status {
-		display: none;
-		margin: 0;
-	}
-
-	.overlay .backup-conf .etc .status input {
-		color: #222;
-		background: #0000000E;
-		border: 1px solid transparent;
-	}
-
-	.overlay .backup-conf .etc .status.error input {
-		color: #d20;
-		background: #dd220018;
-	}
-
-	.overlay .backup-conf .save {
-		display: block;
-		text-align: center;
-		margin: 20px -10px 5px;
-		padding: 20px 10px 0;
-		border-top: 1px solid #888;
-		word-spacing: 30px;
-		position: relative;
-	}
-
-	.overlay .backup-conf .save a {
-		color: #1489db;
-	}
-
-	.overlay .backup-conf.off .save .check {
-		color: #aaa;
-		pointer-events: none;
-		cursor: default;
-	}
-
-	/***/
-
 	@media print {
 		.logo, .config,
 		.board .head .teaser,
@@ -1130,7 +916,7 @@
 	</div>
 
 	<div class='config no-user-select'>
-		<a href=# class=teaser><i>&equiv;</i><u>&#x2714;</u></a>
+		<a href=# class=teaser>&equiv;</a>
 		<div class=bulk>
 			<a href=# class=add-board>Add new board...</a>
 
@@ -1141,8 +927,6 @@
 			<a href=# class=exp-board>Export current board...</a>
 			<a href=# class=imp-board>Import boards...</a>
 				<input class=imp-board-select type="file" accept=".nbx">
-
-			<a href=# class=auto-backup>Auto-backup...</a>
 
 		</div>
 	</div>
@@ -1219,33 +1003,6 @@
 		<div class=license>
 		</div>
 
-		<div class=backup-conf>
-			<a href=# class=close>&times;</a>
-
-			<h3>Auto-backup</h3>
-			<div class=what>
-				<a href=https://nullboard.io/backups target=_blank>What is this?</a>
-			</div>
-
-			<div class=loc>
-				<div class=opt>Local backup</div>
-				<div class=etc>
-					<span>Access token</span> <input class=auth placeholder="required"><br>
-					<p class=status><span>Status</span> <input disabled></p>
-				</div>
-			</div>
-
-			<div class=rem>
-				<div class=opt>Remote backup</div>
-				<div class=etc>
-					<span>URL</span>    <input class=base placeholder="API entry point"><br>
-					<span>Access token</span> <input class=auth placeholder="required"><br>
-					<p class=status><span>Status</span> <input disabled></p>
-				</div>
-			</div>
-
-			<div class=save><a href=# class=check>Check...</a> <a href=# class=ok>Save</a></div>
-		</div>
 	</tt>
 
 </body>
@@ -1283,23 +1040,7 @@
 		this.fileLinks    = false;          // mark up `foo` as <a href=file:///foo>...</a>
 
 		this.board        = null;           // active board
-
-		this.backups      =
-		{
-			agents : [ ],               // [ { type, id, enabled, conf } ];
-			nextId : 1
-		};
-
-		this.backupStatus = { };            // agentId => [ 'conf' ]
 	}
-
-	const default_backup_agents =
-	[
-		{ base: 'http://127.0.0.1:10001', auth: '' }, // local agent
-		{ base: '', auth: '' }                        // remote agent
-	];
-
-	//
 
 	function BoardMeta()
 	{
@@ -1307,7 +1048,6 @@
 		this.current = 1;                   // revision
 		this.ui_spot = 0;                   // 0 = not set
 		this.history = [ ];                 // revision IDs
-		this.backupStatus = { };            // agentId => [ what's backed up ]
 	}
 
 	class Storage
@@ -1319,11 +1059,6 @@
 			this.conf = new AppConfig();
 			this.boardIndex = new Map();
 
-			this.backups =
-			{
-				status : '',      // '', 'ok', 'busy', 'failed'
-				agents : [ ],     // BackupStorage instances
-			};
 		}
 
 		open()
@@ -1374,7 +1109,6 @@
 
 		saveConfig()
 		{
-			this.backupConfig();
 			return this.setJson('config', this.conf);
 		}
 
@@ -1448,12 +1182,6 @@
 			ok_meta = this.setJson('board.' + board.id + '.meta', meta) &&
 			          this.setJson('board.' + board.id, meta.current); // for older versions
 
-			/*
-			 *	run backups
-			 */
-			if (ok_meta && ok_data)
-				this.backupBoard(board.id, board, meta)
-
 			board.history = meta.history; // restore
 
 			console.log( `Saved revision ${board.revision} of ${board.id} (${board.title}), ok = ${ok_data} | ${ok_meta}` );
@@ -1513,9 +1241,6 @@
 			this.delItem('board.' + board_id + '.meta');
 			this.boardIndex.delete(board_id);
 
-			this.backups.agents.forEach(function(store){
-				store.nukeBoard(board_id);
-			});
 
 			console.log( `Deleted board ${board_id} (${title})` );
 		}
@@ -1545,8 +1270,6 @@
 
 			meta.current = revision;
 
-			this.backupBoard(board_id, null, meta);
-
 			return this.setJson('board.' + board_id + '.meta', meta) &&
 			       this.setJson('board.' + board_id, revision); // for older versions
 		}
@@ -1559,8 +1282,6 @@
 				throw `Invalid board_id in setBoardUiSpot(${board_id}, ${ui_spot})`;
 
 			meta.ui_spot = ui_spot;
-
-			this.backupBoard(board_id, null, meta);
 
 			return this.setJson('board.' + board_id + '.meta', meta);
 		}
@@ -1602,159 +1323,8 @@
 		fixupConfig(newInstall)
 		{
 			var conf = this.conf;
-			var simp = (new SimpleBackup).type;
-
-			if (conf.board && ! this.boardIndex.has(conf.board))
-				conf.board = null;
-
-			if (! conf && ! newInstall) // pre-20210410 upgrade
-			{
-				conf.verLast = 20210327;
-				conf.verSeen = 20200220; // 20200429;
-			}
-
-			var agents = conf.backups.agents;
-
-			if (agents.length != 2 ||
-			    agents[0].type != simp || agents[0].conf.base != 'http://127.0.0.1:10001' ||
-			    agents[1].type != simp)
-			{
-				const def = default_backup_agents;
-
-				console.log('Unexpected backup config, will re-initialize.', agents);
-
-				conf.backups.agents = [];
-
-				conf.backups.agents.push({
-					// localhost
-					type    : simp,
-					id      : simp + '-' + (conf.backups.nextId++),
-					enabled : def[0].base && def[0].auth,
-					conf    : def[0],
-				})
-
-				conf.backups.agents.push({
-					// remote
-					type    : simp,
-					id      : simp + '-' + (conf.backups.nextId++),
-					enabled : def[1].base && def[1].auth,
-					conf    : def[1],
-				})
-
-				this.saveConfig();
-			}
 		}
 
-		/*
-		 *	backups
-		 */
-		initBackups(onBackupStatus)
-		{
-			var self = this;
-			var pending = 0;
-			var success = true;
-			var store_id = 1;
-
-			self.backups.agents = [];
-
-			onBackupStatus(null);
-
-			this.conf.backups.agents.forEach(function(b){
-
-				var T = NB.backupTypes.get(b.type);
-				if (! T)
-				{
-					console.log( `Unknown backup type "${b.type}" - skipped` );
-					return;
-				}
-
-				if (! b.enabled)
-					return;
-
-				var agent = new T(b.id, b.conf, onBackupStatus);
-				self.backups.agents.push(agent);
-
-				console.log( `Added backup agent - type '${agent.type}', id '${agent.id}'` );
-
-				agent.checkStatus(null); // will need just onBackupStatus() callbacks
-			});
-		}
-
-		backupBoard(board_id, board, meta)
-		{
-			var self = this;
-			var was = meta.backupStatus || {};
-
-			meta.backupStatus = {};
-
-			if (! this.backups.agents.length)
-			{
-				if (was['data'] || was['meta'])
-					self.setJson('board.' + board_id + '.meta', meta);
-				return;
-			}
-
-			console.log( `Backing up ${board_id}...` );
-
-			this.backups.agents.forEach(function(agent){
-
-				var fields = was[agent.id] || {};
-
-				if (board) delete fields.data;
-				if (meta)  delete fields.meta;
-
-				meta.backupStatus[agent.id] = fields;
-
-				agent.saveBoard(board_id, board, meta, function(ok){
-
-					var what = 'Backup of ' + board_id + (board ? '' : ' (meta)');
-					console.log( `${what} to '${agent.id}' -> ${ok ? 'ok' : 'failed'}` );
-
-					if (ok)
-					{
-						if (board) fields.data = + new Date();
-						if (meta)  fields.meta = + new Date();
-
-						meta.backupStatus[agent.id] = fields;
-					}
-
-					self.setJson('board.' + board_id + '.meta', meta);
-				});
-			});
-		}
-
-		backupConfig()
-		{
-			var self = this;
-			var was = self.conf.backupStatus || {};
-
-			self.conf.backupStatus = {};
-
-			if (! this.backups.agents.length)
-			{
-				if (was['conf'])
-					this.setJson('config', this.conf);
-				return;
-			}
-
-			this.backups.agents.forEach(function(agent){
-
-				var fields = { };
-
-				self.conf.backupStatus[agent.id] = fields;
-
-				agent.saveConfig(self.conf, function(ok){
-
-					if (ok)
-					{
-						fields.conf = + new Date()
-						self.conf.backupStatus[agent.id] = fields;
-					}
-
-					self.setJson('config', self.conf);
-				});
-			});
-		}
 	};
 
 	class Storage_Local extends Storage
@@ -1845,9 +1415,6 @@
 
 				if (! meta)
 					continue;
-
-				delete meta.backingUp;      // run-time var
-				delete meta.needsBackup;    // ditto
 
 				meta = Object.assign(new BoardMeta(), meta);
 				this.boardIndex.set(board_id, meta);
@@ -1946,180 +1513,6 @@
 			this.setJson('board.' + board_id + '.meta', meta);
 
 			return meta;
-		}
-	}
-
-	/*
-	 *
-	 */
-	class BackupStorage
-	{
-		constructor(id, conf, onStatusChange)
-		{
-			this.type           = '?';
-
-			this.id             = id;
-			this.conf           = conf;
-			this.status         = '';
-			this.lastOp         = '';
-			this.lastXhr        = { op: '', text: '', code: 0 };
-			this.onStatusChange = onStatusChange;
-			this.queue          = [];
-		}
-
-		checkStatus(cb)                { return false; }
-		saveConfig(conf, cb)           { throw 'implement-me'; }
-		saveBoard (id, data, meta, cb) { throw 'implement-me'; }
-		nukeBoard (id, cb)             { throw 'implement-me'; }
-	}
-
-	class SimpleBackup extends BackupStorage
-	{
-		constructor(id, conf, onStatusChange)
-		{
-			super(id, null, onStatusChange);
-
-			this.type = 'simp';
-			this.conf = { base: '', auth: '' }
-			this.conf = Object.assign(this.conf, conf);
-		}
-
-		checkStatus(cb)
-		{
-			this.queue.push({
-				what : 'checkStatus',
-				cb   : cb,
-				args :
-				{
-					url: this.conf.base + '/config',
-					type: 'put',
-					headers: { 'X-Access-Token': this.conf.auth },
-					data:
-					{
-						self: document.location.href,
-					//	conf: -- without the data --
-					},
-					dataType: 'json'
-				}
-			});
-
-			this.runQueue();
-		}
-
-		saveConfig(conf, cb)
-		{
-			this.queue.push({
-				what : 'saveConfig',
-				cb   : cb,
-				args :
-				{
-					url: this.conf.base + '/config',
-					type: 'put',
-					headers: { 'X-Access-Token': this.conf.auth },
-					data:
-					{
-						self: document.location.href,
-						conf: JSON.stringify(conf)
-					},
-					dataType: 'json'
-				}
-			});
-
-			this.runQueue();
-		}
-
-		saveBoard(id, data, meta, cb)
-		{
-			this.queue.push({
-				what : 'saveBoard',
-				cb   : cb,
-				args :
-				{
-					url: this.conf.base + '/board/' + id,
-					type: 'put',
-					headers: { 'X-Access-Token': this.conf.auth },
-					data:
-					{
-						self: document.location.href,
-						data: data ? JSON.stringify(data) : null,
-						meta: meta ? JSON.stringify(meta) : null
-					},
-					dataType: 'json'
-				}
-			});
-
-			this.runQueue();
-		}
-
-		nukeBoard(id, cb)
-		{
-			this.queue.push({
-				what : 'saveBoard',
-				cb   : cb,
-				args :
-				{
-					url:  this.conf.base + '/board/' + id,
-					type: 'delete',
-					headers: { 'X-Access-Token': this.conf.auth },
-				}
-			});
-
-			this.runQueue();
-		}
-
-		/*
-		 *	private
-		 */
-		runQueue()
-		{
-			var self = this;
-
-			if (! this.queue.length)
-				return;
-
-			if (this.status == 'busy')
-				return;
-
-			var req = this.queue.shift();
-
-			this.setStatus('busy', req.what);
-
-			$.ajax(req.args)
-			 .done(function(d, s, x) { self.onRequestDone(req,  true, x); })
-			 .fail(function(x, s, e) { self.onRequestDone(req, false, x); })
-		}
-
-		onRequestDone(req, ok, xhr)
-		{
-			console.log( `Backup agent '${this.id}', ${this.lastOp}() -> ${ok ? 'ok' : 'failed'}` );
-
-			var code = xhr.status;
-			var text = xhr.responseText || (code ? `Response code ${code}` : 'Offline or CORS-blocked');
-
-			this.lastXhr = { text: text, code: code };
-
-			if (req.cb) req.cb.call(this, ok);
-
-			if (! this.queue.length)
-			{
-				this.setStatus(ok ? 'ready' : 'error', this.lastOp);
-				return;
-			}
-
-			this.status = 'pre-busy';
-			this.runQueue();
-		}
-
-		setStatus(status, op)
-		{
-			if (status == 'busy' && this.status == 'busy')
-				throw `Backup agent ${this.id} is already busy!`;
-
-			console.log( `Backup agent '${this.id}' status: '${this.status}' -> '${status}'` );
-
-			this.status = status;
-			this.lastOp = op;
-			this.onStatusChange(this);
 		}
 	}
 
@@ -3091,328 +2484,6 @@
 		if (to_open) openBoard(to_open);
 	}
 
-	/*
-	 *
-	 */
-	function findBackupAgent(which)
-	{
-		var a = null;
-
-		NB.storage.backups.agents.forEach(function(agent){
-			if (agent.type      == which.type &&
-			    agent.conf.auth == which.conf.auth &&
-			    agent.conf.base == which.conf.base)
-			{
-				a = agent;
-			}
-		});
-
-		return a;
-	}
-
-	function setBackupConfigUi($div, backupConf)
-	{
-		if (! backupConf.enabled)
-		{
-			$div.addClass('off');
-			return;
-		}
-
-		var $status = $div.find('.status');
-		var b = findBackupAgent(backupConf);
-		var text = 'OK';
-
-		if (b && b.status == 'error')
-		{
-			text = b.lastXhr.text;
-			$status.addClass('error');
-		}
-
-		$status.find('input').val(text);
-		$status.css({ display: 'block' });
-	}
-
-	function getBackupConfigUi()
-	{
-		var conf = NB.storage.getConfig();
-		var loc  = conf.backups.agents[0];
-		var rem  = conf.backups.agents[1];
-
-		var $div = $('.overlay .backup-conf');
-		var $loc = $div.find('.loc');
-		var $rem = $div.find('.rem');
-
-		var ret =
-		{
-			loc: jsonClone(loc),
-			rem: jsonClone(rem)
-		};
-
-		ret.loc.enabled   = ! $loc.hasClass('off');
-		ret.loc.conf.auth = $loc.find('.auth').val();
-
-		ret.rem.enabled   = ! $rem.hasClass('off');
-		ret.rem.conf.base = $rem.find('.base').val();
-		ret.rem.conf.auth = $rem.find('.auth').val();
-
-		//
-		if (ret.loc.enabled && ! ret.loc.conf.auth)
-		{
-			shakeControl($loc.find('.auth'));
-			return null;
-		}
-
-		if (ret.rem.enabled && ! ret.rem.conf.base)
-		{
-			shakeControl($rem.find('.base'));
-			return null;
-		}
-
-		if (ret.rem.enabled && ! ret.rem.conf.auth)
-		{
-			shakeControl($rem.find('.auth'));
-			return null;
-		}
-
-		return ret;
-	}
-
-	function checkBackupConfig(backupConf, $div, onDone)
-	{
-		var $status = $div.find('.status');
-		var $text = $status.find('input');
-
-		$text.val('Checking...');
-		$status.removeClass('error').slideDown();
-
-		$div.delay(850).queue(function(){
-
-			var T = NB.backupTypes.get(backupConf.type);
-			var foo = new T(backupConf.id, backupConf.conf, function(){});
-
-			foo.checkStatus(function(ok){
-
-				if (ok)
-				{
-					$text.val('OK');
-				}
-				else
-				{
-					$text.val(foo.lastXhr.text);
-					$status.addClass('error');
-				}
-
-				onDone();
-			});
-
-			$(this).dequeue();
-		});
-	}
-
-	function configBackups()
-	{
-		var conf = NB.storage.getConfig();
-
-		if (conf.backups.agents.length != 2)
-			throw 'Invalid conf.backups.agents[]'; // as per fixupConfig()
-
-		//
-		var $div = $('tt .backup-conf').clone();
-		var  div = $div[0];
-
-		var $loc = $div.find('.loc');
-		var $rem = $div.find('.rem');
-
-		var typ = (new SimpleBackup).type;
-		var loc = conf.backups.agents[0];
-		var rem = conf.backups.agents[1];
-
-		div.checking = 0;
-
-		//
-		$loc.find('.auth').val( loc.conf.auth );
-		$rem.find('.auth').val( rem.conf.auth );
-		$rem.find('.base').val( rem.conf.base );
-
-		setBackupConfigUi($loc, loc);
-		setBackupConfigUi($rem, rem);
-
-		if (! loc.enabled && ! rem.enabled)
-			$div.addClass('off');
-
-		//
-		$div.find('.opt').click(function(){
-
-			var $opt = $(this).parent();
-
-			if ($opt.hasClass('off'))
-			{
-				$opt.find('.etc')
-				.css({ opacity: 0 })
-				.slideDown('fast')
-				.animate({ opacity: 1 }, 'fast')
-				.queue(function(){
-					$opt.removeClass('off');
-					$div.removeClass('off');
-					$(this).css('opacity', '').dequeue();
-				})
-
-				$opt.find('input').first()
-				.delay(800)
-				.queue(function(){ $(this).focus().dequeue(); });
-			}
-			else
-			{
-				$opt.find('.etc')
-				.animate({ opacity: 0 }, 'fast')
-				.slideUp('fast')
-				.queue(function(){
-					$opt.addClass('off');
-					if ($loc.hasClass('off') && $rem.hasClass('off'))
-						$div.addClass('off');
-					$(this).css({ opacity: '' }).dequeue();
-				})
-			}
-
-			return false;
-		});
-
-		$div.find('.check').click(function(){
-
-			if (div.checking)
-				return false;
-
-			var foo = getBackupConfigUi();
-			if (! foo)
-				return false;
-
-			if (foo.loc.enabled)
-			{
-				div.checking++;
-				checkBackupConfig(foo.loc, $loc, function(){ div.checking--; });
-			}
-
-			if (foo.rem.enabled)
-			{
-				div.checking++;
-				checkBackupConfig(foo.rem, $rem, function(){ div.checking--; });
-			}
-
-			return false;
-		});
-
-		$div.find('.ok').click(function(){
-
-			var foo = getBackupConfigUi();
-			if (! foo)
-				return false;
-
-			if (foo.loc.enabled && ! loc.enabled)
-				foo.loc.id = typ + '-' + (conf.backups.nextId++);
-
-			if (foo.rem.enabled && ! rem.enabled)
-				foo.rem.id = typ + '-' + (conf.backups.nextId++);
-
-			conf.backups.agents[0] = foo.loc;
-			conf.backups.agents[1] = foo.rem;
-
-			NB.storage.initBackups(onBackupStatusChange);
-			NB.storage.saveConfig();
-
-			hideOverlay();
-		});
-
-		$div.find('a.close').click(function(){
-			hideOverlay();
-		});
-
-		showOverlay($div);
-	}
-
-	function onBackupStatusChange(agent)
-	{
-		var agents = NB.storage.backups.agents;
-
-		var $config = $('.config');
-		var $status = $('.config .teaser u')
-
-//		if (agent) console.log( `onBackupStatusChange: ${agent.id}, status ${agent.status}, op ${agent.lastOp}, xhr '${agent.lastXhr.text}' / ${agent.lastXhr.code}` );
-//		else       console.log( `onBackupStatusChange: <generic>` );
-
-		if (! agents.length)
-		{
-			$config.removeClass('backups-on backup-err backing-up');
-			return;
-		}
-
-		$config.addClass('backups-on');
-
-		var busy  = 0;
-		var error = 0;
-		var ready = 0;
-
-		agents.forEach(function(agent){
-			if (agent.status == 'busy')  busy++;  else
-			if (agent.status == 'error') error++; else
-			if (agent.status == 'ready') ready++; else
-				throw `Unknown status [${agent.status}] on backup agent ${agent.id}`;
-		});
-
-		if (error > 0) $config.addClass('backup-err').removeClass('backing-up'); else
-		if (busy > 0)  $config.addClass('backing-up').removeClass('backup-err'); else
-		               $config.removeClass('backing-up backup-err');
-
-		// process all pending backups if needed
-
-		if (! error && ! busy)
-			runPendingBackups();
-	}
-
-	function needsBackingUp(backupStatus, fields, agentIds)
-	{
-		var stale = false;
-		agentIds.forEach(function(id){
-			var obj = backupStatus[id];
-			if (obj) fields.forEach(function(f){ stale = !obj[f]; });
-			else stale = true;
-		});
-
-		return stale;
-	}
-
-	function runPendingBackups()
-	{
-		console.log('Checking for pending backups...');
-
-		var conf = NB.storage.getConfig();
-
-		var agentIds = [];
-		NB.storage.backups.agents.forEach(function(agent){
-			agentIds.push(agent.id);
-		});
-
-		if (needsBackingUp(conf.backupStatus, [ 'conf' ], agentIds))
-		{
-			console.log("  Backing up app config...");
-			NB.storage.backupConfig();
-		}
-
-		var boards = NB.storage.getBoardIndex();
-
-		boards.forEach(function(meta, id){
-
-			if (! needsBackingUp(meta.backupStatus, [ 'data', 'meta' ], agentIds))
-				return;
-
-			console.log(`  Backing up board ${id}...`);
-
-			var board = NB.storage.loadBoard(id);
-			if (! board)
-				return;
-
-			NB.storage.backupBoard(id, board, meta)
-		});
-	}
 
 	/*
 	 *
@@ -3469,7 +2540,6 @@
 	{
 		var $index  = $('.config .boards');
 		var $export = $('.config .exp-board');
-		var $backup = $('.config .auto-backup');
 		var $entry  = $('tt .load-board');
 
 		var $board = $('.wrap .board');
@@ -3503,12 +2573,10 @@
 		{
 			if (id_now) $export.html('Export this board...').show();
 			else        $export.html('Export all boards...').show();
-			$backup.show();
 		}
 		else
 		{
 			$export.hide();
-			$backup.hide();
 		}
 
 		if (! empty) $index.show();
@@ -4165,10 +3233,6 @@
 		return true;
 	});
 
-	$('.config .auto-backup').on('click', function(){
-		configBackups();
-	});
-
 	//
 	$('.config .section .title').on('click', function(){
 		$(this).closest('.section').toggleClass('open');
@@ -4253,7 +3317,7 @@
 
 	boards.forEach( function(meta, board_id) {
 		var hist = meta.history.join(', ');
-		console.log( `Found board ${board_id} - "${meta.title}", revision ${meta.current}, history [${hist}], backup ${JSON.stringify(meta.backupStatus)}` );
+		console.log( `Found board ${board_id} - "${meta.title}", revision ${meta.current}, history [${hist}]` );
 	});
 
 	//
@@ -4261,15 +3325,7 @@
 
 	console.log( `Active:    [${conf.board}]` );
 	console.log( `FileLinks: [${conf.fileLinks}]` );
-	console.log( 'Backups:   ', conf.backups);
 
-	/*
-	 *	backups
-	 */
-	NB.backupTypes = new Map();
-	NB.backupTypes.set( (new SimpleBackup).type, SimpleBackup );
-
-	NB.storage.initBackups(onBackupStatusChange);
 
 	/*
 	 *	the ui
