@@ -569,76 +569,6 @@
 	}
 
 	/***/
-	.logo {
-		position: absolute;
-		top: 9px;
-		left: 9px;
-		padding: 6px 12px;
-		z-index: 3;
-		opacity: 0.6;
-		background: #f8f9fb;
-	}
-
-	.crowded .logo:hover {
-		background: #fff;
-		box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-	}
-
-	.logo:hover {
-		opacity: 1.0;
-	}
-
-	.logo .alert {
-		display: none;
-		font-style: normal;
-		margin-left: 5px;
-		color: #d20;
-	}
-
-	.logo .bulk {
-		overflow: hidden;
-		height: 0;
-		opacity: 0;
-		transition: opacity 400ms;
-		padding-top: 1px;
-	}
-
-	.logo:hover .bulk {
-		height: auto;
-		opacity: 1;
-	}
-
-	.logo a.site,
-	.logo .bulk a {
-		color: #000;
-	}
-
-	.logo .bulk a:hover {
-		color: #1489db;
-	}
-
-	.logo .bulk a {
-		display: block;
-	}
-
-	.logo .bulk a:before {
-		display: inline-block;
-		content: '-';
-		width: 11px;
-	}
-
-	/***/
-	.logo.updated {
-		opacity: 1;
-	}
-
-	.logo.updated .alert {
-		display: inline-block;
-	}
-
-	.logo.updated .bulk .view-changes {
-		color: #d20;
-	}
 
 	/***/
 	.config {
@@ -904,7 +834,7 @@
 	/***/
 
 	@media print {
-		.logo, .config,
+		.config,
 		.board .head .teaser,
 		.list .head .teaser {
 			visibility: hidden;
@@ -937,18 +867,6 @@
 
 </head>
 <body>
-	<div class="logo">
-		<a class=site href=https://nullboard.io>Nullboard</a>
-		<i class=alert></i>
-		<div class=bulk>
-			<a href=# class=view-about>About</a>
-			<a href=# class=view-license>License</a>
-			<a href=https://nullboard.io/changes target=_blank class=view-changes>Changes</a>
-			<a href=https://nullboard.io/github  target=_blank>Github</a>
-			<a href=https://nullboard.io/twitter target=_blank>Twitter</a>
-		</div>
-	</div>
-
 	<div class='config no-user-select'>
 		<a href=# class=teaser>&equiv;</a>
 		<div class=bulk>
@@ -2611,22 +2529,6 @@
 		if (! empty) $index.show();
 	}
 
-	function setWhatsNew()
-	{
-		var conf = NB.storage.getConfig();
-
-		if (conf.verSeen && conf.verSeen < NB.codeVersion)
-		{
-			$('.logo').addClass('updated');
-			$('.logo .alert').html("(updated)");
-		}
-
-		var $link = $('.logo .view-changes');
-		var link = $link.attr('href') + '/?have=' + NB.codeVersion;
-		if (conf.verSeen) link += '&seen=' + conf.verSeen;
-		if (conf.verLast) link += '&last=' + conf.verLast;
-		$link.attr('href', link);
-	}
 
 	/*
 	 *	generic utils
@@ -3279,27 +3181,6 @@
 			hideOverlay();
 	});
 
-	$('.view-about').on('click', function(){
-		var $div = $('tt .about').clone();
-		$div.find('div').html(`Version ${NB.codeVersion}`);
-		showOverlay($div);
-		return false;
-	});
-
-	$('.view-license').on('click', function(){
-
-		var $div = $('tt .license').clone();
-		$div.html(formatLicense());
-		showOverlay($div);
-		return false;
-	});
-
-	$('.view-changes').on('click', function(){
-		if (! $('.logo').hasClass('updated'))
-			return;
-		NB.storage.setVerSeen();
-		$('.logo').removeClass('updated');
-	});
 
 	/***/
 
@@ -3366,8 +3247,6 @@
 	adjustLayout();
 
 	updateBoardIndex();
-
-	setWhatsNew();
 
 	NB.storage.setVerLast();
 
