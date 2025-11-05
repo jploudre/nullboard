@@ -2092,9 +2092,35 @@
 	{
 		closeBoard(true);
 
-		NB.board = new Board();
+		// Find a unique "Untitled Board" name
+		var index = NB.storage.getBoardIndex();
+		var existingTitles = [];
+
+		index.forEach(function(meta, board_id) {
+			existingTitles.push(meta.title);
+		});
+
+		var boardTitle = 'Untitled Board';
+		var counter = 2;
+
+		while (existingTitles.indexOf(boardTitle) !== -1) {
+			boardTitle = 'Untitled Board ' + counter;
+			counter++;
+		}
+
+		// Create board with the unique title
+		NB.board = new Board(boardTitle);
+
+		// Add default lists
+		NB.board.addList('Ideas/Someday');
+		NB.board.addList('ToDo');
+		NB.board.addList('Doing');
+		NB.board.addList('Done');
 
 		showBoard(true);
+
+		// Save the board immediately so it persists on reload
+		saveBoard();
 
 		$('.wrap .board .head').addClass('brand-new');
 		$('.wrap .board .head .text')[0].click();
