@@ -182,6 +182,359 @@
 	}
 
 	/***/
+	/* Header/Menubar from system7css */
+	header{
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 20px;
+		background-color: #000;
+		line-height: 19px;
+		z-index: 999;
+		position: fixed;
+		display: block;
+	}
+
+	header>.container{
+		width: 100%;
+		height: 19px;
+		line-height: 19px;
+		font-size: 10px;
+		font-family: var(--ff);
+		font-weight: bold;
+		margin: 0;
+		background-color: #fff;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+	}
+
+	header img.icon{
+		height: 19px;
+		width: 19px;
+		vertical-align: middle;
+	}
+
+	header .menu{
+		float: left;
+		margin: 0 7px;
+	}
+
+	header .menu.right{
+		float: right;
+	}
+
+	header .menu ul{
+		padding: 0;
+		margin: 0;
+	}
+
+	header .menu li{
+		display: inline-block;
+	}
+
+	header .menu li>a{
+		color: #000;
+		padding: 0 7px;
+	}
+
+	/* Only push down text menu items, not the icon */
+	header .menu li:not(:first-child) > a {
+		position: relative;
+		top: 2px;
+	}
+
+	header .menu li.disabled a{
+		color: #848484;
+	}
+
+	/* Windows menu dropdown */
+	header .menu li.windows-menu {
+		position: relative;
+	}
+
+	header .menu li.windows-menu .boards-dropdown {
+		display: none;
+		position: absolute;
+		top: 19px;
+		left: 0;
+		min-width: 200px;
+		background-color: #fff;
+		border: 1px solid #000;
+		border-top: none;
+		padding: 4px 0;
+		z-index: 1000;
+	}
+
+	header .menu li.windows-menu:hover .boards-dropdown {
+		display: block;
+	}
+
+	header .menu li.windows-menu .boards-dropdown a.load-board {
+		display: block;
+		padding: 2px 20px 2px 20px;
+		color: #000;
+		text-decoration: none;
+		white-space: nowrap;
+		font-size: 10px;
+		font-weight: bold;
+		position: relative;
+		top: 0;
+	}
+
+	header .menu li.windows-menu .boards-dropdown a.load-board:hover {
+		background-color: #000;
+		color: #fff;
+	}
+
+	header .menu li.windows-menu .boards-dropdown a.load-board.active:before {
+		content: '\2713 ';
+		position: absolute;
+		left: 7px;
+	}
+
+	/* File menu dropdown */
+	header .menu li.file-menu {
+		position: relative;
+	}
+
+	header .menu li.file-menu .file-dropdown {
+		display: none;
+		position: absolute;
+		top: 19px;
+		left: 0;
+		min-width: 200px;
+		background-color: #fff;
+		border: 1px solid #000;
+		border-top: none;
+		padding: 4px 0;
+		z-index: 1000;
+	}
+
+	header .menu li.file-menu:hover .file-dropdown {
+		display: block;
+	}
+
+	header .menu li.file-menu .file-dropdown a {
+		display: block;
+		padding: 2px 20px;
+		color: #000;
+		text-decoration: none;
+		white-space: nowrap;
+		position: relative;
+		cursor: pointer;
+	}
+
+	header .menu li.file-menu .file-dropdown a:hover {
+		background-color: #000;
+		color: #fff;
+	}
+
+	/* Edit menu dropdown */
+	header .menu li.edit-menu {
+		position: relative;
+	}
+
+	header .menu li.edit-menu .edit-dropdown {
+		display: none;
+		position: absolute;
+		top: 19px;
+		left: 0;
+		min-width: 200px;
+		background-color: #fff;
+		border: 1px solid #000;
+		border-top: none;
+		padding: 4px 0;
+		z-index: 1000;
+	}
+
+	header .menu li.edit-menu:hover .edit-dropdown {
+		display: block;
+	}
+
+	header .menu li.edit-menu .edit-dropdown a {
+		display: block;
+		padding: 2px 20px;
+		color: #000;
+		text-decoration: none;
+		white-space: nowrap;
+		position: relative;
+		cursor: pointer;
+	}
+
+	header .menu li.edit-menu .edit-dropdown a:hover {
+		background-color: #000;
+		color: #fff;
+	}
+
+	/* Add top padding to body to account for fixed header */
+	body {
+		padding-top: 20px;
+	}
+
+	/***/
+	/* Window styles from system7css */
+	.window{
+		position: relative;
+		border: 1px solid #525252;
+		border-right-width: 2px;
+		border-bottom-width: 2px;
+		background-color: #fff;
+	}
+
+	.window.window-focus{
+		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAARCAMAAAArHTYgAAAAkFBMVEUAAABzc3OEhIS9vb3///8QEBAhISGtra1CQkLGxsbOzs7Ozv/e3t5SUlKlpaWMjIzeAAAAvQDv7+8xY2MxAJycY5ycnP+c//8xMWP//wBjY87/zpwAAN5j/wD/YzExnGPOnGPOzgAA/wCcAGMxMTGlpdb//84x/5wAAO//YwAQAAAAUgD/Y87O////AJzvAADKXxTxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wIVFi03sofQtQAAABNJREFUCNdj4GYQAkJGHFiIQRUADNoA2WlHzfwAAAAASUVORK5CYII=') repeat-x top left #fff;
+		background-size: 1px 17px;
+		border-color: #000;
+	}
+
+	.window>.window-title{
+		display: block;
+		height: 17px;
+		line-height: 17px;
+		text-align: center;
+		padding: 0 6px;
+		border-bottom: 1px solid #000;
+		color: #848484;
+	}
+
+	.window.window-focus>.window-title{
+		border-left: 1px solid #ceceff;
+		border-right: 1px solid #ceceff;
+		color: #000;
+	}
+
+	.window.window-focus>.window-title>span.title{
+		padding: 0 7px;
+		background-color: #efefef;
+	}
+
+	.window.window-focus>.window-title>a{
+		padding: 0 1px;
+		height: 11px;
+		width: 11px;
+		margin-top: 3px;
+		background-color: #efefef;
+		position: relative;
+	}
+
+	.window.window-focus>.window-title>a.btn-close{
+		float: left;
+	}
+
+	.window.window-focus>.window-title>a.btn-close:after{
+		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAMAAACecocUAAAAkFBMVEUAAABzc3OEhIS9vb3///8QEBAhISGtra1CQkLGxsbOzs7Ozv/e3t5SUlKlpaWMjIzeAAAAvQDv7+8xY2MxAJycY5ycnP+c//8xMWP//wBjY87/zpwAAN5j/wD/YzExnGPOnGPOzgAA/wCcAGMxMTGlpdb//84x/5wAAO//YwAQAAAAUgD/Y87O////AJzvAADKXxTxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wIVFjkOwyyP6AAAAB1JREFUCNdjkEAABgluOACy+SBAgppsmFXcyHYBAAI4B5tBJbNQAAAAAElFTkSuQmCC') no-repeat #efefef;
+		display: block;
+		position: absolute;
+		width: 11px;
+		height: 11px;
+		left: 1px;
+		content: " ";
+	}
+
+	.window.window-focus>.window-title>a.btn-maximize{
+		float: right;
+	}
+
+	.window.window-focus>.window-title>a.btn-maximize:after{
+		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAMAAACecocUAAAAkFBMVEUAAABzc3OEhIS9vb3///8QEBAhISGtra1CQkLGxsbOzs7Ozv/e3t5SUlKlpaWMjIzeAAAAvQDv7+8xY2MxAJycY5ycnP+c//8xMWP//wBjY87/zpwAAN5j/wD/YzExnGPOnGPOzgAA/wCcAGMxMTGlpdb//84x/5wAAO//YwAQAAAAUgD/Y87O////AJzvAADKXxTxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wIVFjg4FY0rMAAAACVJREFUCNdjkEAABgluOACy+YBAAoiIZYPNQBLnw8KGWcWNbBcAGe4H9V0Soj8AAAAASUVORK5CYII=') no-repeat #efefef;
+		display: block;
+		position: absolute;
+		width: 11px;
+		height: 11px;
+		left: 1px;
+		content: " ";
+	}
+
+	.window>.window-content{
+		display: block;
+	}
+
+	.board.window > .window-content {
+		padding: 20px;
+	}
+
+	/* Board-specific window titlebar overrides */
+	.board.window.window-focus > .window-title.head > span.title {
+		position: relative;
+		z-index: 1;
+		cursor: pointer;
+	}
+
+	.board.window.window-focus > .window-title.head > span.title > .text {
+		font-weight: bold;
+		font-family: var(--ff);
+		font-size: 10px;
+		border: none;
+		padding: 0;
+		margin: 0;
+		min-height: 0;
+		white-space: normal;
+		overflow: visible;
+		position: relative;
+		top: 1px;
+		cursor: pointer;
+		pointer-events: auto;
+	}
+
+	.board.window.window-focus > .window-title.head > .edit {
+		display: none;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(calc(-50% + 1px), calc(-50% + 1px));
+		min-width: 100px;
+		max-width: calc(100% - 100px);
+		height: 13px;
+		line-height: 13px;
+		font-size: 10px;
+		font-family: var(--ff);
+		font-weight: bold;
+		padding: 2px 7px;
+		border: 1px solid #000;
+		text-align: center;
+		background-color: rgb(204, 204, 251);
+		z-index: 10;
+	}
+
+	.board.window.window-focus > .window-title.head.editing > span.title {
+		visibility: hidden;
+	}
+
+	.board.window.window-focus > .window-title.head.editing > .edit {
+		display: block;
+	}
+
+	.board.window.window-focus > .window-title.head > .edit::placeholder {
+		font-weight: 400;
+		text-transform: uppercase;
+		color: #1489db;
+		opacity: 0.8;
+	}
+
+	/* Override default .board .head styles for window titlebar */
+	.board.window > .window-title.head {
+		background: none !important;
+		padding: 0 6px;
+		margin: 0;
+		border-radius: 0;
+		position: relative;
+	}
+
+	/* Window buttons */
+	.board.window.window-focus > .window-title.head > .btn-close,
+	.board.window.window-focus > .window-title.head > .btn-maximize {
+		pointer-events: none;
+		display: inline-block;
+		position: relative;
+		z-index: 1;
+	}
+
+	.board.window.window-focus > .window-title.head.editing > .btn-close,
+	.board.window.window-focus > .window-title.head.editing > .btn-maximize {
+		display: none;
+	}
+
+	/***/
 	.board {
 		min-width: 240pt;
 
@@ -198,6 +551,13 @@
 		-moz-user-select: none;
 		-ms-user-select: none;
 		user-select: none;
+	}
+
+	/* Ensure board.window keeps window background */
+	.board.window.window-focus {
+		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAARCAMAAAArHTYgAAAAkFBMVEUAAABzc3OEhIS9vb3///8QEBAhISGtra1CQkLGxsbOzs7Ozv/e3t5SUlKlpaWMjIzeAAAAvQDv7+8xY2MxAJycY5ycnP+c//8xMWP//wBjY87/zpwAAN5j/wD/YzExnGPOnGPOzgAA/wCcAGMxMTGlpdb//84x/5wAAO//YwAQAAAAUgD/Y87O////AJzvAADKXxTxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wIVFi03sofQtQAAABNJREFUCNdj4GYQAkJGHFiIQRUADNoA2WlHzfwAAAAASUVORK5CYII=') repeat-x top left #fff;
+		background-size: 1px 17px;
+		padding: 0;
 	}
 
 	.crowded .board {
@@ -225,6 +585,7 @@
 	.board .head .text,
 	.board .head .edit {
 		font-weight: bold;
+		font-size: 10px;
 		padding: 0 5px 2px;
 		border: none;
 	}
@@ -255,41 +616,21 @@
 		outline: 1px solid #8eaedd;
 	}
 
-	.board .menu {
-		position: absolute;
-		top: 0;
-		right: 0;
-		height: 20px;
-		padding: 5px 6px 7px 30px;
-		background: linear-gradient(to right, #EAEDF000, #EAEDF0 10px);
-	}
-
-	.board .menu a,
 	.board .ops  a {
 		color: #000000A0;
 		transition: color 200ms;
 	}
 
-	.board .menu a {
-		padding-left: 10px;
-	}
-
-	.board .menu a:hover,
 	.board .ops  a:hover {
 		color: #000;
 	}
 
-	.board .menu a.warn:hover,
 	.board .ops  a.warn:hover {
 		color: #c40;
 	}
 
-	.board .menu .undo-board,
-	.board .menu .redo-board {
-		display: none;
-	}
-
-	.board .head.editing .menu {
+	header .edit-dropdown .undo-board,
+	header .edit-dropdown .redo-board {
 		display: none;
 	}
 
@@ -299,10 +640,6 @@
 		margin: 0 0 10px;
 		border-radius: 2px;
 		position: relative;
-	}
-
-	.board > .head .menu {
-		margin-right: 5px;
 	}
 
 	/***/
@@ -347,29 +684,6 @@
 
 	.board .list .notes {
 		padding: 0 5px;
-	}
-
-	/***/
-	.board .head .menu .teaser {
-		position: absolute;
-		right: 3px;
-		top: 5px;
-		padding: 0 3px;
-	}
-
-	.board .head .menu .bulk {
-		display: none;
-		opacity: 0;
-		z-index: 1;
-	}
-
-	.board .head .menu:hover .bulk {
-		display: block;
-		opacity: 1;
-	}
-
-	.board .head .menu:hover .teaser {
-		display: none;
 	}
 
 	/***/
@@ -431,6 +745,7 @@
 		padding: 5px 10px 0;
 		margin-right: 15px;
 		min-height: 100%;
+		font-size: 10px;
 	}
 
 	.board .note .text {
@@ -479,6 +794,7 @@
 	.board .note.editing {
 		box-shadow: none;
 		outline: 1px solid #8eaedd;
+		background-color: rgb(204, 204, 251);
 	}
 
 	.board .note.editing .text {
@@ -488,6 +804,7 @@
 	.board .note.editing .edit {
 		display: block;
 		resize: none;
+		background-color: rgb(204, 204, 251);
 	}
 
 	/***/
@@ -570,85 +887,6 @@
 
 	/***/
 
-	/***/
-	.config {
-		position: absolute;
-		top: 10px;
-		right: 21px;
-		z-index: 3;
-		background: #f8f9fb;
-	}
-
-	.crowded .config:hover,
-	.crowded.adjusting .config {
-		background: #fff;
-		box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-	}
-
-	.config a {
-		display: block;
-		color: #000;
-		transition: color 200ms;
-	}
-
-	.config a:hover {
-		color: #1489db;
-	}
-
-	.config .teaser {
-		padding: 5px;
-		color: #999;
-		position: relative;
-	}
-
-	.config .bulk {
-		margin-right: 20px;
-		padding: 5px 0 0 22px;
-		transition: opacity 400ms;
-	}
-
-	.config .bulk .boards {
-		display: none;
-		padding: 6px 2px;
-		margin: 6px -2px;
-		border-top: 1px solid #00000028;
-		border-bottom: 1px solid #00000028;
-	}
-
-	.config .bulk .boards a.load-board {
-		display: block;
-		padding-left: 5px;
-		margin-left: -5px;
-		transition: none;
-	}
-
-	.config .bulk .boards a.load-board.active {
-		color: #1489db;
-	}
-
-	.config .bulk .boards a.load-board.active:before {
-		content: '\2022 ';
-		display: inline-block;
-		width: 13px;
-		margin-left: -13px;
-	}
-
-	.config .bulk .boards a.load-board.active:hover {
-		color: #000;
-	}
-
-	.config .bulk .boards a.load-board.dragging {
-		background: #DDE1E5;
-		border-radius: 2px;
-		color: transparent;
-		transition: none;
-		box-shadow: 0 0 1px #0002 inset;
-	}
-
-	.config .bulk .boards a.load-board.dragging.active:before {
-		content: '';
-	}
-
 	.load-dragster {
 		z-index: 10;
 		position: fixed;
@@ -660,98 +898,6 @@
 		cursor: move;
 		outline: 1px solid #ACB4BC;
 		box-shadow: 0px 1px 3px #00000030;
-	}
-
-	.config .bulk a i,
-	.config .bulk a b {
-		font-style: normal;
-		font-weight: inherit;
-	}
-
-	.config .bulk a i {
-		display: none;
-	}
-
-	.config .bulk .break {
-		padding: 6px 2px 0;
-		margin: 6px -2px 0;
-		border-top: 1px solid #00000028;
-	}
-
-	/***/
-	.config .bulk input.imp-board-select {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		visibility: hidden;
-	}
-
-	/***/
-
-	.config .bulk .section .title {
-		text-align: center;
-		width: 0;
-		display: inline-block;
-		white-space: pre;
-		transition: width 250ms, padding 250ms;
-	}
-
-	.config .bulk .section .title u {
-		text-decoration: none;
-		transition: opacity 100ms;
-	}
-
-	.config .bulk .section .details {
-		height: 0;
-		opacity: 0;
-		transition: opacity 250ms;
-		padding-right: 8px;
-		margin-right: -8px;
-	}
-
-	/***/
-	.config .bulk .section.open {
-		padding-bottom: 8px;
-		border-bottom: 1px solid #00000028;
-	}
-
-	.crowded .config .bulk .section.open {
-		border-bottom: none;
-	}
-
-	.config .bulk .section.open .title {
-		width: 100%;
-		font-weight: bold;
-		padding-left: 5px;
-		transition: width 250ms, padding 250ms;
-	}
-
-	.config .bulk .section.open .title u {
-		opacity: 0;
-		transition: opacity 100ms;
-	}
-
-	.config .bulk .section.open .details {
-		height: 100%;
-		opacity: 1;
-		transition: opacity 250ms;
-	}
-
-	/***/
-	.config .bulk {
-		display: none;
-		opacity: 0;
-	}
-
-	.config:hover .teaser,
-	.adjusting .config .teaser {
-		display: none;
-	}
-
-	.config:hover .bulk,
-	.adjusting .config .bulk {
-		display: block;
-		opacity: 1;
 	}
 
 	/***/
@@ -834,7 +980,6 @@
 	/***/
 
 	@media print {
-		.config,
 		.board .head .teaser,
 		.list .head .teaser {
 			visibility: hidden;
@@ -867,21 +1012,39 @@
 
 </head>
 <body>
-	<div class='config no-user-select'>
-		<a href=# class=teaser>&equiv;</a>
-		<div class=bulk>
-			<a href=# class=add-board>Add new board...</a>
-
-			<div class=boards draggable=false>
-				<!-- here'll be boards -->
-			</div>
-
-			<a href=# class=exp-board>Export current board...</a>
-			<a href=# class=imp-board>Import boards...</a>
-				<input class=imp-board-select type="file" accept=".nbx">
-
+	<header>
+		<div class="container">
+			<nav class="menu">
+				<ul>
+					<li><a href="#"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wIQEiomp6E+bgAAAHdJREFUOMvtkssRgCAMRF8cK6EVS5GybIVWaCVe9CDgJP5GD+6NTHhk2cBrSigJ/RBohRkS1+Vh6WvVTJjXTgGsYKoOO9Ieorsz7L6qxPOwU5Np2P6KynvGv0sBIwAAZXIBhSiPBbC/tGRjuiAH38q6hZbnX1c1Ax//IvZpwr+QAAAAAElFTkSuQmCC" class="icon" alt=""/></a></li>
+					<li class="file-menu">
+						<a href="#">File</a>
+						<div class="file-dropdown">
+							<a href=# class=add-board>Add new board...</a>
+							<a href=# class='exp-board'>Export board...</a>
+							<a href=# class='imp-board'>Import boards...</a>
+							<input class=imp-board-select type="file" accept=".nbx" style="display: none;">
+						</div>
+					</li>
+					<li class="edit-menu">
+						<a href="#">Edit</a>
+						<div class="edit-dropdown">
+							<a href=# class='del-board'>Delete Board</a>
+							<a href=# class='undo-board'>Undo</a>
+							<a href=# class='redo-board'>Redo</a>
+							<a href=# class='add-list'>Add List</a>
+						</div>
+					</li>
+					<li class="windows-menu">
+						<a href="#">Windows</a>
+						<div class="boards-dropdown">
+							<!-- boards will be populated here -->
+						</div>
+					</li>
+				</ul>
+			</nav>
 		</div>
-	</div>
+	</header>
 	</div>
 
 	<div class=wrap>
@@ -892,22 +1055,15 @@
 
 	<tt>
 		<!-- templates -->
-		<div class=board>
-			<div class=head>
-				<div class=text></div>
-				<input class=edit spellcheck=false placeholder='Name of the board'>
-				<div class=menu>
-					<a href=# class=teaser>&equiv;</a>
-					<div class=bulk>
-						<a href=# class='del-board warn'><u></u> Board</a>
-						<a href=# class='undo-board'>Undo</a>
-						<a href=# class='redo-board'>Redo</a>
-						<a href=# class='add-list'>+ List</a>
-					</div>
-				</div>
+		<div class="board window window-focus">
+			<div class="window-title head">
+				<span class="title"><span class="text board-title-display"></span></span>
+				<input class="edit" spellcheck=false placeholder='Name of the board'>
 			</div>
-			<div class=lists-scroller><div></div></div>
-			<div class=lists>
+			<div class="window-content">
+				<div class=lists-scroller><div></div></div>
+				<div class=lists>
+				</div>
 			</div>
 		</div>
 
@@ -2050,24 +2206,9 @@
 	{
 		var board_id = NB.board.id;
 
-		var $bulk = $('.wrap .board > .head .menu .bulk');
-		var via_menu = $bulk.length && $bulk[0].offsetWidth > 0 && $bulk[0].offsetHeight > 0;
-
 		NB.storage.setBoardRevision(board_id, revision);
 
 		openBoard(board_id);
-
-		if (via_menu)
-		{
-			var $menu = $('.wrap .board > .head .menu');
-			var $teaser = $menu.find('.teaser');
-			var $bulk = $menu.find('.bulk');
-
-			$teaser.hide();
-			setTimeout(function(){ $teaser.css('display', ''); }, 100);
-			$bulk.show();
-			setTimeout(function(){ $bulk.css('display', ''); }, 100);
-		}
 	}
 
 	function closeBoard(quick)
@@ -2463,7 +2604,7 @@
 	 */
 	function saveBoardOrder()
 	{
-		var $index = $('.config .load-board');
+		var $index = $('.boards-dropdown .load-board');
 		var spot = 1;
 
 		$index.each(function(){
@@ -2490,8 +2631,8 @@
 
 	function updateUndoRedo()
 	{
-		var $undo = $('.board .menu .undo-board');
-		var $redo = $('.board .menu .redo-board');
+		var $undo = $('header .undo-board');
+		var $redo = $('header .redo-board');
 
 		var undo = false;
 		var redo = false;
@@ -2511,8 +2652,8 @@
 
 	function updateBoardIndex()
 	{
-		var $index  = $('.config .boards');
-		var $export = $('.config .exp-board');
+		var $index  = $('.boards-dropdown');
+		var $export = $('header .exp-board');
 		var $entry  = $('tt .load-board');
 
 		var $board = $('.wrap .board');
@@ -2520,7 +2661,6 @@
 		var empty = true;
 
 		$index.html('');
-		$index.hide();
 
 		var boards = NB.storage.getBoardIndex();
 		var index = [];
@@ -2551,8 +2691,6 @@
 		{
 			$export.hide();
 		}
-
-		if (! empty) $index.show();
 	}
 
 
@@ -2894,7 +3032,7 @@
 		}
 
 		NB.loadDrag = new Drag2();
-		NB.loadDrag.listSel = '.config .boards';
+		NB.loadDrag.listSel = '.boards-dropdown';
 		NB.loadDrag.itemSel = 'a.load-board';
 		NB.loadDrag.dragster = 'load-dragster';
 		NB.loadDrag.onDragging = function(started)
@@ -2905,16 +3043,10 @@
 			{
 				var $drag = drag.$drag;
 
-				$('.config .teaser').css({ display: 'none' });
-				$('.config .bulk').css({ display: 'block', opacity: 1 });
 				$drag.html( $(this.item).html() );
 			}
 			else
 			{
-				$('.config .teaser').css({ display: '' });
-				var $bulk = $('.config .bulk');
-				$bulk.show();
-				setTimeout(function(){ $bulk.css({ display: '', opacity: '' }); }, 250);
 				saveBoardOrder();
 			}
 		}
@@ -2954,6 +3086,98 @@
 
 		startEditing($(this), ev);
 		return false;
+	});
+
+	// Special handler for board title in window titlebar
+	$('.wrap').on('click', '.board .window-title.head .text', function(ev){
+		var $head = $(this).closest('.window-title.head');
+		var $edit = $head.find('.edit');
+		var $text = $(this);
+		var $titleSpan = $head.find('span.title');
+
+		$edit.val( getText($text) );
+
+		// Match the width of the gray title area (span.title)
+		// span.title has padding: 0 7px (14px total)
+		// edit input has padding: 2px 7px (14px) + border: 1px (2px) = 16px total
+		// .width() sets content width, so subtract edit padding+border from span outerWidth
+		var titleWidth = $titleSpan.outerWidth() - 16;
+		$edit.width(titleWidth);
+
+		$head.addClass('editing');
+
+		if ($edit.length) $edit[0].focus();
+
+		return false;
+	});
+
+	// Board title edit keydown handler
+	$('.wrap').on('keydown', '.board .window-title.head .edit', function(ev){
+		var $this = $(this);
+		var $head = $this.closest('.window-title.head');
+
+		// Enter or Escape to finish editing
+		if (ev.keyCode == 13 || ev.keyCode == 27)
+		{
+			var $text = $head.find('.text');
+			var text_now = $this.val().trimRight();
+
+			if (ev.keyCode == 13 && text_now)
+			{
+				setText($text, text_now);
+				if (NB.board) NB.board.title = text_now;
+				saveBoard();
+				updateBoardIndex();
+			}
+
+			$head.removeClass('editing');
+			return false;
+		}
+	});
+
+	// Board title edit blur handler
+	$('.wrap').on('blur', '.board .window-title.head .edit', function(ev){
+		var $this = $(this);
+		var $head = $this.closest('.window-title.head');
+		var $text = $head.find('.text');
+		var text_now = $this.val().trimRight();
+
+		if (text_now)
+		{
+			setText($text, text_now);
+			if (NB.board) NB.board.title = text_now;
+			saveBoard();
+			updateBoardIndex();
+		}
+
+		$head.removeClass('editing');
+	});
+
+	// Board title edit input handler - resize as typing
+	$('.wrap').on('input', '.board .window-title.head .edit', function(){
+		var $this = $(this);
+		var $head = $this.closest('.window-title.head');
+
+		// Calculate what span.title width would be with this text
+		// span.title has padding: 0 7px
+		var tempSpan = $('<span>').css({
+			'font-size': '10px',
+			'font-family': $this.css('font-family'),
+			'font-weight': 'bold',
+			'padding': '0 7px',
+			'visibility': 'hidden',
+			'position': 'absolute',
+			'white-space': 'nowrap'
+		}).text($this.val() || 'A').appendTo('body');
+
+		// Get the outerWidth (includes padding) and subtract edit input's padding+border
+		var titleOuterWidth = tempSpan.outerWidth();
+		tempSpan.remove();
+
+		var contentWidth = titleOuterWidth - 16; // Subtract edit input's padding (14px) + border (2px)
+		var maxWidth = $head.width() - 100; // Leave room for buttons
+
+		$this.width(Math.max(100, Math.min(contentWidth, maxWidth)));
 	});
 
 	$('.wrap').on('click', '.board .note .text a', function(ev){
@@ -3073,12 +3297,13 @@
 	});
 
 	//
-	$('.config').on('click', '.add-board', function(){
+	$('header').on('click', '.add-board', function(){
 		addBoard();
 		return false;
 	});
 
-	$('.config').on('click', '.load-board', function(){
+	// Click handler for Windows menu dropdown
+	$('header').on('click', '.load-board', function(){
 
 		var board_id = parseInt( $(this).attr('board_id') );
 
@@ -3092,23 +3317,23 @@
 		return false;
 	});
 
-	$('.wrap').on('click', '.board .del-board', function(){
+	$('header').on('click', '.del-board', function(){
 		deleteBoard();
 		return false;
 	});
 
-	$('.wrap').on('click', '.board .undo-board', function(){
+	$('header').on('click', '.undo-board', function(){
 		undoBoard();
 		return false;
 	});
 
-	$('.wrap').on('click', '.board .redo-board', function(){
+	$('header').on('click', '.redo-board', function(){
 		redoBoard();
 		return false;
 	});
 
 	//
-	$('.wrap').on('click', '.board .add-list', function(){
+	$('header').on('click', '.add-list', function(){
 		addList();
 		return false;
 	});
@@ -3147,8 +3372,9 @@
 		NB.noteDrag.prime(this.parentNode, ev);
 	});
 
-	$('.config').on('mousedown', 'a.load-board', function(ev){
-		if ($('.config a.load-board').length > 1)
+	// Mousedown handler for Windows menu dropdown
+	$('header').on('mousedown', 'a.load-board', function(ev){
+		if ($('header a.load-board').length > 1)
 			NB.loadDrag.prime(this, ev);
 	});
 
@@ -3166,12 +3392,12 @@
 	});
 
 	//
-	$('.config .imp-board').on('click', function(ev){
-		$('.config .imp-board-select')[0].click();
+	$('header .imp-board').on('click', function(ev){
+		$('header .imp-board-select')[0].click();
 		return false;
 	});
 
-	$('.config .imp-board-select').on('change' , function(){
+	$('header .imp-board-select').on('change' , function(){
 		var files = this.files;
 		var reader = new FileReader();
 		reader.onload = function(ev){ importBoard(ev.target.result); };
@@ -3179,17 +3405,11 @@
 		return true;
 	});
 
-	$('.config .exp-board').on('click', function(){
+	$('header .exp-board').on('click', function(){
 		var pack = exportBoard();
 		$(this).attr('href', pack.blob);
 		$(this).attr('download', pack.file);
 		return true;
-	});
-
-	//
-	$('.config .section .title').on('click', function(){
-		$(this).closest('.section').toggleClass('open');
-		return false;
 	});
 
 	//
@@ -3277,7 +3497,7 @@
 	NB.storage.setVerLast();
 
 	//
-	if (! NB.board && ! $('.config .load-board').length)
+	if (! NB.board && ! $('.boards-dropdown .load-board').length)
 		NB.board = createDemoBoard();
 
 	if (NB.board)
