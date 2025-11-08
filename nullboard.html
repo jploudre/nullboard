@@ -165,7 +165,8 @@
 	.lists:after,
 	.notes:after,
 	.head:after,
-	.menu:after {
+	.board .menu:after,
+	.list .menu:after {
 		content: "";
 		display: table;
 		clear: both;
@@ -687,6 +688,44 @@
 	}
 
 	/***/
+	/* List head menu */
+	.board .list .head .menu {
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 20px;
+		padding: 5px 6px 7px 30px;
+		background: linear-gradient(to right, #EAEDF000, #EAEDF0 10px);
+		font-size: 10px;
+	}
+
+	.board .list .head .menu .teaser {
+		position: absolute;
+		right: 3px;
+		top: 5px;
+		padding: 0 3px;
+	}
+
+	.board .list .head .menu .bulk {
+		display: none;
+		opacity: 0;
+		z-index: 1;
+	}
+
+	.board .list .head .menu:hover .bulk {
+		display: block;
+		opacity: 1;
+	}
+
+	.board .list .head .menu:hover .teaser {
+		display: none;
+	}
+
+	.board .list .head.editing .menu {
+		display: none;
+	}
+
+	/***/
 	.board .list .menu .mov-list-r.half {
 		padding-left: 0;
 	}
@@ -871,6 +910,7 @@
 		white-space: pre-wrap;
 		cursor: move;
 		font-weight: 400;
+		font-size: 10px;
 
 		padding: 5px 25px 6px 10px;
 
@@ -896,6 +936,7 @@
 		color: #000;
 		border-radius: 2px;
 		cursor: move;
+		font-size: 10px;
 		outline: 1px solid #ACB4BC;
 		box-shadow: 0px 1px 3px #00000030;
 	}
@@ -1045,7 +1086,6 @@
 			</nav>
 		</div>
 	</header>
-	</div>
 
 	<div class=wrap>
 	</div>
