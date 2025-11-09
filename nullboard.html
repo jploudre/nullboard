@@ -2623,16 +2623,6 @@
 	/*
 	 *	generic utils
 	 */
-	function jsonMatch(a, b)
-	{
-		return JSON.stringify(a) == JSON.stringify(b);
-	}
-
-	function jsonClone(x)
-	{
-		return JSON.parse(JSON.stringify(x));
-	}
-
 	function htmlEncode(raw)
 	{
 		// Use vanilla JS instead of jQuery hack
@@ -2764,14 +2754,6 @@
 	}
 
 	// setRevealState removed - Ctrl/CapsLock reveal functionality disabled
-
-	//
-	function showDing()
-	{
-		var $body = $('body');
-		$body.addClass('ding');
-		setTimeout(function(){ $body.removeClass('ding'); }, 250);
-	}
 
 	/*
 	 *	adjust this and that
@@ -2914,21 +2896,6 @@
 			}
 		}
 	}
-
-	//
-	function getVar(name)
-	{
-		var v = $('html').css(name);
-		var m = v.match(/^\s*calc\((.*)\)$/);
-		if (m) v = eval(m[1]);
-		return parseFloat( v );
-	}
-
-	function updateVarsAndLayout()
-	{
-		adjustLayout();
-	}
-
 
 	/*
 	 *	event handlers
