@@ -55,12 +55,6 @@
 	}
 
 	/***/
-	@keyframes shake {
-		33%  { margin-left: -5px; }
-		66%  { margin-left:  5px; }
-		100% { margin-left:  0px; }
-	}
-
 	/* CSS transitions to replace jQuery .animate() */
 	.drag-swap-transition {
 		position: relative;
@@ -82,19 +76,6 @@
 		opacity: 0;
 	}
 
-	.control-shake {
-		position: relative;
-		animation: control-shake-anim 240ms;
-	}
-
-	@keyframes control-shake-anim {
-		0%   { left: 0px; }
-		25%  { left: 4px; }
-		50%  { left: -3px; }
-		75%  { left: 2px; }
-		100% { left: 0px; }
-	}
-
 	a {
 		text-decoration: none;
 		transition: color 200ms;
@@ -109,11 +90,6 @@
 	}
 
 	/***/
-	.ding {
-		animation-name: shake;
-		animation-duration: 200ms;
-	}
-
 	.no-user-select {
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
@@ -764,29 +740,6 @@
 		color: inherit;
 		cursor: default;
 		transition: none;
-	}
-
-	@keyframes whoomp {
-		0%   { color: inherit; }
-		30%  { color: #888;    }
-		100% { color: inherit; }
-	}
-
-	.board .head .text a:hover,
-	.board .note .text a:hover {
-		animation-name: whoomp;
-		animation-duration: 700ms;
-	}
-
-	.reveal .board .head .text a,
-	.reveal .board .note .text a {
-		color: #1489db;
-		cursor: pointer;
-	}
-
-	.reveal .board .head .text a:hover,
-	.reveal .board .note .text a:hover {
-		animation-name: none;
 	}
 
 	/***/
@@ -2665,18 +2618,6 @@
 		else if (document.selection) { document.selection.empty(); }
 	}
 
-	function shakeControl($x)
-	{
-		// Use CSS animation instead of jQuery .animate() chain
-		if ($x.length) $x[0].focus();
-		$x.addClass('control-shake');
-
-		// Remove class after animation completes (240ms total)
-		setTimeout(function(){
-			$x.removeClass('control-shake');
-		}, 240);
-	}
-
 	/*
 	 *	inline editing
 	 */
@@ -3008,15 +2949,6 @@
 		var maxWidth = $head.width() - 100; // Leave room for buttons
 
 		$this.width(Math.max(100, Math.min(contentWidth, maxWidth)));
-	});
-
-	$('.wrap').on('click', '.board .note .text a', function(ev){
-
-		if (! $('body').hasClass('reveal'))
-			return true;
-
-		ev.stopPropagation();
-		return true;
 	});
 
 	//
