@@ -15,6 +15,7 @@
 		this.mouseEv = null;
 		this.delta   = { x: 0, y: 0 };
 		this.inSwap  = 0;
+		this.swapped = false;
 
 		// api
 		this.prime = function(item, ev)
@@ -22,6 +23,7 @@
 			var self = this;
 
 			this.item = item;
+			this.swapped = false;
 			this.priming = setTimeout(function(){ self.onPrimed.call(self); }, ev.altKey ? 1 : 500);
 			this.primeXY = { x: ev.clientX, y: ev.clientY };
 			this.mouseEv = ev;
@@ -187,6 +189,9 @@
 
 			$want.css({ display: 'none' });
 
+			// Mark that a swap is happening
+			drag.swapped = true;
+
 			if (targetItem)
 			{
 				if (before)
@@ -325,30 +330,57 @@
 		}
 
 		this.stopDragging = function()
+	{
+		var $item = $(this.item);
+
+		$item.removeClass('dragging');
+		$('body').removeClass('dragging');
+
+		if (this.$drag)
 		{
-			var $item = $(this.item);
+			this.$drag.remove();
+			this.$drag = null;
 
-			$item.removeClass('dragging');
-			$('body').removeClass('dragging');
+			removeTextSelection();
 
-			if (this.$drag)
-			{
-				this.$drag.remove();
-				this.$drag = null;
-
-				removeTextSelection();
-
-				if (this.onDragging)
-					this.onDragging.call(this, false); // stopped
-
-				// Play drag end sound
-				var audioPopr = document.getElementById('soundPopr');
-				if (audioPopr) {
-					audioPopr.currentTime = 0;
-					audioPopr.play().catch(function() {});
-				}
-			}
-
-			this.item = null;
+			if (this.onDragging)
+				this.onDragging.call(this, false); // stopped
 		}
+
+		// Play drag end sound only if a swap actually occurred
+		if (this.swapped) {
+			var audioPopr = document.getElementById('soundPopr');
+			if (audioPopr && audioPopr.readyState >= 2) {
+				// Clean up any previous clone to prevent accumulation
+				if (Drag2.lastAudioClone) {
+					Drag2.lastAudioClone.pause();
+					Drag2.lastAudioClone = null;
+				}
+				// Create a fresh clone for this drop
+				var audioClone = audioPopr.cloneNode(true);
+				audioClone.currentTime = 0;
+				Drag2.lastAudioClone = audioClone;
+				// Clean up reference after audio finishes
+				audioClone.addEventListener('ended', function() {
+					Drag2.lastAudioClone = null;
+				}, { once: true });
+				// Also cleanup if audio duration is exceeded (safety timeout)
+				setTimeout(function() {
+					if (Drag2.lastAudioClone === audioClone) {
+						Drag2.lastAudioClone = null;
+					}
+				}, 500);
+				// Attempt to play
+				audioClone.play().catch(function(err) {
+					console.warn('Failed to play drop sound:', err);
+					Drag2.lastAudioClone = null;
+				});
+			}
+		}
+
+		this.item = null;
 	}
+}
+
+// Static reference for audio clone management (shared across all Drag2 instances)
+Drag2.lastAudioClone = null;
