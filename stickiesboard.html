@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stickies Board</title>
+  <!-- Version: Sticky Notes with Colors - Updated 2025-01-09 -->
   <style>
 
   @font-face {
@@ -305,6 +306,94 @@
 	header .menu li.edit-menu .edit-dropdown a:hover {
 		background-color: #000;
 		color: #fff;
+	}
+
+	/* Color menu dropdown */
+	header .menu li.color-menu {
+		position: relative;
+	}
+
+	header .menu li.color-menu .color-dropdown {
+		display: none;
+		position: absolute;
+		top: 19px;
+		left: 0;
+		min-width: 200px;
+		background-color: #fff;
+		border: 1px solid #000;
+		border-top: none;
+		padding: 4px 0;
+		z-index: 1000;
+	}
+
+	header .menu li.color-menu:hover .color-dropdown {
+		display: block;
+	}
+
+	/* Don't show dropdown when disabled */
+	header .menu li.color-menu.disabled:hover .color-dropdown {
+		display: none;
+	}
+
+	header .menu li.color-menu .color-dropdown a {
+		display: block;
+		padding: 2px 20px;
+		color: #000;
+		text-decoration: none;
+		white-space: nowrap;
+		position: relative;
+		cursor: pointer;
+	}
+
+	header .menu li.color-menu .color-dropdown a:hover {
+		background-color: #000;
+		color: #fff;
+	}
+
+	header .menu li.color-menu .color-dropdown a.active:before {
+		content: '\2713 ';
+		position: absolute;
+		left: 7px;
+	}
+
+	/* Color swatches in menu */
+	.color-swatch {
+		display: inline-block;
+		width: 19px;
+		height: 12px;
+		margin-right: 8px;
+		vertical-align: middle;
+		border: 1px solid;
+	}
+
+	.color-swatch[data-color='yellow'] {
+		background-color: #ffffb4;
+		border-color: #ffda03;
+	}
+
+	.color-swatch[data-color='blue'] {
+		background-color: #b2ffff;
+		border-color: #00daff;
+	}
+
+	.color-swatch[data-color='green'] {
+		background-color: #daffda;
+		border-color: #87ff87;
+	}
+
+	.color-swatch[data-color='pink'] {
+		background-color: #fbe0e0;
+		border-color: #ffb3b3;
+	}
+
+	.color-swatch[data-color='purple'] {
+		background-color: #dadaff;
+		border-color: #b3b3fe;
+	}
+
+	.color-swatch[data-color='gray'] {
+		background-color: #f3f3f3;
+		border-color: #cdcdcd;
 	}
 
 	/* Add top padding to body to account for fixed header */
@@ -690,16 +779,74 @@
 	}
 
 	/***/
+	/* Sticky note color variables - shared by notes and dragster */
+	.board .note-yellow,
+	.note-dragster.note-yellow { --pale-color: #ffffb4; --dark-color: #ffda03; }
+
+	.board .note-blue,
+	.note-dragster.note-blue { --pale-color: #b2ffff; --dark-color: #00daff; }
+
+	.board .note-green,
+	.note-dragster.note-green { --pale-color: #daffda; --dark-color: #87ff87; }
+
+	.board .note-pink,
+	.note-dragster.note-pink { --pale-color: #fbe0e0; --dark-color: #ffb3b3; }
+
+	.board .note-purple,
+	.note-dragster.note-purple { --pale-color: #dadaff; --dark-color: #b3b3fe; }
+
+	.board .note-gray,
+	.note-dragster.note-gray { --pale-color: #f3f3f3; --dark-color: #cdcdcd; }
+
 	.board .note {
-		background: #fff;
+		background: var(--pale-color, #fff);
 		margin-top: 5px;
-		box-shadow: 0 1px 2px #bbb, 0 0 1px #ddd;
+		box-shadow: none;
 		position: relative;
+		border-top: 1px solid white;
+		border-left: 1px solid white;
+		border-bottom: 1px solid var(--dark-color, #bbb);
+		border-right: 1px solid var(--dark-color, #bbb);
+	}
+
+	/* Titlebar styling */
+	.board .note .titlebar {
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 9px;
+		pointer-events: auto;
+		z-index: 1;
+	}
+
+	.board .note.selected .titlebar,
+	.board .note.editing .titlebar {
+		display: block;
+	}
+
+	/* Checkerboard pattern for titlebar - shared by selected/editing notes and dragster */
+	.board .note.selected .titlebar,
+	.board .note.editing .titlebar,
+	.note-dragster .titlebar {
+		background-image:
+			linear-gradient(45deg, var(--dark-color) 25%, transparent 25%, transparent 75%, var(--dark-color) 75%),
+			linear-gradient(45deg, var(--dark-color) 25%, transparent 25%, transparent 75%, var(--dark-color) 75%);
+		background-size: 2px 2px;
+		background-position: 0 0, 1px 1px;
+		background-color: var(--pale-color);
+	}
+
+	/* Selected/Editing state - dark borders all around */
+	.board .note.selected,
+	.board .note.editing {
+		border: 1px solid var(--dark-color, #757575);
 	}
 
 	.board .note.dragging,
 	.board .note.dragging.raw {
-		background: #CED4DA;
+		background: var(--pale-color, #CED4DA);
 		box-shadow: 0 +1px 0 #0001 inset,
 		            0 -1px 0 #0001 inset,
 		            +1px 0 0 #0001 inset,
@@ -721,8 +868,8 @@
 
 	.board .note .text,
 	.board .note .edit {
-		padding: 5px 10px 0;
-		margin-right: 15px;
+		padding: 10px 8px 0;  /* Adjusted spacing to match target */
+		margin-right: 12px;
 		min-height: 100%;
 		font-size: 10px;
 		font-family: 'Espy Sans Revived Nine';
@@ -748,12 +895,6 @@
 		border: none;
 	}
 
-	.board .note.editing {
-		box-shadow: none;
-		outline: 1px solid #8eaedd;
-		background-color: rgb(204, 204, 251);
-	}
-
 	.board .note.editing .text {
 		display: none;
 	}
@@ -761,7 +902,7 @@
 	.board .note.editing .edit {
 		display: block;
 		resize: none;
-		background-color: rgb(204, 204, 251);
+		background-color: var(--pale-color, #fff);
 	}
 
 	/***/
@@ -824,19 +965,26 @@
 		z-index: 2;
 		position: fixed;
 		opacity: 0;
-		background: #fff;
+		background: var(--pale-color, #fff);
 		white-space: pre-wrap;
 		cursor: move;
 		font-weight: 400;
 		font-size: 10px;
+		font-family: 'Espy Sans Revived Nine';
+		padding-bottom: 6px;
 
-		padding: 5px 25px 6px 10px;
+		border: 1px solid var(--dark-color, #757575);
+		box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+	}
 
-		box-shadow: 0 +1px 0 #ACB4BC inset,
-		            0 -1px 0 #ACB4BC inset,
-		            +1px 0 0 #ACB4BC inset,
-		            -1px 0 0 #ACB4BC inset,
-		            0px 1px 3px #00000030;
+	.note-dragster .titlebar {
+		display: block;
+		height: 9px;
+	}
+
+	.note-dragster .text {
+		padding: 14px 10px 0;
+		margin-right: 15px;
 	}
 
 	.note-dragster a {
@@ -928,6 +1076,17 @@
 							<a href=# class='add-list'>Add List</a>
 						</div>
 					</li>
+					<li class="color-menu">
+						<a href="#">Color</a>
+						<div class="color-dropdown">
+							<a href=# class='set-color' data-color='yellow'><span class='color-swatch' data-color='yellow'></span>Yellow</a>
+							<a href=# class='set-color' data-color='blue'><span class='color-swatch' data-color='blue'></span>Blue</a>
+							<a href=# class='set-color' data-color='green'><span class='color-swatch' data-color='green'></span>Green</a>
+							<a href=# class='set-color' data-color='pink'><span class='color-swatch' data-color='pink'></span>Pink</a>
+							<a href=# class='set-color' data-color='purple'><span class='color-swatch' data-color='purple'></span>Purple</a>
+							<a href=# class='set-color' data-color='gray'><span class='color-swatch' data-color='gray'></span>Gray</a>
+						</div>
+					</li>
 					<li class="windows-menu">
 						<a href="#">Windows</a>
 						<div class="boards-dropdown">
@@ -976,6 +1135,7 @@
 		</div>
 
 		<div class=note>
+			<div class=titlebar></div>
 			<div class=ops>
 				<a href=# class=teaser></a>
 				<div class=bulk>
@@ -1509,9 +1669,10 @@
 
 <script type="text/javascript">
 
-	function Note(text)
+	function Note(text, color)
 	{
 		this.text = text;
+		this.color = color || 'gray';
 	}
 
 	function List(title)
@@ -1519,9 +1680,9 @@
 		this.title = title;
 		this.notes = [ ];
 
-		this.addNote = function(text)
+		this.addNote = function(text, color)
 		{
-			var x = new Note(text);
+			var x = new Note(text, color);
 			this.notes.push(x);
 			return x;
 		}
@@ -2158,8 +2319,17 @@
 			var l = board.addList( getText($list.find('.head .text')) );
 
 			$list.find('.note').each(function(){
-				var $note = $(this)
-				var n = l.addNote( getText($note.find('.text')) );
+				var $note = $(this);
+				var text = getText($note.find('.text'));
+
+				// Extract color from note class
+				var color = 'gray';
+				var colorClass = $note.attr('class').match(/\bnote-(yellow|blue|green|pink|purple|gray)\b/);
+				if (colorClass) {
+					color = colorClass[1];
+				}
+
+				var n = l.addNote(text, color);
 			});
 		});
 
@@ -2262,6 +2432,9 @@
 			list.notes.forEach(function(n){
 				var $n = $ndiv.clone();
 				setText( $n.find('.text'), n.text );
+				// Apply note color
+				var color = n.color || 'gray';
+				$n.addClass('note-' + color);
 				$l_notes.append($n);
 			});
 
@@ -2805,8 +2978,14 @@
 			{
 				var $drag = drag.$drag;
 
-				$drag.html('<div class=text></div>');
+				$drag.html('<div class=titlebar></div><div class=text></div>');
 				$drag.find('.text').html( $note.find('.text').html() );
+
+				// Copy color class from note to dragster
+				var colorClass = $note.attr('class').match(/\bnote-(yellow|blue|green|pink|purple|gray)\b/);
+				if (colorClass) {
+					$drag.addClass(colorClass[0]);
+				}
 
 				drag.org_loc = noteLocation($note);
 			}
@@ -2839,6 +3018,30 @@
 	}
 
 	/*
+	 *	Initialize NB object
+	 */
+	var NB =
+	{
+		codeVersion: 20231105,
+		blobVersion: 20190412, // board blob format in Storage
+		board: null,
+		storage: null,
+		selectedNote: null,
+
+		peek: function(name)
+		{
+			return this.storage.getConfig()[name];
+		},
+
+		poke: function(name, val)
+		{
+			var conf = this.storage.getConfig();
+			conf[name] = val;
+			return this.storage.saveConfig();
+		}
+	};
+
+	/*
 	 *	event handlers
 	 */
 	// Window blur handler removed - reveal functionality disabled
@@ -2854,6 +3057,13 @@
 		}
 
 		NB.noteDrag.cancelPriming();
+
+		// Select this note and enable color menu
+		var $note = $(this).closest('.note');
+		$('.board .note').removeClass('selected');
+		$note.addClass('selected');
+		NB.selectedNote = $note[0];
+		$('.color-menu').removeClass('disabled');
 
 		startEditing($(this), ev);
 		return false;
@@ -3095,6 +3305,60 @@
 	});
 
 	//
+	// Color menu handler
+	//
+	$('header').on('click', '.set-color', function(){
+		// Don't do anything if color menu is disabled
+		if ($('.color-menu').hasClass('disabled')) {
+			return false;
+		}
+
+		var color = $(this).data('color');
+		var $note = $(NB.selectedNote);
+
+		if (!$note.length) {
+			return false;
+		}
+
+		// Remove all color classes
+		$note.removeClass('note-yellow note-blue note-green note-pink note-purple note-gray');
+
+		// Add new color class
+		$note.addClass('note-' + color);
+
+		// Update the note data model
+		var list_index = $note.closest('.list').index();
+		var note_index = $note.index();
+		if (NB.board.lists[list_index] && NB.board.lists[list_index].notes[note_index]) {
+			NB.board.lists[list_index].notes[note_index].color = color;
+			saveBoard();
+		}
+
+		return false;
+	});
+
+	// Update color menu checkmarks when hovering over Color menu
+	$('header').on('mouseenter', '.color-menu', function(){
+		$('.color-dropdown a').removeClass('active');
+
+		if (NB.selectedNote) {
+			var $note = $(NB.selectedNote);
+			var currentColor = 'gray';
+
+			// Extract color from class
+			var classes = $note.attr('class').split(' ');
+			for (var i = 0; i < classes.length; i++) {
+				if (classes[i].match(/^note-/)) {
+					currentColor = classes[i].replace('note-', '');
+					break;
+				}
+			}
+
+			$('.color-dropdown a[data-color="' + currentColor + '"]').addClass('active');
+		}
+	});
+
+	//
 	$('header').on('click', '.add-list', function(){
 		addList();
 		return false;
@@ -3126,11 +3390,51 @@
 		return false;
 	});
 
+	//
+	// Note selection management
+	//
+
+	// Select note when clicking on it (not on text)
+	$('.wrap').on('click', '.board .note', function(ev){
+		// Don't select if clicking on text (text handler will manage)
+		if ($(ev.target).closest('.text').length)
+			return;
+
+		// Deselect all notes
+		$('.board .note').removeClass('selected');
+
+		// Select this note
+		$(this).addClass('selected');
+		NB.selectedNote = this;
+
+		// Enable color menu
+		$('.color-menu').removeClass('disabled');
+
+		return false;
+	});
+
+	// Deselect when clicking outside notes (but not on header/menus)
+	$('.wrap').on('click', function(ev){
+		if (!$(ev.target).closest('.note').length && !$(ev.target).closest('header').length) {
+			$('.board .note').removeClass('selected');
+			NB.selectedNote = null;
+
+			// Disable color menu
+			$('.color-menu').addClass('disabled');
+		}
+	});
+
 	// Raw note toggle removed
 	// Collapse toggle removed
 
 	//
-	$('.wrap').on('mousedown', '.board .note .text', function(ev){
+	// Drag from anywhere when NOT editing
+	$('.wrap').on('mousedown', '.board .note:not(.editing) .text', function(ev){
+		NB.noteDrag.prime(this.parentNode, ev);
+	});
+
+	// Drag from titlebar only when editing
+	$('.wrap').on('mousedown', '.board .note.editing .titlebar', function(ev){
 		NB.noteDrag.prime(this.parentNode, ev);
 	});
 
@@ -3183,26 +3487,6 @@
 	/*
 	 *	the init()
 	 */
-	var NB =
-	{
-		codeVersion: 20231105,
-		blobVersion: 20190412, // board blob format in Storage
-		board: null,
-		storage: null,
-
-		peek: function(name)
-		{
-			return this.storage.getConfig()[name];
-		},
-
-		poke: function(name, val)
-		{
-			var conf = this.storage.getConfig();
-			conf[name] = val;
-			return this.storage.saveConfig();
-		}
-	};
-
 	NB.storage = new Storage_Local();
 
 	if (! NB.storage.open())
@@ -3248,6 +3532,9 @@
 
 	if (NB.board)
 		showBoard(true);
+
+	// Initialize color menu as disabled (will enable when note is selected)
+	$('.color-menu').addClass('disabled');
 
 	//
 	setInterval(adjustListScroller, 100);
