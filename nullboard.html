@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nullboard</title>
+  <title>Stickies Board</title>
   <style>
 
   @font-face {
@@ -1326,18 +1326,18 @@
 
 		getItem(name)
 		{
-			return localStorage.getItem('nullboard.' + name);
+			return localStorage.getItem('stickiesboard.' + name);
 		}
 
 		setItem(name, val)
 		{
-			localStorage.setItem('nullboard.' + name, val);
+			localStorage.setItem('stickiesboard.' + name, val);
 			return true;
 		}
 
 		delItem(name)
 		{
-			localStorage.removeItem('nullboard.' + name);
+			localStorage.removeItem('stickiesboard.' + name);
 			return true;
 		}
 
@@ -1380,7 +1380,7 @@
 			for (var i=0; i<localStorage.length; i++)
 			{
 				var k = localStorage.key(i);
-				var m = k.match(/^nullboard\.board\.(\d+).meta$/);
+				var m = k.match(/^stickiesboard\.board\.(\d+).meta$/);
 
 				if (! m)
 					continue;
@@ -1414,7 +1414,7 @@
 			for (var i=0; i<localStorage.length; i++)
 			{
 				var k = localStorage.key(i);
-				var m = k.match(/^nullboard\.board\.(\d+)$/);
+				var m = k.match(/^stickiesboard\.board\.(\d+)$/);
 
 				if (! m)
 					continue;
@@ -1445,7 +1445,7 @@
 			for (var i=0; i<localStorage.length; )
 			{
 				var k = localStorage.key(i);
-				var m = k.match(/^nullboard\./);
+				var m = k.match(/^stickiesboard\./);
 
 				if (m) localStorage.removeItem(k);
 				else   i++;
@@ -1470,7 +1470,7 @@
 
 			// load history
 
-			var re = new RegExp('^nullboard\.board\.' + board_id + '\.(\\d+)$');
+			var re = new RegExp('^stickiesboard\.board\.' + board_id + '\.(\\d+)$');
 			var revs = new Array();
 
 			for (var i=0; i<localStorage.length; i++)
@@ -2285,7 +2285,7 @@
 	function createDemoBoard()
 	{
 		var blob =
-			'{"format":20190412,"id":1555071015420,"revision":581,"title":"Welcome to Nullboard","lists":[{"title":"The Use' +
+			'{"format":20190412,"id":1555071015420,"revision":581,"title":"Welcome to Stickies Board","lists":[{"title":"The Use' +
 			'r Manual","notes":[{"text":"This is a note.\\nA column of notes is a list.\\nA set of lists is a board.","raw"' +
 			':false,"min":false},{"text":"All data is saved locally.\\nThe whole thing works completely offline.","raw":fal' +
 			'se,"min":false},{"text":"Last 50 board revisions are retained.","raw":false,"min":false},{"text":"Ctrl-Z is Un' +
@@ -2293,7 +2293,7 @@
 			't":"Caveats","raw":true,"min":false},{"text":"Desktop-oriented.\\nMobile support is basically untested.","raw"' +
 			':false,"min":false},{"text":"Works in Firefox, Chrome is supported.\\nShould work in Safari, may work in Edge.' +
 			'","raw":false,"min":false},{"text":"Still very much in beta. Caveat emptor.","raw":false,"min":false},{"text":' +
-			'"Issues and suggestions","raw":true,"min":false},{"text":"Post them on Github.\\nSee \\"Nullboard\\" at the to' +
+			'"Issues and suggestions","raw":true,"min":false},{"text":"Post them on Github.\\nSee \\"Stickies Board\\" at the to' +
 			'p left for the link.","raw":false,"min":false}]},{"title":"Things to try","notes":[{"text":"\u2022   Click on ' +
 			'a note to edit.","raw":false,"min":false},{"text":"\u2022   Click outside of it when done editing.\\n\u2022   ' +
 			'Alternatively, use Shift-Enter.","raw":false,"min":false},{"text":"\u2022   To discard changes press Escape.",' +
@@ -2346,13 +2346,13 @@
 			})
 
 			blob = JSON.stringify(all);
-			file = `Nullboard.nbx`;
+			file = `Stickies Board.nbx`;
 		}
 		else
 		{
 			var board = NB.board;
 			blob = JSON.stringify(board);
-			file = `Nullboard-${board.id}-${board.title}.nbx`;
+			file = `Stickies Board-${board.id}-${board.title}.nbx`;
 		}
 
 		blob = encodeURIComponent(blob);
@@ -2497,12 +2497,12 @@
 	 */
 	function updatePageTitle()
 	{
-		var title = 'Nullboard';
+		var title = 'Stickies Board';
 
 		if (NB.board)
 		{
 			title = NB.board.title;
-			title = 'NB - ' + (title || '(untitled board)');
+			title = 'SB - ' + (title || '(untitled board)');
 		}
 
 		document.title = title;
