@@ -183,7 +183,8 @@
 		NB.board = new Board(boardTitle);
 
 		// Add default lists
-		NB.board.addList('Ideas/Someday');
+		var firstList = NB.board.addList('Ideas/Someday');
+		firstList.addNote('Start ideas here.');
 		NB.board.addList('ToDo');
 		NB.board.addList('Doing');
 		NB.board.addList('Done');
