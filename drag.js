@@ -371,8 +371,7 @@
 					}
 				}, 500);
 				// Attempt to play
-				audioClone.play().catch(function(err) {
-					console.warn('Failed to play drop sound:', err);
+				audioClone.play().catch(function() {
 					Drag2.lastAudioClone = null;
 				});
 			}
