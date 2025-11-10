@@ -20,13 +20,17 @@
 	/*
 	 *	notes / lists / boards
 	 */
-	function addNote($list, $after, $before)
+	function addNote($list, $after, $before, color)
 	{
 		var $note  = $('tt .note').clone();
 		var $notes = $list.find('.notes');
 
 		$note.find('.text').html('');
 		$note.addClass('brand-new');
+
+		// Set color (default to gray if not provided)
+		color = color || 'gray';
+		$note.addClass('note-' + color);
 
 		if ($before && $before.length)
 		{
@@ -1086,7 +1090,13 @@
 
 			if (isNote)
 			{
-				addNote($list, $note);
+				// Get the color of the current note
+				var currentColor = 'gray';
+				var colorMatch = $note.attr('class').match(/\bnote-(yellow|blue|green|pink|purple|gray)\b/);
+				if (colorMatch) {
+					currentColor = colorMatch[1];
+				}
+				addNote($list, $note, null, currentColor);
 			}
 			else
 			if (isList)
