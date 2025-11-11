@@ -1171,6 +1171,15 @@
 		return false;
 	});
 
+	$('header').on('click', '.add-note-first', function(){
+		var $board = $('.wrap .board');
+		var $firstList = $board.find('.lists .list').first();
+		if ($firstList.length) {
+			addNote($firstList);
+		}
+		return false;
+	});
+
 	// Click handler for Windows menu dropdown
 	$('header').on('click', '.load-board', function(){
 

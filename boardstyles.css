@@ -610,6 +610,7 @@
 		min-height: 20px;
 		white-space: pre;
 		overflow: hidden;
+		text-align: center;
 	}
 
 	.board .head .edit {
@@ -682,8 +683,24 @@
 		vertical-align: top;
 		width: 200px;
 		margin: 0 5px 10px;
-		background: linear-gradient(#EAEDF0 30px, #DDE1E5 90px);
+		border: 1px solid #111;
+		background: #EAEDF0;
+		box-shadow:
+			1px 2px #111,
+			inset 1px 1px 0px 0px #fff,
+			inset -1px -1px 0px 0px #999;
 		border-radius: 2px;
+	}
+
+	.board .list .inner {
+		margin: 4px 4px 4px 4px;
+		border: 1px solid #111;
+		background-color: #F3F5F8;
+		box-shadow:
+			-1px -1px 0px 0px #999,
+			1px 1px 0px 0px #fff,
+			inset 1px 1px 0px 0px #fff,
+			inset -1px -1px 0px 0px #999;
 	}
 
 	.board .list::-webkit-scrollbar {
@@ -705,6 +722,7 @@
 	/***/
 	/* List head menu */
 	.board .list .head .menu {
+		display: none;
 		position: absolute;
 		top: 0;
 		right: 0;
