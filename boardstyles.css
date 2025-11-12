@@ -55,6 +55,19 @@
 		outline: none;
 	}
 
+	/* Menu item flash animation on select */
+	@keyframes menu-flash {
+		0%, 24% { background-color: #dadaff; }
+		25%, 49% { background-color: #fff; }
+		50%, 74% { background-color: #dadaff; }
+		75%, 99% { background-color: #fff; }
+		100% { background-color: #dadaff; }
+	}
+
+	.menu-flashing {
+		animation: menu-flash 0.4s steps(1, end);
+	}
+
 	tt {
 		display: none;
 	}
@@ -146,12 +159,20 @@
 	header .menu li>a{
 		color: #000;
 		padding: 0 7px;
+		display: block;
+		height: 19px;
+		line-height: 19px;
 	}
 
-	/* Only push down text menu items, not the icon */
+	header .menu li:hover>a {
+		background-color: #000;
+		color: #fff;
+	}
+
+	/* Push down text for non-icon menu items */
 	header .menu li:not(:first-child) > a {
-		position: relative;
-		top: 2px;
+		padding-top: 2px;
+		height: 17px;
 	}
 
 	header .menu li.disabled a{
@@ -171,7 +192,7 @@
 		min-width: 200px;
 		background-color: #fff;
 		border: 1px solid #000;
-		border-top: none;
+		border-top: 1px solid #000;
 		padding: 4px 0;
 		z-index: 1000;
 	}
@@ -193,8 +214,8 @@
 	}
 
 	header .menu li.windows-menu .boards-dropdown a.load-board:hover {
-		background-color: #000;
-		color: #fff;
+		background-color: #dadaff;
+		color: #000;
 	}
 
 	header .menu li.windows-menu .boards-dropdown a.load-board.active:before {
@@ -216,7 +237,7 @@
 		min-width: 200px;
 		background-color: #fff;
 		border: 1px solid #000;
-		border-top: none;
+		border-top: 1px solid #000;
 		padding: 4px 0;
 		z-index: 1000;
 	}
@@ -236,8 +257,8 @@
 	}
 
 	header .menu li.file-menu .file-dropdown a:hover {
-		background-color: #000;
-		color: #fff;
+		background-color: #dadaff;
+		color: #000;
 	}
 
 	/* Edit menu dropdown */
@@ -253,7 +274,7 @@
 		min-width: 200px;
 		background-color: #fff;
 		border: 1px solid #000;
-		border-top: none;
+		border-top: 1px solid #000;
 		padding: 4px 0;
 		z-index: 1000;
 	}
@@ -273,8 +294,8 @@
 	}
 
 	header .menu li.edit-menu .edit-dropdown a:hover {
-		background-color: #000;
-		color: #fff;
+		background-color: #dadaff;
+		color: #000;
 	}
 
 	/* Menu dividers */
@@ -307,7 +328,7 @@
 		min-width: 200px;
 		background-color: #fff;
 		border: 1px solid #000;
-		border-top: none;
+		border-top: 1px solid #000;
 		padding: 4px 0;
 		z-index: 1000;
 	}
@@ -332,8 +353,8 @@
 	}
 
 	header .menu li.color-menu .color-dropdown a:hover {
-		background-color: #000;
-		color: #fff;
+		background-color: #dadaff;
+		color: #000;
 	}
 
 	header .menu li.color-menu .color-dropdown a.active:before {
@@ -633,6 +654,33 @@
 		outline: 1px solid #8eaedd;
 	}
 
+	/* List-specific title editing styles - keep same dimensions, just change background */
+	.board .list .head .text,
+	.board .list .head .edit {
+		font-weight: bold;
+		font-size: 10px;
+		padding: 0 5px 2px;
+		border: none;
+		text-align: center;
+		min-height: 20px;
+		white-space: pre;
+		overflow: hidden;
+	}
+
+	.board .list .head .edit {
+		display: none;
+		background-color: #dadaff;
+		outline: none;
+	}
+
+	.board .list .head.editing .text {
+		display: none;
+	}
+
+	.board .list .head.editing .edit {
+		display: block;
+	}
+
 	.board .ops  a {
 		color: #000000A0;
 		transition: color 200ms;
@@ -683,24 +731,33 @@
 		vertical-align: top;
 		width: 200px;
 		margin: 0 5px 10px;
-		border: 1px solid #111;
-		background: #EAEDF0;
+		background: #cdcdcd;
+		border: 1px solid #000;
 		box-shadow:
-			1px 2px #111,
-			inset 1px 1px 0px 0px #fff,
-			inset -1px -1px 0px 0px #999;
-		border-radius: 2px;
+			inset 1px 1px 0 0 #dadaff;
+		border-radius: 0;
+		position: relative;
+	}
+
+	.board .list::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		box-shadow:
+			inset -1px -1px 0 0 #8787b0;
+		pointer-events: none;
 	}
 
 	.board .list .inner {
-		margin: 4px 4px 4px 4px;
-		border: 1px solid #111;
-		background-color: #F3F5F8;
+		margin: 3px 3px 3px 3px;
+		background-color: #f8f8f8;
+		border: 1px solid #000;
 		box-shadow:
-			-1px -1px 0px 0px #999,
-			1px 1px 0px 0px #fff,
-			inset 1px 1px 0px 0px #fff,
-			inset -1px -1px 0px 0px #999;
+			-1px -1px 0 0 #8787b0,
+			1px 1px 0 0 #dadaff;
 	}
 
 	.board .list::-webkit-scrollbar {

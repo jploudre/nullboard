@@ -1166,12 +1166,22 @@
 	});
 
 	//
+	// Helper function to flash a menu item on click
+	function flashMenuItem($element) {
+		$element.addClass('menu-flashing');
+		setTimeout(function() {
+			$element.removeClass('menu-flashing');
+		}, 600); // Match the animation duration
+	}
+
 	$('header').on('click', '.add-board', function(){
+		flashMenuItem($(this));
 		addBoard();
 		return false;
 	});
 
 	$('header').on('click', '.add-note-first', function(){
+		flashMenuItem($(this));
 		var $board = $('.wrap .board');
 		var $firstList = $board.find('.lists .list').first();
 		if ($firstList.length) {
@@ -1182,6 +1192,7 @@
 
 	// Click handler for Windows menu dropdown
 	$('header').on('click', '.load-board', function(){
+		flashMenuItem($(this));
 
 		var board_id = parseInt( $(this).attr('board_id') );
 
@@ -1196,16 +1207,19 @@
 	});
 
 	$('header').on('click', '.del-board', function(){
+		flashMenuItem($(this));
 		deleteBoard();
 		return false;
 	});
 
 	$('header').on('click', '.undo-board', function(){
+		flashMenuItem($(this));
 		undoBoard();
 		return false;
 	});
 
 	$('header').on('click', '.redo-board', function(){
+		flashMenuItem($(this));
 		redoBoard();
 		return false;
 	});
@@ -1214,6 +1228,7 @@
 	// Color menu handler
 	//
 	$('header').on('click', '.set-color', function(){
+		flashMenuItem($(this));
 		// Don't do anything if color menu is disabled
 		if ($('.color-menu').hasClass('disabled')) {
 			return false;
@@ -1266,6 +1281,7 @@
 
 	//
 	$('header').on('click', '.add-list', function(){
+		flashMenuItem($(this));
 		addList();
 		return false;
 	});
@@ -1365,6 +1381,7 @@
 
 	//
 	$('header .imp-board').on('click', function(ev){
+		flashMenuItem($(this));
 		$('header .imp-board-select')[0].click();
 		return false;
 	});
@@ -1378,6 +1395,7 @@
 	});
 
 	$('header .exp-board').on('click', function(){
+		flashMenuItem($(this));
 		var pack = exportBoard();
 		$(this).attr('href', pack.blob);
 		$(this).attr('download', pack.file);
