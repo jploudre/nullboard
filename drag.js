@@ -375,6 +375,8 @@
 					Drag2.lastAudioClone = null;
 				});
 			}
+			// Reset the swapped flag after playing sound
+			this.swapped = false;
 		}
 
 		this.item = null;
