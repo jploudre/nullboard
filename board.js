@@ -48,16 +48,16 @@
 
 		setVerLast()
 		{
-			if (this.conf.verLast == NB.codeVersion)
+			if (this.conf.verLast == SKB.codeVersion)
 				return true;
 
-			this.conf.verLast = NB.codeVersion;
+			this.conf.verLast = SKB.codeVersion;
 			return this.saveConfig();
 		}
 
 		setVerSeen(ver)
 		{
-			this.conf.verSeen = ver || NB.codeVersion;
+			this.conf.verSeen = ver || SKB.codeVersion;
 			return this.saveConfig();
 		}
 
@@ -175,10 +175,10 @@
 			if (! board)
 				return false;
 
-			if (board.format != NB.blobVersion)
+			if (board.format != SKB.blobVersion)
 			{
 				console.log('Board ' + board_id + '/' + revision + ' format is unsupported');
-				console.log('Have [' + board.format + '], need [' + NB.blobVersion);
+				console.log('Have [' + board.format + '], need [' + SKB.blobVersion);
 				return false;
 			}
 
@@ -327,7 +327,7 @@
 			var conf = this.getJson('config');
 			var newInstall = true;
 
-//			if (conf && (conf.format != NB.confVersion))
+//			if (conf && (conf.format != SKB.confVersion))
 //			{
 //				if (! confirm('Preferences are stored in an unsupported format. Reset them?'))
 //					return false;

@@ -126,32 +126,32 @@
 	{
 		closeBoard(true);
 
-		NB.board = NB.storage.loadBoard(board_id, null);
-		NB.storage.setActiveBoard(board_id);
+		SKB.board = SKB.storage.loadBoard(board_id, null);
+		SKB.storage.setActiveBoard(board_id);
 
 		showBoard(true);
 	}
 
 	function reopenBoard(revision)
 	{
-		var board_id = NB.board.id;
+		var board_id = SKB.board.id;
 
-		NB.storage.setBoardRevision(board_id, revision);
+		SKB.storage.setBoardRevision(board_id, revision);
 
 		openBoard(board_id);
 	}
 
 	function closeBoard(quick)
 	{
-		if (! NB.board)
+		if (! SKB.board)
 			return;
 
 		var $board = $('.wrap .board');
 
 		$board.remove();
 
-		NB.board = null;
-		NB.storage.setActiveBoard(null);
+		SKB.board = null;
+		SKB.storage.setActiveBoard(null);
 
 //		updateUndoRedo();
 		updateBoardIndex();
@@ -164,7 +164,7 @@
 		closeBoard(true);
 
 		// Find a unique "Untitled Board" name
-		var index = NB.storage.getBoardIndex();
+		var index = SKB.storage.getBoardIndex();
 		var existingTitles = [];
 
 		index.forEach(function(meta, board_id) {
@@ -180,14 +180,14 @@
 		}
 
 		// Create board with the unique title
-		NB.board = new Board(boardTitle);
+		SKB.board = new Board(boardTitle);
 
 		// Add default lists
-		var firstList = NB.board.addList('Ideas/Someday');
+		var firstList = SKB.board.addList('Ideas/Someday');
 		firstList.addNote('Start ideas here.');
-		NB.board.addList('ToDo');
-		NB.board.addList('Doing');
-		NB.board.addList('Done');
+		SKB.board.addList('ToDo');
+		SKB.board.addList('Doing');
+		SKB.board.addList('Done');
 
 		showBoard(true);
 
@@ -201,7 +201,7 @@
 	function saveBoard()
 	{
 		var $board = $('.wrap .board');
-		var board = Object.assign(new Board(), NB.board); // id, revision & title
+		var board = Object.assign(new Board(), SKB.board); // id, revision & title
 
 		board.lists = [];
 
@@ -224,8 +224,8 @@
 			});
 		});
 
-		NB.storage.saveBoard(board);
-		NB.board = board;
+		SKB.storage.saveBoard(board);
+		SKB.board = board;
 
 		updateUndoRedo();
 		updateBoardIndex();
@@ -234,14 +234,14 @@
 	function deleteBoard()
 	{
 		var $list = $('.wrap .board .list');
-		var board_id = NB.board.id;
+		var board_id = SKB.board.id;
 
 		if ($list.length && ! confirm("PERMANENTLY delete this board, all its lists and their notes?"))
 			return;
 
 		closeBoard();
 
-		NB.storage.nukeBoard(board_id);
+		SKB.storage.nukeBoard(board_id);
 
 		updateBoardIndex();
 	}
@@ -249,11 +249,11 @@
 	//
 	function undoBoard()
 	{
-		if (! NB.board)
+		if (! SKB.board)
 			return false;
 
-		var hist = NB.storage.getBoardHistory(NB.board.id);
-		var have = NB.board.revision;
+		var hist = SKB.storage.getBoardHistory(SKB.board.id);
+		var have = SKB.board.revision;
 		var want = 0;
 
 		for (var i=0; i<hist.length-1 && ! want; i++)
@@ -274,11 +274,11 @@
 
 	function redoBoard()
 	{
-		if (! NB.board)
+		if (! SKB.board)
 			return false;
 
-		var hist = NB.storage.getBoardHistory(NB.board.id);
-		var have = NB.board.revision;
+		var hist = SKB.storage.getBoardHistory(SKB.board.id);
+		var have = SKB.board.revision;
 		var want = 0;
 
 		for (var i=1; i<hist.length && ! want; i++)
@@ -300,7 +300,7 @@
 	//
 	function showBoard(quick)
 	{
-		var board = NB.board;
+		var board = SKB.board;
 
 		var $wrap = $('.wrap');
 		var $bdiv = $('tt .board');
@@ -387,8 +387,8 @@
 		demo.id = +new Date();
 		demo.revision = 0;
 
-		NB.storage.saveBoard(demo);
-		NB.storage.setActiveBoard(demo.id);
+		SKB.storage.saveBoard(demo);
+		SKB.storage.setActiveBoard(demo.id);
 
 		return Object.assign(new Board(), demo);
 	}
@@ -400,13 +400,13 @@
 	{
 		var blob, file;
 
-		if (! NB.board)
+		if (! SKB.board)
 		{
-			var index = NB.storage.getBoardIndex();
+			var index = SKB.storage.getBoardIndex();
 			var all = [];
 
 			boards.forEach(function(meta, board_id){
-				all.push( NB.storage.loadBoard(board_id, null) );
+				all.push( SKB.storage.loadBoard(board_id, null) );
 			})
 
 			blob = JSON.stringify(all);
@@ -414,7 +414,7 @@
 		}
 		else
 		{
-			var board = NB.board;
+			var board = SKB.board;
 			blob = JSON.stringify(board);
 			file = `Stickies Board-${board.id}-${board.title}.nbx`;
 		}
@@ -436,8 +436,8 @@
 		if (! foo.id || ! foo.revision || ! Array.isArray(foo.lists))
 			return "Required board properties are empty.";
 
-		if (foo.format != NB.blobVersion)
-			return `Unsupported blob format "${foo.format}", expecting "${NB.blobVersion}".`;
+		if (foo.format != SKB.blobVersion)
+			return `Unsupported blob format "${foo.format}", expecting "${SKB.blobVersion}".`;
 
 		return null;
 	}
@@ -459,7 +459,7 @@
 		if (! Array.isArray(data))
 			data = [ data ];
 
-		var index = NB.storage.getBoardIndex();
+		var index = SKB.storage.getBoardIndex();
 		var msg, one, all = '';
 
 		for (var i=0; i<data.length; i++)
@@ -529,7 +529,7 @@
 
 			board.revision--; // save will ++ it back
 
-			if (! NB.storage.saveBoard(board)) // this updates 'index'
+			if (! SKB.storage.saveBoard(board)) // this updates 'index'
 			{
 				alert(`Failed to save board ${board.id}. Import failed.`);
 				return false;
@@ -552,7 +552,7 @@
 
 		$index.each(function(){
 			var id = parseInt( $(this).attr('board_id') );
-			NB.storage.setBoardUiSpot(id, spot++);
+			SKB.storage.setBoardUiSpot(id, spot++);
 		});
 	}
 
@@ -563,9 +563,9 @@
 	{
 		var title = 'Stickies Board';
 
-		if (NB.board)
+		if (SKB.board)
 		{
-			title = NB.board.title;
+			title = SKB.board.title;
 			title = 'SB - ' + (title || '(untitled board)');
 		}
 
@@ -580,10 +580,10 @@
 		var undo = false;
 		var redo = false;
 
-		if (NB.board && NB.board.revision)
+		if (SKB.board && SKB.board.revision)
 		{
-			var history = NB.storage.getBoardHistory(NB.board.id);
-			var rev = NB.board.revision;
+			var history = SKB.storage.getBoardHistory(SKB.board.id);
+			var rev = SKB.board.revision;
 
 			undo = (rev != history[history.length-1]);
 			redo = (rev != history[0]);
@@ -600,12 +600,12 @@
 		var $entry  = $('tt .load-board');
 
 		var $board = $('.wrap .board');
-		var id_now = NB.board && NB.board.id;
+		var id_now = SKB.board && SKB.board.id;
 		var empty = true;
 
 		$index.html('');
 
-		var boards = NB.storage.getBoardIndex();
+		var boards = SKB.storage.getBoardIndex();
 		var index = [];
 
 		boards.forEach(function(meta, id){ index.push({ id: id, meta: meta }); });
@@ -659,7 +659,7 @@
 			return '<a href="' + url + '" target=_blank>' + url + '</a>';
 		});
 
-		if ( NB.peek('fileLinks') )
+		if ( SKB.peek('fileLinks') )
 		{
 			var xmmm = /`(.*?)`/mg;
 			text = text.replace(xmmm, function(full, text){
@@ -734,7 +734,7 @@
 			setText( $text, text_now );
 
 			if ($item.parent().hasClass('board'))
-				NB.board.title = text_now;
+				SKB.board.title = text_now;
 
 			updatePageTitle();
 			saveBoard();
@@ -856,11 +856,11 @@
 	 */
 	function initDragAndDrop()
 	{
-		NB.noteDrag = new Drag2();
-		NB.noteDrag.listSel = '.board .list .notes';
-		NB.noteDrag.itemSel = '.note';
-		NB.noteDrag.dragster = 'note-dragster';
-		NB.noteDrag.onDragging = function(started)
+		SKB.noteDrag = new Drag2();
+		SKB.noteDrag.listSel = '.board .list .notes';
+		SKB.noteDrag.itemSel = '.note';
+		SKB.noteDrag.dragster = 'note-dragster';
+		SKB.noteDrag.onDragging = function(started)
 		{
 			var drag = this;
 			var $note = $(drag.item);
@@ -887,11 +887,11 @@
 			}
 		}
 
-		NB.loadDrag = new Drag2();
-		NB.loadDrag.listSel = '.boards-dropdown';
-		NB.loadDrag.itemSel = 'a.load-board';
-		NB.loadDrag.dragster = 'load-dragster';
-		NB.loadDrag.onDragging = function(started)
+		SKB.loadDrag = new Drag2();
+		SKB.loadDrag.listSel = '.boards-dropdown';
+		SKB.loadDrag.itemSel = 'a.load-board';
+		SKB.loadDrag.dragster = 'load-dragster';
+		SKB.loadDrag.onDragging = function(started)
 		{
 			var drag = this;
 
@@ -909,9 +909,9 @@
 	}
 
 	/*
-	 *	Initialize NB object
+	 *	Initialize SKB object
 	 */
-	var NB =
+	var SKB =
 	{
 		codeVersion: 20231105,
 		blobVersion: 20190412, // board blob format in Storage
@@ -947,13 +947,13 @@
 			return false;
 		}
 
-		NB.noteDrag.cancelPriming();
+		SKB.noteDrag.cancelPriming();
 
 		// Select this note and enable color menu
 		var $note = $(this).closest('.note');
 		$('.board .note').removeClass('selected');
 		$note.addClass('selected');
-		NB.selectedNote = $note[0];
+		SKB.selectedNote = $note[0];
 		$('.color-menu').removeClass('disabled');
 
 		startEditing($(this), ev);
@@ -997,7 +997,7 @@
 			if (ev.keyCode == 13 && text_now)
 			{
 				setText($text, text_now);
-				if (NB.board) NB.board.title = text_now;
+				if (SKB.board) SKB.board.title = text_now;
 				saveBoard();
 				updateBoardIndex();
 			}
@@ -1017,7 +1017,7 @@
 		if (text_now)
 		{
 			setText($text, text_now);
-			if (NB.board) NB.board.title = text_now;
+			if (SKB.board) SKB.board.title = text_now;
 			saveBoard();
 			updateBoardIndex();
 		}
@@ -1196,9 +1196,9 @@
 
 		var board_id = parseInt( $(this).attr('board_id') );
 
-		NB.loadDrag.cancelPriming();
+		SKB.loadDrag.cancelPriming();
 
-		if (NB.board && (NB.board.id == board_id))
+		if (SKB.board && (SKB.board.id == board_id))
 			closeBoard();
 		else
 			openBoard(board_id);
@@ -1235,7 +1235,7 @@
 		}
 
 		var color = $(this).data('color');
-		var $note = $(NB.selectedNote);
+		var $note = $(SKB.selectedNote);
 
 		if (!$note.length) {
 			return false;
@@ -1250,8 +1250,8 @@
 		// Update the note data model
 		var list_index = $note.closest('.list').index();
 		var note_index = $note.index();
-		if (NB.board.lists[list_index] && NB.board.lists[list_index].notes[note_index]) {
-			NB.board.lists[list_index].notes[note_index].color = color;
+		if (SKB.board.lists[list_index] && SKB.board.lists[list_index].notes[note_index]) {
+			SKB.board.lists[list_index].notes[note_index].color = color;
 			saveBoard();
 		}
 
@@ -1262,8 +1262,8 @@
 	$('header').on('mouseenter', '.color-menu', function(){
 		$('.color-dropdown a').removeClass('active');
 
-		if (NB.selectedNote) {
-			var $note = $(NB.selectedNote);
+		if (SKB.selectedNote) {
+			var $note = $(SKB.selectedNote);
 			var currentColor = 'gray';
 
 			// Extract color from class
@@ -1327,7 +1327,7 @@
 
 		// Select this note
 		$(this).addClass('selected');
-		NB.selectedNote = this;
+		SKB.selectedNote = this;
 
 		// Enable color menu
 		$('.color-menu').removeClass('disabled');
@@ -1339,7 +1339,7 @@
 	$('.wrap').on('click', function(ev){
 		if (!$(ev.target).closest('.note').length && !$(ev.target).closest('header').length) {
 			$('.board .note').removeClass('selected');
-			NB.selectedNote = null;
+			SKB.selectedNote = null;
 
 			// Disable color menu
 			$('.color-menu').addClass('disabled');
@@ -1352,31 +1352,31 @@
 	//
 	// Drag from anywhere when NOT editing
 	$('.wrap').on('mousedown', '.board .note:not(.editing) .text', function(ev){
-		NB.noteDrag.prime(this.parentNode, ev);
+		SKB.noteDrag.prime(this.parentNode, ev);
 	});
 
 	// Drag from titlebar only when editing
 	$('.wrap').on('mousedown', '.board .note.editing .titlebar', function(ev){
-		NB.noteDrag.prime(this.parentNode, ev);
+		SKB.noteDrag.prime(this.parentNode, ev);
 	});
 
 	// Mousedown handler for Windows menu dropdown
 	$('header').on('mousedown', 'a.load-board', function(ev){
 		if ($('header a.load-board').length > 1)
-			NB.loadDrag.prime(this, ev);
+			SKB.loadDrag.prime(this, ev);
 	});
 
 	//
 	$(document).on('mouseup', function(ev){
-		if (NB.noteDrag) NB.noteDrag.end();
-		if (NB.loadDrag) NB.loadDrag.end();
-		if (NB.varAdjust) NB.varAdjust.end();
+		if (SKB.noteDrag) SKB.noteDrag.end();
+		if (SKB.loadDrag) SKB.loadDrag.end();
+		if (SKB.varAdjust) SKB.varAdjust.end();
 	});
 
 	$(document).on('mousemove', function(ev){
-		if (NB.noteDrag) NB.noteDrag.onMouseMove(ev);
-		if (NB.loadDrag) NB.loadDrag.onMouseMove(ev);
-		if (NB.varAdjust) NB.varAdjust.onMouseMove(ev);
+		if (SKB.noteDrag) SKB.noteDrag.onMouseMove(ev);
+		if (SKB.loadDrag) SKB.loadDrag.onMouseMove(ev);
+		if (SKB.varAdjust) SKB.varAdjust.onMouseMove(ev);
 	});
 
 	//
@@ -1411,15 +1411,15 @@
 	/*
 	 *	the init()
 	 */
-	NB.storage = new Storage_Local();
+	SKB.storage = new Storage_Local();
 
-	if (! NB.storage.open())
+	if (! SKB.storage.open())
 	{
 		easyMartina = true;
 		throw new Error();
 	}
 
-	var boards = NB.storage.getBoardIndex();
+	var boards = SKB.storage.getBoardIndex();
 
 	boards.forEach( function(meta, board_id) {
 		var hist = meta.history.join(', ');
@@ -1427,7 +1427,7 @@
 	});
 
 	//
-	var conf = NB.storage.getConfig();
+	var conf = SKB.storage.getConfig();
 
 	console.log( `Active:    [${conf.board}]` );
 	console.log( `FileLinks: [${conf.fileLinks}]` );
@@ -1438,7 +1438,7 @@
 	 */
 	initDragAndDrop();
 
-	NB.varAdjust = new VarAdjust()
+	SKB.varAdjust = new VarAdjust()
 
 	//
 	if (conf.board)
@@ -1448,13 +1448,13 @@
 
 	updateBoardIndex();
 
-	NB.storage.setVerLast();
+	SKB.storage.setVerLast();
 
 	//
-	if (! NB.board && ! $('.boards-dropdown .load-board').length)
-		NB.board = createDemoBoard();
+	if (! SKB.board && ! $('.boards-dropdown .load-board').length)
+		SKB.board = createDemoBoard();
 
-	if (NB.board)
+	if (SKB.board)
 		showBoard(true);
 
 	// Initialize color menu as disabled (will enable when note is selected)
