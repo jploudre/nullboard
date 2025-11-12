@@ -869,7 +869,7 @@
 			{
 				var $drag = drag.$drag;
 
-				$drag.html('<div class=titlebar></div><div class=text></div>');
+				$drag.html('<div class=titlebar></div><a href=# class=note-icon></a><div class=text></div>');
 				$drag.find('.text').html( $note.find('.text').html() );
 
 				// Copy color class from note to dragster
@@ -1307,7 +1307,7 @@
 		return false;
 	});
 
-	$('.wrap').on('click', '.board .del-note', function(){
+	$('.wrap').on('click', '.board .note-icon', function(){
 		deleteNote( $(this).closest('.note') );
 		return false;
 	});

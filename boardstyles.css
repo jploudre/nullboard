@@ -682,18 +682,6 @@
 		display: block;
 	}
 
-	.board .ops  a {
-		color: #000000A0;
-		transition: color 200ms;
-	}
-
-	.board .ops  a:hover {
-		color: #000;
-	}
-
-	.board .ops  a.warn:hover {
-		color: #c40;
-	}
 
 	header .edit-dropdown .undo-board,
 	header .edit-dropdown .redo-board {
@@ -876,6 +864,35 @@
 		border-right: 1px solid var(--dark-color, #bbb);
 	}
 
+	/* Sticky note icon */
+	.board .note .note-icon {
+		position: absolute;
+		left: 4px;
+		top: 1px;
+		width: 7px;
+		height: 7px;
+		opacity: 0;
+		transition: opacity 400ms;
+		z-index: 2;
+		background: var(--pale-color, #fff);
+		background-image:
+			linear-gradient(var(--dark-color), var(--dark-color)),
+			linear-gradient(var(--dark-color), var(--dark-color)),
+			linear-gradient(var(--dark-color), var(--dark-color)),
+			linear-gradient(var(--dark-color), var(--dark-color));
+		background-size: 1px 3px, 3px 1px, 7px 1px, 1px 7px;
+		background-position: 1px 1px, 1px 1px, 0px 6px, 6px 0px;
+		background-repeat: no-repeat;
+		cursor: pointer;
+	}
+
+	.board .note:hover .note-icon,
+	.board .note.selected .note-icon,
+	.board .note.editing .note-icon,
+	.board .note.dragging .note-icon {
+		opacity: 1;
+	}
+
 	/* Titlebar styling */
 	.board .note .titlebar {
 		display: none;
@@ -972,56 +989,6 @@
 		background-color: var(--pale-color, #fff);
 	}
 
-	/***/
-	.board .note .ops {
-		position: absolute;
-		top: 0;
-		right: 0;
-		opacity: 0;
-		transition: opacity 400ms;
-		cursor: default;
-	}
-
-	.board .note.editing .ops {
-		display: none;
-	}
-
-	.board .note:hover .ops {
-		opacity: 1;
-	}
-
-	.board .note .ops .teaser {
-		display: block;
-		margin-top: 2px;
-		margin-right: 1px;
-		padding-right: 3px;
-	}
-
-	.board .note .ops .teaser:before {
-		content: '\2261';
-	}
-
-	.board .note .ops .bulk {
-		display: none;
-		background: #fff;
-		border-left: none;
-		padding: 1px 0 2px 5px;
-		font-weight: bold;
-		border-left: 1px solid #ddd;
-		border-bottom: 1px solid #ddd;
-	}
-
-	.board .note .ops .bulk a {
-		padding-right: 4px;
-	}
-
-	.board .note .ops:hover .bulk {
-		display: block;
-	}
-
-	.board .note .ops:hover .teaser {
-		display: none;
-	}
 
 	/***/
 	/* Raw mode removed */
@@ -1042,6 +1009,25 @@
 
 		border: 1px solid var(--dark-color, #757575);
 		box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+	}
+
+	/* Sticky note icon on dragster */
+	.note-dragster .note-icon {
+		position: absolute;
+		left: 4px;
+		top: 1px;
+		width: 7px;
+		height: 7px;
+		z-index: 2;
+		background: var(--pale-color, #fff);
+		background-image:
+			linear-gradient(var(--dark-color), var(--dark-color)),
+			linear-gradient(var(--dark-color), var(--dark-color)),
+			linear-gradient(var(--dark-color), var(--dark-color)),
+			linear-gradient(var(--dark-color), var(--dark-color));
+		background-size: 1px 3px, 3px 1px, 7px 1px, 1px 7px;
+		background-position: 1px 1px, 1px 1px, 0px 6px, 6px 0px;
+		background-repeat: no-repeat;
 	}
 
 	.note-dragster .titlebar {
