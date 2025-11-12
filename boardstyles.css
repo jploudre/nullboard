@@ -170,7 +170,8 @@
 	}
 
 	/* Push down text for non-icon menu items */
-	header .menu li:not(:first-child) > a {
+	header .menu li:not(:first-child) > a,
+	header .menu.right li > a {
 		padding-top: 2px;
 		height: 17px;
 	}
