@@ -574,6 +574,7 @@
 	/***/
 	.board {
 		min-width: 240pt;
+		min-height: 600px;
 
 		width: -moz-max-content;    /* firefox */
 		width: -webkit-max-content; /* chrome  */
@@ -755,6 +756,7 @@
 		margin: 3px 3px 3px 3px;
 		background-color: #f8f8f8;
 		border: 1px solid #000;
+		min-height: 80px;
 		box-shadow:
 			-1px -1px 0 0 #b3b3fe,
 			1px 1px 0 0 #dadaff,
@@ -776,6 +778,8 @@
 
 	.board .list .notes {
 		padding: 0 5px;
+		min-height: 42px;
+		box-sizing: border-box;
 	}
 
 	/***/
@@ -1042,12 +1046,17 @@
 
 	.note-dragster .titlebar {
 		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
 		height: 9px;
+		z-index: 1;
 	}
 
 	.note-dragster .text {
-		padding: 14px 10px 0;
-		margin-right: 15px;
+		padding: 10px 8px 0;
+		margin-right: 12px;
 	}
 
 	.note-dragster a {
