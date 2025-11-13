@@ -123,7 +123,13 @@
 				if (x <= rcList.left || rcList.right <= x)
 					return;
 
+				// Check if we're within this list's vertical bounds
+				if (y < rcList.top || y >= rcList.bottom)
+					return;
+
+				var hasItems = false;
 				$(list).find(drag.itemSel).each(function(){
+					hasItems = true;
 					var rcItem = this.getBoundingClientRect();
 
 					if (! itemTop || rcItem.top < yTop)
@@ -149,18 +155,12 @@
 					before = (y < (rcItem.top + rcItem.bottom)/2);
 				});
 
-				if (y < rcList.top)
+				// Only set as target if we haven't found a specific item
+				// This handles empty lists
+				if (!targetItem && !hasItems)
 				{
 					targetList = list;
-					targetItem = itemTop;
-					before = true;
-				}
-				else
-				if (y >= rcList.bottom)
-				{
-					targetList = list;
-					targetItem = itemBottom;
-					before = false;
+					targetItem = null;  // Will append to end of list
 				}
 
 			});
@@ -223,9 +223,9 @@
 			/*
 			 *	see if it's a same-list move
 			 */
-			if (targetList == have.parentNode)
+			if (targetList == have.parentNode && targetItem)
 			{
-				// Animated same-list swap
+				// Animated same-list swap (only if there's a target item to animate with)
 				var delta = $have.offset().top - $target.offset().top;
 
 				var d_bulk = 0;
