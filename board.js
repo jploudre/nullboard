@@ -63,9 +63,7 @@
 
 		setActiveBoard(board_id)
 		{
-			console.log('setActiveBoard [' + this.conf.board + '] -> [' + board_id + ']');
-
-			var meta = board_id ? this.boardIndex.get(board_id) : true;
+				var meta = board_id ? this.boardIndex.get(board_id) : true;
 
 			if (! meta)
 				throw `Invalid board_id in setActiveBoard(... ${board_id})`;
@@ -105,7 +103,7 @@
 			{
 				board.revision = 1;
 
-				ok_data = this.setJson('board.' + board.id + '.' + board.revision, board);
+				ok_data = this.setJson(this.bk(board.id, board.revision), board);
 
 				meta = new BoardMeta();
 				meta.title   = board.title || '(Untitled board)';
@@ -121,7 +119,7 @@
 
 				board.revision = rev_new;
 
-				ok_data = this.setJson('board.' + board.id + '.' + board.revision, board);
+				ok_data = this.setJson(this.bk(board.id, board.revision), board);
 
 				meta.title   = board.title || '(Untitled board)';
 				meta.current = board.revision;
@@ -135,8 +133,7 @@
 					if ( (rev_old < rev && rev < rev_new) || (rebuild.length >= this.conf.maxUndo) )
 					{
 						this.delItem('board.' + board.id + '.' + rev);
-						console.log( `Deleted revision ${rev} of ${board.id} (${board.title})` );
-					}
+								}
 					else
 					{
 						rebuild.push(rev);
@@ -149,13 +146,12 @@
 			/*
 			 *	save meta
 			 */
-			ok_meta = this.setJson('board.' + board.id + '.meta', meta) &&
+			ok_meta = this.setJson(this.bmk(board.id), meta) &&
 			          this.setJson('board.' + board.id, meta.current); // for older versions
 
 			board.history = meta.history; // restore
 
-			console.log( `Saved revision ${board.revision} of ${board.id} (${board.title}), ok = ${ok_data} | ${ok_meta}` );
-			return ok_data && ok_meta;
+				return ok_data && ok_meta;
 		}
 
 		loadBoard(board_id, revision)
@@ -171,29 +167,23 @@
 			if (! meta.history.includes(revision))
 				throw `Invalid revision in loadBoard(${board_id}, ${revision})`;
 
-			var board = this.getJson('board.' + board_id + '.' + revision);
+			var board = this.getJson(this.bk(board_id, revision));
 			if (! board)
 				return false;
 
 			if (board.format != SKB.blobVersion)
 			{
-				console.log('Board ' + board_id + '/' + revision + ' format is unsupported');
-				console.log('Have [' + board.format + '], need [' + SKB.blobVersion);
-				return false;
+						return false;
 			}
 
 			if (board.revision != revision)
 			{
-				console.log('Board ' + board_id + '/' + revision + ' revision is wrong');
-				console.log('Have [' + board.revision + ']');
-				return false;
+						return false;
 			}
 
 			board.history = meta.history;
 
-			console.log( `Loaded revision ${board.revision} of ${board.id} (${board.title})` );
-
-			return Object.assign(new Board(), board);
+				return Object.assign(new Board(), board);
 		}
 
 		nukeBoard(board_id)
@@ -206,14 +196,13 @@
 			var title = meta.title + '';
 
 			for (var rev of meta.history)
-				this.delItem('board.' + board_id + '.' + rev);
+				this.delItem(this.bk(board_id, rev));
 
-			this.delItem('board.' + board_id + '.meta');
+			this.delItem(this.bmk(board_id));
 			this.boardIndex.delete(board_id);
 
 
-			console.log( `Deleted board ${board_id} (${title})` );
-		}
+			}
 
 		getBoardHistory(board_id)
 		{
@@ -240,8 +229,8 @@
 
 			meta.current = revision;
 
-			return this.setJson('board.' + board_id + '.meta', meta) &&
-			       this.setJson('board.' + board_id, revision); // for older versions
+			return this.setJson(this.bmk(board_id), meta) &&
+			       this.setJson(this.bk(board_id), revision); // for older versions
 		}
 
 		setBoardUiSpot(board_id, ui_spot)
@@ -253,7 +242,7 @@
 
 			meta.ui_spot = ui_spot;
 
-			return this.setJson('board.' + board_id + '.meta', meta);
+			return this.setJson(this.bmk(board_id), meta);
 		}
 
 		/*
@@ -266,6 +255,9 @@
 
 		openInner()   { throw 'implement-me'; }
 		wipeInner()   { throw 'implement-me'; }
+
+		bk(id, rev) { return 'board.' + id + (rev !== undefined ? '.' + rev : ''); }
+		bmk(id) { return 'board.' + id + '.meta'; }
 
 		getJson(name)
 		{
@@ -280,8 +272,7 @@
 		{
 			if (! this.setItem(name, JSON.stringify(val)))
 			{
-				console.log("setJson(" + name + ") failed");
-				return false;
+					return false;
 			}
 
 			return true;
@@ -303,22 +294,23 @@
 		{
 			super();
 			this.type = 'LocalStorage';
+			this.pfx = 'stickiesboard.';
 		}
 
 		getItem(name)
 		{
-			return localStorage.getItem('stickiesboard.' + name);
+			return localStorage.getItem(this.pfx + name);
 		}
 
 		setItem(name, val)
 		{
-			localStorage.setItem('stickiesboard.' + name, val);
+			localStorage.setItem(this.pfx + name, val);
 			return true;
 		}
 
 		delItem(name)
 		{
-			localStorage.removeItem('stickiesboard.' + name);
+			localStorage.removeItem(this.pfx + name);
 			return true;
 		}
 
@@ -361,25 +353,23 @@
 			for (var i=0; i<localStorage.length; i++)
 			{
 				var k = localStorage.key(i);
-				var m = k.match(/^stickiesboard\.board\.(\d+).meta$/);
+				var m = k.match(new RegExp('^' + this.pfx + 'board\\.(\\d+).meta$'));
 
 				if (! m)
 					continue;
 
 				var board_id = parseInt(m[1]);
-				var meta = this.getJson('board.' + board_id + '.meta');
+				var meta = this.getJson(this.bmk(board_id));
 
 				if (! meta.hasOwnProperty('history'))
 				{
-					console.log( `Invalid meta for board ${board_id}` );
-					continue;
+						continue;
 				}
 
 				for (var rev of meta.history)
-					if (! this.getJson('board.' + board_id + '.' + rev))
+					if (! this.getJson(this.bk(board_id, rev)))
 					{
-						console.log( `Invalid revision ${rev} in history of ${board_id}` );
-						meta = this.rebuildMeta(board_id);
+							meta = this.rebuildMeta(board_id);
 						break;
 					}
 
@@ -395,7 +385,7 @@
 			for (var i=0; i<localStorage.length; i++)
 			{
 				var k = localStorage.key(i);
-				var m = k.match(/^stickiesboard\.board\.(\d+)$/);
+				var m = k.match(new RegExp('^' + this.pfx + 'board\\.(\\d+)$'));
 
 				if (! m)
 					continue;
@@ -426,7 +416,7 @@
 			for (var i=0; i<localStorage.length; )
 			{
 				var k = localStorage.key(i);
-				var m = k.match(/^stickiesboard\./);
+				var m = k.indexOf(this.pfx) === 0;
 
 				if (m) localStorage.removeItem(k);
 				else   i++;
@@ -443,15 +433,13 @@
 		{
 			var meta = new BoardMeta();
 
-			console.log( `Rebuilding meta for ${board_id} ...` );
-
-			// get current revision
+				// get current revision
 
 			meta.current = this.getItem('board.' + board_id); // may be null
 
 			// load history
 
-			var re = new RegExp('^stickiesboard\.board\.' + board_id + '\.(\\d+)$');
+			var re = new RegExp('^' + this.pfx + 'board.' + board_id + '\\.(\\d+)$');
 			var revs = new Array();
 
 			for (var i=0; i<localStorage.length; i++)
@@ -462,8 +450,7 @@
 
 			if (! revs.length)
 			{
-				console.log('* No revisions found');
-				this.delItem('board.' + board_id);
+					this.delItem('board.' + board_id);
 				return false;
 			}
 
@@ -480,7 +467,7 @@
 			var board = this.getJson('board.' + board_id + '.' + meta.current)
 			meta.title = (board.title || '(untitled board)');
 
-			this.setJson('board.' + board_id + '.meta', meta);
+			this.setJson(this.bmk(board_id), meta);
 
 			return meta;
 		}

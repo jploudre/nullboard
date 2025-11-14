@@ -20,9 +20,14 @@
 	/*
 	 *	notes / lists / boards
 	 */
+	var $tNote = $('tt .note');
+	var $tList = $('tt .list');
+	var $tBoard = $('tt .board');
+	var $tLoad = $('tt .load-board');
+
 	function addNote($list, $after, $before, color)
 	{
-		var $note  = $('tt .note').clone();
+		var $note  = $tNote.clone();
 		var $notes = $list.find('.notes');
 
 		$note.find('.text').html('');
@@ -71,7 +76,7 @@
 	{
 		var $board = $('.wrap .board');
 		var $lists = $board.find('.lists');
-		var $list = $('tt .list').clone();
+		var $list = $tList.clone();
 
 		$list.find('.text').html('');
 		$list.find('.head').addClass('brand-new');
@@ -262,13 +267,10 @@
 
 		if (! want)
 		{
-			console.log('Undo - failed');
-			return false;
+				return false;
 		}
 
-		console.log('Undo -> ' + want);
-
-		reopenBoard(want);
+			reopenBoard(want);
 		return true;
 	}
 
@@ -287,13 +289,10 @@
 
 		if (! want)
 		{
-			console.log('Redo - failed');
-			return false;
+				return false;
 		}
 
-		console.log('Redo -> ' + want);
-
-		reopenBoard(want);
+			reopenBoard(want);
 		return true;
 	}
 
@@ -303,11 +302,8 @@
 		var board = SKB.board;
 
 		var $wrap = $('.wrap');
-		var $bdiv = $('tt .board');
-		var $ldiv = $('tt .list');
-		var $ndiv = $('tt .note');
 
-		var $b = $bdiv.clone();
+		var $b = $tBoard.clone();
 		var $b_lists = $b.find('.lists');
 
 		$b[0].board_id = board.id;
@@ -315,13 +311,13 @@
 
 		board.lists.forEach(function(list){
 
-			var $l = $ldiv.clone();
+			var $l = $tList.clone();
 			var $l_notes = $l.find('.notes');
 
 			setText( $l.find('.head .text'), list.title );
 
 			list.notes.forEach(function(n){
-				var $n = $ndiv.clone();
+				var $n = $tNote.clone();
 				setText( $n.find('.text'), n.text );
 				// Apply note color
 				var color = n.color || 'gray';
@@ -500,20 +496,17 @@
 				if (confirm(`Board ${which} already exists. Overwrite it?`) &&
 				    confirm(`OVERWRITE for sure?`))
 				{
-					console.log(`Import: ${board.id} (${board.title} - will overwrite existing one`);
-					check_title = false;
+						check_title = false;
 				}
 				else
 				if (confirm(`Import the board under a new ID?`))
 				{
 					var new_id = +new Date();
-					console.log(`Import: ${board.id} (${board.title} - will import as ${new_id}`);
-					board.id = new_id;
+						board.id = new_id;
 				}
 				else
 				{
-					console.log(`Import: ${board.id} (${board.title} - ID conflict, will not import`);
-					continue;
+						continue;
 				}
 			}
 
@@ -597,7 +590,6 @@
 	{
 		var $index  = $('.boards-dropdown');
 		var $export = $('header .exp-board');
-		var $entry  = $('tt .load-board');
 
 		var $board = $('.wrap .board');
 		var id_now = SKB.board && SKB.board.id;
@@ -614,7 +606,7 @@
 
 		index.forEach(function(entry){
 
-			var $e = $entry.clone();
+			var $e = $tLoad.clone();
 			$e.attr('board_id', entry.id);
 			$e.html(entry.meta.title);
 
@@ -1166,97 +1158,57 @@
 	});
 
 	//
-	// Helper function to flash a menu item on click
-	function flashMenuItem($element) {
-		$element.addClass('menu-flashing');
-		setTimeout(function() {
-			$element.removeClass('menu-flashing');
-		}, 600); // Match the animation duration
+	// Helper function to flash menu item and handle click
+	function flash($el) {
+		$el.addClass('menu-flashing');
+		setTimeout(function() { $el.removeClass('menu-flashing'); }, 600);
+	}
+	function handleClick(fn) {
+		return function() {
+			flash($(this));
+			fn.call(this);
+			return false;
+		};
 	}
 
-	$('header').on('click', '.add-board', function(){
-		flashMenuItem($(this));
-		addBoard();
-		return false;
-	});
+	$('header').on('click', '.add-board', handleClick(addBoard));
 
-	$('header').on('click', '.add-note-first', function(){
-		flashMenuItem($(this));
-		var $board = $('.wrap .board');
-		var $firstList = $board.find('.lists .list').first();
-		if ($firstList.length) {
-			addNote($firstList);
-		}
-		return false;
-	});
+	$('header').on('click', '.add-note-first', handleClick(function(){
+		var $fl = $('.wrap .board .lists .list').first();
+		if ($fl.length) addNote($fl);
+	}));
 
 	// Click handler for Windows menu dropdown
-	$('header').on('click', '.load-board', function(){
-		flashMenuItem($(this));
-
+	$('header').on('click', '.load-board', handleClick(function(){
 		var board_id = parseInt( $(this).attr('board_id') );
-
 		SKB.loadDrag.cancelPriming();
-
 		if (SKB.board && (SKB.board.id == board_id))
 			closeBoard();
 		else
 			openBoard(board_id);
+	}));
 
-		return false;
-	});
-
-	$('header').on('click', '.del-board', function(){
-		flashMenuItem($(this));
-		deleteBoard();
-		return false;
-	});
-
-	$('header').on('click', '.undo-board', function(){
-		flashMenuItem($(this));
-		undoBoard();
-		return false;
-	});
-
-	$('header').on('click', '.redo-board', function(){
-		flashMenuItem($(this));
-		redoBoard();
-		return false;
-	});
+	$('header').on('click', '.del-board', handleClick(deleteBoard));
+	$('header').on('click', '.undo-board', handleClick(undoBoard));
+	$('header').on('click', '.redo-board', handleClick(redoBoard));
 
 	//
 	// Color menu handler
 	//
-	$('header').on('click', '.set-color', function(){
-		flashMenuItem($(this));
-		// Don't do anything if color menu is disabled
-		if ($('.color-menu').hasClass('disabled')) {
-			return false;
-		}
-
+	$('header').on('click', '.set-color', handleClick(function(){
+		if ($('.color-menu').hasClass('disabled')) return;
 		var color = $(this).data('color');
 		var $note = $(SKB.selectedNote);
-
-		if (!$note.length) {
-			return false;
-		}
-
-		// Remove all color classes
+		if (!$note.length) return;
 		$note.removeClass('note-yellow note-blue note-green note-pink note-purple note-gray');
-
-		// Add new color class
 		$note.addClass('note-' + color);
-
-		// Update the note data model
 		var list_index = $note.closest('.list').index();
 		var note_index = $note.index();
 		if (SKB.board.lists[list_index] && SKB.board.lists[list_index].notes[note_index]) {
 			SKB.board.lists[list_index].notes[note_index].color = color;
 			saveBoard();
 		}
-
-		return false;
-	});
+	}));
 
 	// Update color menu checkmarks when hovering over Color menu
 	$('header').on('mouseenter', '.color-menu', function(){
@@ -1280,11 +1232,7 @@
 	});
 
 	//
-	$('header').on('click', '.add-list', function(){
-		flashMenuItem($(this));
-		addList();
-		return false;
-	});
+	$('header').on('click', '.add-list', handleClick(addList));
 
 	$('.wrap').on('click', '.board .del-list', function(){
 		deleteList( $(this).closest('.list') );
@@ -1380,11 +1328,9 @@
 	});
 
 	//
-	$('header .imp-board').on('click', function(ev){
-		flashMenuItem($(this));
+	$('header .imp-board').on('click', handleClick(function(){
 		$('header .imp-board-select')[0].click();
-		return false;
-	});
+	}));
 
 	$('header .imp-board-select').on('change' , function(){
 		var files = this.files;
@@ -1395,7 +1341,7 @@
 	});
 
 	$('header .exp-board').on('click', function(){
-		flashMenuItem($(this));
+		flash($(this));
 		var pack = exportBoard();
 		$(this).attr('href', pack.blob);
 		$(this).attr('download', pack.file);
@@ -1423,14 +1369,10 @@
 
 	boards.forEach( function(meta, board_id) {
 		var hist = meta.history.join(', ');
-		console.log( `Found board ${board_id} - "${meta.title}", revision ${meta.current}, history [${hist}]` );
 	});
 
 	//
 	var conf = SKB.storage.getConfig();
-
-	console.log( `Active:    [${conf.board}]` );
-	console.log( `FileLinks: [${conf.fileLinks}]` );
 
 
 	/*
