@@ -241,7 +241,7 @@
 		var $list = $('.wrap .board .list');
 		var board_id = SKB.board.id;
 
-		if ($list.length && ! confirm("PERMANENTLY delete this board, all its lists and their notes?"))
+		if ($list.length && ! confirm("Permanently delete this board and its contents?"))
 			return;
 
 		closeBoard();
