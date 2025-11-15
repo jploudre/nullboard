@@ -10,7 +10,7 @@ const GistSync = {
 	FILENAME_SUFFIX: '.json',
 
 	// State
-	syncDebounceTimer: null,
+	syncDebounceTimers: new Map(),
 	retryQueue: [],
 	retryTimer: null,
 	isOffline: false,
@@ -355,13 +355,14 @@ const GistSync = {
 	queueBoardForSync: function(boardId) {
 		if (!this.isEnabled()) return;
 
-		// Clear existing timer
-		if (this.syncDebounceTimer) {
-			clearTimeout(this.syncDebounceTimer);
+		// Clear existing timer for THIS board only
+		if (this.syncDebounceTimers.has(boardId)) {
+			clearTimeout(this.syncDebounceTimers.get(boardId));
 		}
 
-		// Start new 15-second timer
-		this.syncDebounceTimer = setTimeout(async () => {
+		// Start new 15-second timer for this board
+		const timer = setTimeout(async () => {
+			this.syncDebounceTimers.delete(boardId);
 			try {
 				await this.syncBoardToGist(boardId);
 
@@ -370,10 +371,13 @@ const GistSync = {
 				this.saveRetryQueue();
 
 			} catch (error) {
+				console.error('Sync failed for board', boardId, ':', error);
 				// Add to retry queue
 				this.addToRetryQueue(boardId);
 			}
 		}, 15000); // 15 seconds
+
+		this.syncDebounceTimers.set(boardId, timer);
 	},
 
 	addToRetryQueue: function(boardId) {
@@ -407,11 +411,21 @@ const GistSync = {
 	},
 
 	loadRetryQueue: function() {
-		const stored = localStorage.getItem('stickiesboard.sync.queue');
-		this.retryQueue = stored ? JSON.parse(stored) : [];
+		try {
+			const stored = localStorage.getItem('stickiesboard.sync.queue');
+			this.retryQueue = stored ? JSON.parse(stored) : [];
+		} catch (error) {
+			console.error('Failed to load retry queue:', error);
+			this.retryQueue = [];
+			localStorage.removeItem('stickiesboard.sync.queue');
+		}
 	},
 	saveRetryQueue: function() {
-		localStorage.setItem('stickiesboard.sync.queue', JSON.stringify(this.retryQueue));
+		try {
+			localStorage.setItem('stickiesboard.sync.queue', JSON.stringify(this.retryQueue));
+		} catch (error) {
+			console.error('Failed to save retry queue:', error);
+		}
 	},
 
 	scheduleRetryProcessor: function() {
@@ -446,6 +460,7 @@ const GistSync = {
 					// Success - don't add to remaining
 
 				} catch (error) {
+					console.error('Retry sync failed for board', item.boardId, ':', error);
 					// Failed - check if should retry or go offline
 					if (item.attempt >= 3) {
 						console.log('Max retries exceeded, entering offline mode');
