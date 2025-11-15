@@ -354,7 +354,8 @@
 		firstList.addNote('Control-Enter while editing to make a new note below');
 		SKB.board.addList('ToDo');
 		SKB.board.addList('Doing');
-		SKB.board.addList('Done');
+		var doneList = SKB.board.addList('Done');
+		doneList.addNote('Ephemeral Process, here. Thinking not tweaking.');
 
 		// Save the board immediately so it persists on reload
 		SKB.storage.saveBoard(SKB.board);
