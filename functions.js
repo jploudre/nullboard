@@ -349,9 +349,9 @@
 
 		// Add default lists
 		var firstList = SKB.board.addList('Ideas/Someday');
-		firstList.addNote('Control-Enter while editing to make a new note below');
-		firstList.addNote('Lists and Boards can be retitled by clicking on them');
 		firstList.addNote('Awesome running 200% Zoom and Fullscreen');
+		firstList.addNote('Lists and Boards can be retitled by clicking on them');
+		firstList.addNote('Control-Enter while editing to make a new note below');
 		SKB.board.addList('ToDo');
 		SKB.board.addList('Doing');
 		SKB.board.addList('Done');
