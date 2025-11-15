@@ -396,119 +396,6 @@
 		return { blob: blob, file: file };
 	}
 
-	function checkImport(foo)
-	{
-		var props = [ 'format', 'id', 'revision', 'title', 'lists' ];
-
-		for (var i=0; i<props.length; i++)
-			if (! foo.hasOwnProperty(props[i]))
-				return "Required board properties are missing.";
-
-		if (! foo.id || ! foo.revision || ! Array.isArray(foo.lists))
-			return "Required board properties are empty.";
-
-		if (foo.format != SKB.blobVersion)
-			return `Unsupported blob format "${foo.format}", expecting "${SKB.blobVersion}".`;
-
-		return null;
-	}
-
-	function importBoard(blob)
-	{
-		var data;
-
-		try
-		{
-			data = JSON.parse(blob);
-		}
-		catch (x)
-		{
-			alert('File is not in a valid JSON format.');
-			return false;
-		}
-
-		if (! Array.isArray(data))
-			data = [ data ];
-
-		var index = SKB.storage.getBoardIndex();
-		var msg, one, all = '';
-
-		for (var i=0; i<data.length; i++)
-		{
-			var board = data[i];
-
-			var whoops = checkImport(board);
-			if (whoops)
-			{
-				alert(whoops);
-				return false;
-			}
-
-			var title = board.title || '(untitled board)';
-			one =  `"${title}", ID ${board.id}, revision ${board.revision}`;
-			all += `    ID ${board.id}, revision ${board.revision} - "${title}"    \n`;
-		}
-
-		if (data.length == 1) msg = `Import a board called ${one} ?`;
-		else                  msg = `About to import the following boards:\n\n${all}\nProceed?`;
-
-		if (! confirm(msg))
-			return false;
-
-		var to_open = '';
-
-		for (var i=0; i<data.length; i++)
-		{
-			var board = data[i];
-			var check_title = true;
-
-			// check ID
-
-			if (index.has(board.id))
-			{
-				var which = (data.length == 1) ? "with the same ID" : board.id;
-
-				if (confirm(`Board ${which} already exists. Overwrite it?`) &&
-				    confirm(`OVERWRITE for sure?`))
-				{
-						check_title = false;
-				}
-				else
-				if (confirm(`Import the board under a new ID?`))
-				{
-					var new_id = +new Date();
-						board.id = new_id;
-				}
-				else
-				{
-						continue;
-				}
-			}
-
-			if (check_title)
-			{
-				var retitle = false;
-				index.forEach( have => { retitle |= (have.title == board.title) } );
-
-				if (retitle) board.title += ' (imported)';
-			}
-
-			// ok, do the deed
-
-			board.revision--; // save will ++ it back
-
-			if (! SKB.storage.saveBoard(board)) // this updates 'index'
-			{
-				alert(`Failed to save board ${board.id}. Import failed.`);
-				return false;
-			}
-
-			if (! to_open) to_open = data[0].id;
-		}
-
-		if (to_open) openBoard(to_open);
-	}
-
 
 	/*
 	 *
@@ -1300,19 +1187,6 @@
 		if (SKB.noteDrag) SKB.noteDrag.onMouseMove(ev);
 		if (SKB.loadDrag) SKB.loadDrag.onMouseMove(ev);
 		if (SKB.varAdjust) SKB.varAdjust.onMouseMove(ev);
-	});
-
-	//
-	$('header .imp-board').on('click', handleClick(function(){
-		$('header .imp-board-select')[0].click();
-	}));
-
-	$('header .imp-board-select').on('change' , function(){
-		var files = this.files;
-		var reader = new FileReader();
-		reader.onload = function(ev){ importBoard(ev.target.result); };
-		reader.readAsText(files[0]);
-		return true;
 	});
 
 	$('header .exp-board').on('click', function(){
