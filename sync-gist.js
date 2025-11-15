@@ -68,13 +68,176 @@ const GistSync = {
 		}
 	},
 
+	// API request wrapper with error handling
+	_apiRequest: async function(method, endpoint, body = null) {
+		const token = this.getToken();
+		if (!token) {
+			throw new Error('No GitHub token configured');
+		}
+
+		const options = {
+			method: method,
+			headers: {
+				'Authorization': 'token ' + token,
+				'Accept': 'application/vnd.github.v3+json',
+				'Content-Type': 'application/json'
+			}
+		};
+
+		if (body) {
+			options.body = JSON.stringify(body);
+		}
+
+		const response = await fetch(this.API_BASE + endpoint, options);
+
+		// Handle errors
+		if (response.status === 401) {
+			this.setEnabled(false);
+			if (window.SyncUI) {
+				window.SyncUI.updateIndicator();
+				window.SyncUI.showError('Token invalid or expired. Please update token.');
+			}
+			throw new Error('Invalid or expired token');
+		}
+
+		if (response.status === 403) {
+			// Rate limit - enter offline mode
+			this.setOffline(true);
+			throw new Error('Rate limit exceeded');
+		}
+
+		if (response.status >= 500) {
+			// Server error - enter offline mode
+			this.setOffline(true);
+			throw new Error('GitHub API unavailable');
+		}
+
+		if (response.status === 404 && method === 'GET') {
+			return null; // Gist not found
+		}
+
+		if (!response.ok) {
+			throw new Error('API request failed: ' + response.status);
+		}
+
+		// DELETE returns 204 No Content
+		if (response.status === 204) {
+			return { success: true };
+		}
+
+		return await response.json();
+	},
+
+	validateToken: async function(token) {
+		try {
+			// Temporarily set token for validation
+			const oldToken = this.getToken();
+			this.setToken(token);
+
+			const result = await this._apiRequest('GET', '/gists');
+
+			// Restore old token if validation failed
+			if (!result) {
+				this.setToken(oldToken);
+				return false;
+			}
+
+			return true;
+		} catch (error) {
+			this.setToken('');
+			return false;
+		}
+	},
+
+	createGist: async function(boardId, boardData) {
+		const filename = this.FILENAME_PREFIX + boardId + this.FILENAME_SUFFIX;
+
+		// Remove history before syncing
+		const cleanData = Object.assign({}, boardData);
+		delete cleanData.history;
+
+		const body = {
+			description: 'Sticky Kanban Board Data',
+			public: false,
+			files: {}
+		};
+		body.files[filename] = {
+			content: JSON.stringify(cleanData)
+		};
+
+		const result = await this._apiRequest('POST', '/gists', body);
+		return result.id;
+	},
+
+	updateGist: async function(gistId, boardData) {
+		const filename = this.FILENAME_PREFIX + boardData.id + this.FILENAME_SUFFIX;
+
+		// Remove history before syncing
+		const cleanData = Object.assign({}, boardData);
+		delete cleanData.history;
+
+		const body = {
+			files: {}
+		};
+		body.files[filename] = {
+			content: JSON.stringify(cleanData)
+		};
+
+		await this._apiRequest('PATCH', '/gists/' + gistId, body);
+		return true;
+	},
+
+	fetchGist: async function(gistId) {
+		const result = await this._apiRequest('GET', '/gists/' + gistId);
+		if (!result) return null;
+
+		// Find the sticky-kanban file
+		for (const filename in result.files) {
+			if (filename.startsWith(this.FILENAME_PREFIX) && filename.endsWith(this.FILENAME_SUFFIX)) {
+				const content = result.files[filename].content;
+				return JSON.parse(content);
+			}
+		}
+
+		return null;
+	},
+
+	listAllGists: async function() {
+		const result = await this._apiRequest('GET', '/gists');
+		if (!result) return [];
+
+		const boards = [];
+
+		for (const gist of result) {
+			for (const filename in gist.files) {
+				if (filename.startsWith(this.FILENAME_PREFIX) && filename.endsWith(this.FILENAME_SUFFIX)) {
+					// Extract board ID from filename
+					const boardId = filename.substring(
+						this.FILENAME_PREFIX.length,
+						filename.length - this.FILENAME_SUFFIX.length
+					);
+
+					const content = gist.files[filename].content;
+					const boardData = JSON.parse(content);
+
+					boards.push({
+						gistId: gist.id,
+						boardId: parseInt(boardId),
+						boardData: boardData
+					});
+				}
+			}
+		}
+
+		return boards;
+	},
+
+	deleteGist: async function(gistId) {
+		await this._apiRequest('DELETE', '/gists/' + gistId);
+		return true;
+	},
+
 	// Placeholder functions to be implemented
-	validateToken: async function(token) { },
-	createGist: async function(boardId, boardData) { },
-	updateGist: async function(gistId, boardData) { },
-	fetchGist: async function(gistId) { },
-	listAllGists: async function() { },
-	deleteGist: async function(gistId) { },
 	syncBoardToGist: async function(boardId) { },
 	pullAllGistsFromGitHub: async function() { },
 	queueBoardForSync: function(boardId) { },
