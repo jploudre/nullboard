@@ -352,10 +352,130 @@ const GistSync = {
 			// Don't throw - allow app to continue working locally
 		}
 	},
-	queueBoardForSync: function(boardId) { },
-	loadRetryQueue: function() { },
-	saveRetryQueue: function() { },
-	processRetryQueue: function() { },
+	queueBoardForSync: function(boardId) {
+		if (!this.isEnabled()) return;
+
+		// Clear existing timer
+		if (this.syncDebounceTimer) {
+			clearTimeout(this.syncDebounceTimer);
+		}
+
+		// Start new 15-second timer
+		this.syncDebounceTimer = setTimeout(async () => {
+			try {
+				await this.syncBoardToGist(boardId);
+
+				// Remove from retry queue if present
+				this.retryQueue = this.retryQueue.filter(item => item.boardId !== boardId);
+				this.saveRetryQueue();
+
+			} catch (error) {
+				// Add to retry queue
+				this.addToRetryQueue(boardId);
+			}
+		}, 15000); // 15 seconds
+	},
+
+	addToRetryQueue: function(boardId) {
+		// Check if already in queue
+		const existing = this.retryQueue.find(item => item.boardId === boardId);
+
+		if (existing) {
+			// Increment attempt
+			existing.attempt += 1;
+			existing.nextRetry = Date.now() + this.getRetryDelay(existing.attempt);
+		} else {
+			// Add new entry
+			this.retryQueue.push({
+				boardId: boardId,
+				attempt: 1,
+				nextRetry: Date.now() + this.getRetryDelay(1)
+			});
+		}
+
+		this.saveRetryQueue();
+		this.scheduleRetryProcessor();
+	},
+
+	getRetryDelay: function(attempt) {
+		switch(attempt) {
+			case 1: return 15000;  // 15 seconds
+			case 2: return 30000;  // 30 seconds
+			case 3: return 60000;  // 60 seconds
+			default: return null;  // No more retries - go offline
+		}
+	},
+
+	loadRetryQueue: function() {
+		const stored = localStorage.getItem('stickiesboard.sync.queue');
+		this.retryQueue = stored ? JSON.parse(stored) : [];
+	},
+	saveRetryQueue: function() {
+		localStorage.setItem('stickiesboard.sync.queue', JSON.stringify(this.retryQueue));
+	},
+
+	scheduleRetryProcessor: function() {
+		// Clear existing timer
+		if (this.retryTimer) {
+			clearTimeout(this.retryTimer);
+		}
+
+		// Find next retry time
+		let nextRetry = null;
+		for (const item of this.retryQueue) {
+			if (!nextRetry || item.nextRetry < nextRetry) {
+				nextRetry = item.nextRetry;
+			}
+		}
+
+		if (nextRetry) {
+			const delay = Math.max(0, nextRetry - Date.now());
+			this.retryTimer = setTimeout(() => {
+				this.processRetryQueue();
+			}, delay);
+		}
+	},
+	processRetryQueue: async function() {
+		const now = Date.now();
+		const remaining = [];
+
+		for (const item of this.retryQueue) {
+			if (item.nextRetry <= now) {
+				try {
+					await this.syncBoardToGist(item.boardId);
+					// Success - don't add to remaining
+
+				} catch (error) {
+					// Failed - check if should retry or go offline
+					if (item.attempt >= 3) {
+						console.log('Max retries exceeded, entering offline mode');
+						this.setOffline(true);
+						// Keep in queue for when online
+						remaining.push({
+							boardId: item.boardId,
+							attempt: 0, // Reset for when we come back online
+							nextRetry: now + 60000
+						});
+					} else {
+						// Add back with incremented attempt
+						item.attempt += 1;
+						item.nextRetry = now + this.getRetryDelay(item.attempt);
+						remaining.push(item);
+					}
+				}
+			} else {
+				remaining.push(item);
+			}
+		}
+
+		this.retryQueue = remaining;
+		this.saveRetryQueue();
+
+		// Schedule next processing
+		if (this.retryQueue.length > 0) {
+			this.scheduleRetryProcessor();
+		}
+	},
 	setupBeforeUnload: function() { },
 	setupOnlineListener: function() { }
 };
