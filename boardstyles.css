@@ -9,8 +9,8 @@
 
 	html, body, input, textarea {
 		font-family: var(--ff);
-		font-size: 10pt;
-		line-height: 13pt;
+		font-size: 10px;
+		line-height: 13px;
 	}
 
 	/***/
@@ -574,7 +574,7 @@
 
 	/***/
 	.board {
-		min-width: 240pt;
+		min-width: 320px;
 		min-height: 600px;
 
 		width: -moz-max-content;    /* firefox */
@@ -967,7 +967,7 @@
 	.board .note .text {
 		white-space: pre-wrap;
 		overflow-wrap: anywhere;
-		min-height: 13pt;
+		min-height: 13px;
 	}
 
 	/***/
@@ -1135,8 +1135,10 @@
 	display: inline-block;
 }
 
-/* Sync dialog styles */
-.sync-dialog-overlay {
+/* Dialog styles - Classic Mac System 7/8 aesthetic */
+
+/* Dialog overlay (backdrop) */
+.dialog-overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -1149,50 +1151,103 @@
 	z-index: 10000;
 }
 
-.sync-dialog {
-	background-color: #fff;
-	border: 2px solid #000;
-	box-shadow: 2px 2px 0 #000;
+/* Dialog outer container - uses window styling */
+.dialog {
 	min-width: 400px;
 	max-width: 500px;
+	width: auto;
+	background: #cdcdcd;
+	border: 1px solid #000;
+	box-shadow: inset 1px 1px 0 0 #dadaff;
+	position: relative;
 }
 
-.sync-dialog-title {
-	background-color: #000;
-	color: #fff;
-	padding: 4px 8px;
+.dialog::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	box-shadow: inset -1px -1px 0 0 #8787b0;
+	pointer-events: none;
+}
+
+/* Dialog title bar - horizontal stripes like window titlebar */
+.dialog-title {
+	display: block;
+	height: 17px;
+	line-height: 17px;
+	text-align: center;
+	padding: 0 6px;
+	border-bottom: 1px solid #000;
+	color: #000;
 	font-weight: bold;
-	border-bottom: 2px solid #000;
+	font-size: 10px;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAARCAMAAAArHTYgAAAAkFBMVEUAAABzc3OEhIS9vb3///8QEBAhISGtra1CQkLGxsbOzs7Ozv/e3t5SUlKlpaWMjIzeAAAAvQDv7+8xY2MxAJycY5ycnP+c//8xMWP//wBjY87/zpwAAN5j/wD/YzExnGPOnGPOzgAA/wCcAGMxMTGlpdb//84x/5wAAO//YwAQAAAAUgD/Y87O////AJzvAADKXxTxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wIVFi03sofQtQAAABNJREFUCNdj4GYQAkJGHFiIQRUADNoA2WlHzfwAAAAASUVORK5CYII=') repeat-x top left #fff;
+	background-size: 1px 17px;
+	border-left: 1px solid #ceceff;
+	border-right: 1px solid #ceceff;
 }
 
-.sync-dialog-content {
+.dialog-title .title-text {
+	padding: 0 7px;
+	background-color: #efefef;
+}
+
+/* Dialog body - outer container like .list */
+.dialog-body {
+	margin: -1px 3px 3px 3px;  /* Negative top margin to overlap titlebar border */
+}
+
+/* Dialog inner - white content area with 3D inset like .list .inner */
+.dialog-inner {
+	background-color: #f8f8f8;
+	border: 1px solid #000;
 	padding: 16px;
-	line-height: 1.6;
+	box-shadow:
+		-1px -1px 0 0 #b3b3fe,
+		1px 1px 0 0 #dadaff,
+		-1px 1px 0 0 #b3b3fe,
+		1px -1px 0 0 #b3b3fe;
 }
 
-.sync-dialog-content p {
+/* Dialog content */
+.dialog-content {
+	font-size: 10px;
+	line-height: 1.6;
+	margin-bottom: 16px;
+}
+
+.dialog-content p {
 	margin: 8px 0;
 }
 
-.sync-dialog-content ol {
+.dialog-content p:first-child {
+	margin-top: 0;
+}
+
+.dialog-content ol {
 	margin: 8px 0 8px 20px;
 	padding: 0;
 }
 
-.sync-dialog-content ol li {
+.dialog-content ol li {
 	margin: 4px 0;
 }
 
-.sync-token-input {
+/* Dialog inputs */
+.dialog-input {
 	width: 100%;
 	padding: 4px 8px;
 	border: 1px solid #000;
 	margin-top: 8px;
+	box-sizing: border-box;
 	font-family: var(--ff);
-	font-size: 10pt;
+	font-size: 10px;
 }
 
-.sync-error {
+.dialog-error {
 	color: #ff0000;
 	margin-top: 8px;
 	font-weight: bold;
@@ -1203,30 +1258,55 @@
 	letter-spacing: 2px;
 }
 
-.sync-dialog-buttons {
-	padding: 8px 16px 16px 16px;
+/* Dialog buttons - Classic Mac style */
+.dialog-buttons {
+	margin-top: 16px;
 	text-align: right;
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
 }
 
-.sync-dialog-buttons button {
+.dialog-button {
 	background-color: #fff;
-	border: 1px solid #000;
-	padding: 4px 12px;
-	margin-left: 8px;
+	border: 2px solid #000;
+	border-radius: 8px;
+	padding: 4px 16px;
+	min-width: 70px;
 	cursor: pointer;
 	font-family: var(--ff);
-	font-size: 10pt;
+	font-size: 10px;
+	font-weight: bold;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.sync-dialog-buttons button:hover {
+.dialog-button:hover:not(:disabled) {
 	background-color: #f0f0f0;
 }
 
-.sync-dialog-buttons button:active {
+.dialog-button:active:not(:disabled) {
 	background-color: #e0e0e0;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.sync-dialog-buttons button:disabled {
+.dialog-button:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
+}
+
+/* Default button (primary action) - darker/thicker appearance */
+.dialog-button.default {
+	background-color: #000;
+	color: #fff;
+	border-width: 3px;
+	border-color: #000;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-button.default:hover:not(:disabled) {
+	background-color: #222;
+}
+
+.dialog-button.default:active:not(:disabled) {
+	background-color: #111;
 }

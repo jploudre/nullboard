@@ -31,17 +31,23 @@ const SyncUI = {
 			// Already enabled - show status
 			const boardCount = this.countSyncedBoards();
 			dialogHTML = `
-				<div class="sync-dialog-overlay">
-					<div class="sync-dialog">
-						<div class="sync-dialog-title">GitHub Gist Sync</div>
-						<div class="sync-dialog-content">
-							<p>Token: <span class="token-hidden">••••••••••••</span></p>
-							<p>Status: ✓ Syncing ${boardCount} boards</p>
+				<div class="dialog-overlay">
+					<div class="dialog">
+						<div class="dialog-title">
+							<span class="title-text">GitHub Gist Sync</span>
 						</div>
-						<div class="sync-dialog-buttons">
-							<button class="sync-disable-btn">Disable Sync</button>
-							<button class="sync-update-token-btn">Update Token</button>
-							<button class="sync-close-btn">Close</button>
+						<div class="dialog-body">
+							<div class="dialog-inner">
+								<div class="dialog-content">
+									<p>Token: <span class="token-hidden">••••••••••••</span></p>
+									<p>Status: ✓ Syncing ${boardCount} boards</p>
+								</div>
+								<div class="dialog-buttons">
+									<button class="dialog-button sync-disable-btn">Disable Sync</button>
+									<button class="dialog-button sync-update-token-btn">Update Token</button>
+									<button class="dialog-button default sync-close-btn">Close</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -49,22 +55,28 @@ const SyncUI = {
 		} else {
 			// Not enabled - show setup
 			dialogHTML = `
-				<div class="sync-dialog-overlay">
-					<div class="sync-dialog">
-						<div class="sync-dialog-title">GitHub Gist Sync Setup</div>
-						<div class="sync-dialog-content">
-							<p>To enable sync:</p>
-							<ol>
-								<li>Go to github.com/settings/tokens</li>
-								<li>Create token with 'gist' scope</li>
-								<li>Paste token below</li>
-							</ol>
-							<input type="text" class="sync-token-input" placeholder="github_pat_..." />
-							<div class="sync-error" style="display:none;"></div>
+				<div class="dialog-overlay">
+					<div class="dialog">
+						<div class="dialog-title">
+							<span class="title-text">GitHub Gist Sync Setup</span>
 						</div>
-						<div class="sync-dialog-buttons">
-							<button class="sync-enable-btn">Enable Sync</button>
-							<button class="sync-cancel-btn">Cancel</button>
+						<div class="dialog-body">
+							<div class="dialog-inner">
+								<div class="dialog-content">
+									<p>To enable sync:</p>
+									<ol>
+										<li>Go to github.com/settings/tokens</li>
+										<li>Create token with 'gist' scope</li>
+										<li>Paste token below</li>
+									</ol>
+									<input type="text" class="dialog-input" placeholder="github_pat_..." />
+									<div class="dialog-error" style="display:none;"></div>
+								</div>
+								<div class="dialog-buttons">
+									<button class="dialog-button default sync-enable-btn">Enable Sync</button>
+									<button class="dialog-button sync-cancel-btn">Cancel</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -85,7 +97,7 @@ const SyncUI = {
 
 		// Enable sync (use namespaced event)
 		$(document).on('click.syncDialog', '.sync-enable-btn', async function() {
-			const token = $('.sync-token-input').val().trim();
+			const token = $('.dialog-input').val().trim();
 			if (!token) {
 				self.showDialogError('Please enter a token');
 				return;
@@ -109,7 +121,7 @@ const SyncUI = {
 		});
 
 		// Close/Cancel (use namespaced event)
-		$(document).on('click.syncDialog', '.sync-close-btn, .sync-cancel-btn, .sync-dialog-overlay', function(e) {
+		$(document).on('click.syncDialog', '.sync-close-btn, .sync-cancel-btn, .dialog-overlay', function(e) {
 			if (e.target === e.currentTarget) {
 				self.closeDialog();
 			}
@@ -119,17 +131,23 @@ const SyncUI = {
 	showUpdateTokenDialog: function() {
 		// Similar to setup but for updating token
 		const dialogHTML = `
-			<div class="sync-dialog-overlay">
-				<div class="sync-dialog">
-					<div class="sync-dialog-title">Update GitHub Token</div>
-					<div class="sync-dialog-content">
-						<p>Enter new GitHub Personal Access Token:</p>
-						<input type="text" class="sync-token-input" placeholder="github_pat_..." />
-						<div class="sync-error" style="display:none;"></div>
+			<div class="dialog-overlay">
+				<div class="dialog">
+					<div class="dialog-title">
+						<span class="title-text">Update GitHub Token</span>
 					</div>
-					<div class="sync-dialog-buttons">
-						<button class="sync-enable-btn">Update Token</button>
-						<button class="sync-cancel-btn">Cancel</button>
+					<div class="dialog-body">
+						<div class="dialog-inner">
+							<div class="dialog-content">
+								<p>Enter new GitHub Personal Access Token:</p>
+								<input type="text" class="dialog-input" placeholder="github_pat_..." />
+								<div class="dialog-error" style="display:none;"></div>
+							</div>
+							<div class="dialog-buttons">
+								<button class="dialog-button default sync-enable-btn">Update Token</button>
+								<button class="dialog-button sync-cancel-btn">Cancel</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -141,13 +159,13 @@ const SyncUI = {
 	},
 
 	closeDialog: function() {
-		$('.sync-dialog-overlay').remove();
+		$('.dialog-overlay').remove();
 		$(document).off('click.syncDialog'); // Clean up event handlers
 		this.dialogOpen = false;
 	},
 
 	showDialogError: function(message) {
-		$('.sync-error').text(message).show();
+		$('.dialog-error').text(message).show();
 	},
 
 	handleEnableSync: async function(token) {
