@@ -151,6 +151,11 @@
 
 			board.history = meta.history; // restore
 
+			// Trigger sync if enabled
+			if (window.GistSync && window.GistSync.isEnabled()) {
+				window.GistSync.queueBoardForSync(board.id);
+			}
+
 				return ok_data && ok_meta;
 		}
 
@@ -201,7 +206,20 @@
 			this.delItem(this.bmk(board_id));
 			this.boardIndex.delete(board_id);
 
+			// Delete gist if sync enabled
+			if (window.GistSync && window.GistSync.isEnabled()) {
+				const gistId = window.GistSync.getGistId(board_id);
+				if (gistId) {
+					window.GistSync.deleteGist(gistId).catch(error => {
+						console.error('Failed to delete gist:', error);
+						// Add to retry queue
+						window.GistSync.addToRetryQueue(board_id);
+					});
+					window.GistSync.deleteGistId(board_id);
+				}
+			}
 
+			return title;
 			}
 
 		getBoardHistory(board_id)
@@ -407,6 +425,30 @@
 			this.fixupConfig(newInstall);
 
 			this.type = 'LocalStorage';
+
+			// Pull from GitHub if sync enabled
+			if (window.GistSync && window.GistSync.isEnabled()) {
+				// Pull in background (don't block app load)
+				setTimeout(async () => {
+					try {
+						await window.GistSync.pullAllGistsFromGitHub();
+						// Reload current board if it was updated
+						if (this.conf.board) {
+							const currentBoardId = this.conf.board;
+							const updatedBoard = this.loadBoard(currentBoardId);
+							if (updatedBoard && window.SKB) {
+								window.SKB.board = updatedBoard;
+								// Trigger UI refresh if needed
+								if (window.refreshBoard) {
+									window.refreshBoard();
+								}
+							}
+						}
+					} catch (error) {
+						console.error('Initial sync pull failed:', error);
+					}
+				}, 100);
+			}
 
 			return true;
 		}
