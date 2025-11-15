@@ -225,6 +225,8 @@ const GistSync = {
 						const content = gist.files[filename].content;
 						const boardData = JSON.parse(content);
 
+						// Board IDs are numbers (created as +new Date() in board.js)
+						// Parse to ensure type consistency with boardIndex Map keys
 						boards.push({
 							gistId: gist.id,
 							boardId: parseInt(boardId),
@@ -326,8 +328,8 @@ const GistSync = {
 					if (gist.boardData.revision > localMeta.current) {
 						console.log('Updating board from GitHub (newer revision):', gist.boardData.title);
 
-						// GitHub version is newer - load it
-						gist.boardData.history = localMeta.history || [gist.boardData.revision];
+						// GitHub version wins - use only its revision for history
+						gist.boardData.history = [gist.boardData.revision];
 
 						SKB.storage.saveBoard(gist.boardData);
 						this.setLastSyncRev(gist.boardId, gist.boardData.revision);
