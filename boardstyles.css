@@ -1115,3 +1115,125 @@
         background-size: 256px 256px;
       }
   }
+
+/* Sync indicator styles */
+.sync-indicator {
+	display: inline-block;
+	margin-right: 4px;
+	font-weight: normal;
+}
+
+.sync-indicator.synced {
+	color: #000;
+}
+
+.sync-indicator.syncing,
+.sync-indicator.offline {
+	color: #888;
+}
+
+.sync-indicator .error-badge {
+	display: inline-block;
+	background-color: #ffb3d9;
+	border: 1px solid #ff66b3;
+	padding: 0 4px;
+	border-radius: 2px;
+	color: #fff;
+	font-size: 9pt;
+}
+
+/* Sync dialog styles */
+.sync-dialog-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10000;
+}
+
+.sync-dialog {
+	background-color: #fff;
+	border: 2px solid #000;
+	box-shadow: 2px 2px 0 #000;
+	min-width: 400px;
+	max-width: 500px;
+}
+
+.sync-dialog-title {
+	background-color: #000;
+	color: #fff;
+	padding: 4px 8px;
+	font-weight: bold;
+	border-bottom: 2px solid #000;
+}
+
+.sync-dialog-content {
+	padding: 16px;
+	line-height: 1.6;
+}
+
+.sync-dialog-content p {
+	margin: 8px 0;
+}
+
+.sync-dialog-content ol {
+	margin: 8px 0 8px 20px;
+	padding: 0;
+}
+
+.sync-dialog-content ol li {
+	margin: 4px 0;
+}
+
+.sync-token-input {
+	width: 100%;
+	padding: 4px 8px;
+	border: 1px solid #000;
+	margin-top: 8px;
+	font-family: var(--ff);
+	font-size: 10pt;
+}
+
+.sync-error {
+	color: #ff0000;
+	margin-top: 8px;
+	font-weight: bold;
+}
+
+.token-hidden {
+	font-family: monospace;
+	letter-spacing: 2px;
+}
+
+.sync-dialog-buttons {
+	padding: 8px 16px 16px 16px;
+	text-align: right;
+}
+
+.sync-dialog-buttons button {
+	background-color: #fff;
+	border: 1px solid #000;
+	padding: 4px 12px;
+	margin-left: 8px;
+	cursor: pointer;
+	font-family: var(--ff);
+	font-size: 10pt;
+}
+
+.sync-dialog-buttons button:hover {
+	background-color: #f0f0f0;
+}
+
+.sync-dialog-buttons button:active {
+	background-color: #e0e0e0;
+}
+
+.sync-dialog-buttons button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
