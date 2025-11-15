@@ -491,8 +491,92 @@ const GistSync = {
 			this.scheduleRetryProcessor();
 		}
 	},
-	setupBeforeUnload: function() { },
-	setupOnlineListener: function() { }
+	setupBeforeUnload: function() {
+		window.addEventListener('beforeunload', (event) => {
+			// Check if there are pending operations
+			const hasPending = this.syncDebounceTimer !== null || this.retryQueue.length > 0;
+
+			if (hasPending && this.isEnabled()) {
+				// Attempt synchronous sync for pending items
+				const pendingBoards = [];
+
+				// Add debounced board
+				if (this.syncDebounceTimer && SKB.board) {
+					pendingBoards.push(SKB.board.id);
+				}
+
+				// Add retry queue boards
+				for (const item of this.retryQueue) {
+					if (!pendingBoards.includes(item.boardId)) {
+						pendingBoards.push(item.boardId);
+					}
+				}
+
+				// Try to sync synchronously (browsers allow this in beforeunload)
+				for (const boardId of pendingBoards) {
+					try {
+						// Note: This uses synchronous XMLHttpRequest which is deprecated
+						// but still supported in beforeunload context
+						this.syncBoardToGistSync(boardId);
+					} catch (error) {
+						console.error('Sync during close failed:', error);
+					}
+				}
+
+				// If we get here and still have pending, warn user
+				if (pendingBoards.length > 0) {
+					event.preventDefault();
+					event.returnValue = 'Changes are still syncing to GitHub. Leave anyway?';
+				}
+			}
+		});
+	},
+
+	// Synchronous version for beforeunload
+	syncBoardToGistSync: function(boardId) {
+		if (!this.isEnabled()) return;
+
+		const token = this.getToken();
+		if (!token) return;
+
+		const board = SKB.storage.loadBoard(boardId);
+		if (!board) return;
+
+		const gistId = this.getGistId(boardId);
+		if (!gistId) return; // Can't create gist synchronously, skip
+
+		// Update existing gist only
+		const filename = this.FILENAME_PREFIX + boardId + this.FILENAME_SUFFIX;
+		const cleanData = Object.assign({}, board);
+		delete cleanData.history;
+
+		const xhr = new XMLHttpRequest();
+		xhr.open('PATCH', this.API_BASE + '/gists/' + gistId, false); // false = synchronous
+		xhr.setRequestHeader('Authorization', 'token ' + token);
+		xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+		xhr.setRequestHeader('Content-Type', 'application/json');
+
+		const body = { files: {} };
+		body.files[filename] = { content: JSON.stringify(cleanData) };
+
+		xhr.send(JSON.stringify(body));
+
+		if (xhr.status === 200) {
+			this.setLastSyncRev(boardId, board.revision);
+		}
+	},
+
+	setupOnlineListener: function() {
+		window.addEventListener('online', () => {
+			if (this.isOffline && this.isEnabled()) {
+				console.log('Network back online, attempting to sync');
+				this.setOffline(false);
+
+				// Process retry queue immediately
+				this.processRetryQueue();
+			}
+		});
+	}
 };
 
 // Auto-initialize when script loads
