@@ -246,9 +246,110 @@ const GistSync = {
 		return true;
 	},
 
-	// Placeholder functions to be implemented
-	syncBoardToGist: async function(boardId) { },
-	pullAllGistsFromGitHub: async function() { },
+	// Sync operations
+	syncBoardToGist: async function(boardId) {
+		if (!this.isEnabled()) return;
+
+		try {
+			// Update indicator to syncing state
+			if (window.SyncUI) {
+				window.SyncUI.updateIndicator('syncing');
+			}
+
+			// Load board from storage
+			const board = SKB.storage.loadBoard(boardId);
+			if (!board) {
+				console.error('Board not found:', boardId);
+				return;
+			}
+
+			const gistId = this.getGistId(boardId);
+
+			if (gistId) {
+				// Update existing gist
+				await this.updateGist(gistId, board);
+			} else {
+				// Create new gist
+				const newGistId = await this.createGist(boardId, board);
+				this.setGistId(boardId, newGistId);
+			}
+
+			// Update last synced revision
+			this.setLastSyncRev(boardId, board.revision);
+
+			// Clear offline flag on success
+			if (this.isOffline) {
+				this.setOffline(false);
+			}
+
+			// Update indicator to synced state
+			if (window.SyncUI) {
+				window.SyncUI.updateIndicator('synced');
+			}
+
+		} catch (error) {
+			console.error('Sync failed:', error);
+			// Error handling done in _apiRequest
+			throw error;
+		}
+	},
+
+	pullAllGistsFromGitHub: async function() {
+		if (!this.isEnabled()) return;
+
+		try {
+			const gists = await this.listAllGists();
+			const localBoardIndex = SKB.storage.getBoardIndex();
+			const gistBoardIds = new Set();
+
+			// Process each gist
+			for (const gist of gists) {
+				gistBoardIds.add(gist.boardId);
+
+				// Store gist ID mapping
+				this.setGistId(gist.boardId, gist.gistId);
+
+				const localMeta = localBoardIndex.get(gist.boardId);
+
+				if (!localMeta) {
+					// Board doesn't exist locally - import it
+					console.log('Importing board from GitHub:', gist.boardData.title);
+
+					// Restore history array
+					gist.boardData.history = [gist.boardData.revision];
+
+					SKB.storage.saveBoard(gist.boardData);
+					this.setLastSyncRev(gist.boardId, gist.boardData.revision);
+
+				} else {
+					// Board exists - compare revisions
+					if (gist.boardData.revision > localMeta.current) {
+						console.log('Updating board from GitHub (newer revision):', gist.boardData.title);
+
+						// GitHub version is newer - load it
+						gist.boardData.history = localMeta.history || [gist.boardData.revision];
+
+						SKB.storage.saveBoard(gist.boardData);
+						this.setLastSyncRev(gist.boardId, gist.boardData.revision);
+					}
+				}
+			}
+
+			// Check for deleted boards (local exists but gist deleted)
+			for (const [boardId, meta] of localBoardIndex) {
+				const hasGistId = this.getGistId(boardId);
+				if (hasGistId && !gistBoardIds.has(boardId)) {
+					console.log('Board deleted from GitHub, removing locally:', meta.title);
+					SKB.storage.nukeBoard(boardId);
+					this.deleteGistId(boardId);
+				}
+			}
+
+		} catch (error) {
+			console.error('Pull failed:', error);
+			// Don't throw - allow app to continue working locally
+		}
+	},
 	queueBoardForSync: function(boardId) { },
 	loadRetryQueue: function() { },
 	saveRetryQueue: function() { },
