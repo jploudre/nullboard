@@ -80,8 +80,11 @@ const SyncUI = {
 	setupDialogHandlers: function() {
 		const self = this;
 
-		// Enable sync
-		$(document).on('click', '.sync-enable-btn', async function() {
+		// Unbind previous handlers to prevent duplicates
+		$(document).off('click.syncDialog');
+
+		// Enable sync (use namespaced event)
+		$(document).on('click.syncDialog', '.sync-enable-btn', async function() {
 			const token = $('.sync-token-input').val().trim();
 			if (!token) {
 				self.showDialogError('Please enter a token');
@@ -91,8 +94,8 @@ const SyncUI = {
 			await self.handleEnableSync(token);
 		});
 
-		// Update token
-		$(document).on('click', '.sync-update-token-btn', function() {
+		// Update token (use namespaced event)
+		$(document).on('click.syncDialog', '.sync-update-token-btn', function() {
 			self.closeDialog();
 			// Show setup dialog with pre-filled token option
 			setTimeout(() => {
@@ -100,15 +103,15 @@ const SyncUI = {
 			}, 100);
 		});
 
-		// Disable sync
-		$(document).on('click', '.sync-disable-btn', function() {
+		// Disable sync (use namespaced event)
+		$(document).on('click.syncDialog', '.sync-disable-btn', function() {
 			if (confirm('Disable sync? Your boards will remain on GitHub and locally.')) {
 				self.handleDisableSync();
 			}
 		});
 
-		// Close/Cancel
-		$(document).on('click', '.sync-close-btn, .sync-cancel-btn, .sync-dialog-overlay', function(e) {
+		// Close/Cancel (use namespaced event)
+		$(document).on('click.syncDialog', '.sync-close-btn, .sync-cancel-btn, .sync-dialog-overlay', function(e) {
 			if (e.target === e.currentTarget) {
 				self.closeDialog();
 			}
@@ -141,6 +144,7 @@ const SyncUI = {
 
 	closeDialog: function() {
 		$('.sync-dialog-overlay').remove();
+		$(document).off('click.syncDialog'); // Clean up event handlers
 		this.dialogOpen = false;
 	},
 
@@ -175,7 +179,6 @@ const SyncUI = {
 			// Push all local boards that don't have gists
 			const boardIndex = SKB.storage.getBoardIndex();
 			let uploadCount = 0;
-			let downloadCount = GistSync.isOffline ? 0 : await this.countDownloadedBoards();
 
 			for (const [boardId, meta] of boardIndex) {
 				const gistId = GistSync.getGistId(boardId);
@@ -191,9 +194,12 @@ const SyncUI = {
 
 			// Close dialog and show success
 			this.closeDialog();
-			alert(`Synced ${boardIndex.size} boards (${downloadCount} downloaded, ${uploadCount} uploaded)`);
+			alert(`Sync enabled! ${boardIndex.size} boards are now syncing.`);
 
 		} catch (error) {
+			// Rollback on failure
+			GistSync.setEnabled(false);
+			GistSync.setToken('');
 			this.showDialogError('Sync failed: ' + error.message);
 			$('.sync-enable-btn').prop('disabled', false).text('Enable Sync');
 		}
@@ -253,12 +259,6 @@ const SyncUI = {
 			}
 		}
 		return count;
-	},
-
-	countDownloadedBoards: function() {
-		// This is called during initial sync - count how many we pulled
-		// Simple heuristic: boards with gist IDs that we didn't create
-		return 0; // Placeholder - actual count happens in handleEnableSync
 	},
 
 	showError: function(message) {
