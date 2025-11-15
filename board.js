@@ -5,7 +5,7 @@
 		this.verLast      = null;           // last used codeVersion
 		this.verSeen      = null;           // latest codeVersion they saw the changelog for
 
-		this.maxUndo      = 50;             // board revisions to keep
+		this.maxUndo      = 20;             // board revisions to keep
 
 		this.fileLinks    = false;          // mark up `foo` as <a href=file:///foo>...</a>
 
