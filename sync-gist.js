@@ -494,15 +494,15 @@ const GistSync = {
 	setupBeforeUnload: function() {
 		window.addEventListener('beforeunload', (event) => {
 			// Check if there are pending operations
-			const hasPending = this.syncDebounceTimer !== null || this.retryQueue.length > 0;
+			const hasPending = this.syncDebounceTimers.size > 0 || this.retryQueue.length > 0;
 
 			if (hasPending && this.isEnabled()) {
 				// Attempt synchronous sync for pending items
 				const pendingBoards = [];
 
-				// Add debounced board
-				if (this.syncDebounceTimer && SKB.board) {
-					pendingBoards.push(SKB.board.id);
+				// Add debounced boards
+				for (const boardId of this.syncDebounceTimers.keys()) {
+					pendingBoards.push(boardId);
 				}
 
 				// Add retry queue boards
