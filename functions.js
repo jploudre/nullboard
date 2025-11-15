@@ -241,9 +241,6 @@
 		var $list = $('.wrap .board .list');
 		var board_id = SKB.board.id;
 
-		if ($list.length && ! confirm("Permanently delete this board and its contents?"))
-			return;
-
 		closeBoard();
 
 		SKB.storage.nukeBoard(board_id);
@@ -308,6 +305,11 @@
 
 		$b[0].board_id = board.id;
 		setText( $b.find('.head .text'), board.title );
+
+		// Ensure lists array exists
+		if (!board.lists) {
+			board.lists = [];
+		}
 
 		board.lists.forEach(function(list){
 
@@ -490,6 +492,9 @@
 		}
 	}
 
+
+// Expose to window for sync-ui.js
+window.updateBoardIndex = updateBoardIndex;
 
 	/*
 	 *	generic utils
@@ -767,8 +772,8 @@
 	 */
 	var SKB =
 	{
-		codeVersion: 20231105,
-		blobVersion: 20190412, // board blob format in Storage
+		codeVersion: 20251115,
+		blobVersion: 20251115, // board blob format in Storage
 		board: null,
 		storage: null,
 		selectedNote: null,
@@ -1232,7 +1237,7 @@
 	SKB.varAdjust = new VarAdjust()
 
 	//
-	if (conf.board)
+	if (conf.board && SKB.storage.getBoardIndex().has(conf.board))
 		openBoard(conf.board);
 
 	adjustLayout();

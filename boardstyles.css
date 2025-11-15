@@ -1118,9 +1118,8 @@
 
 /* Sync indicator styles */
 .sync-indicator {
-	display: inline-block;
-	margin-right: 4px;
-	font-weight: normal;
+	position: absolute;
+	left: 7px;
 }
 
 .sync-indicator.synced {
@@ -1134,12 +1133,6 @@
 
 .sync-indicator .error-badge {
 	display: inline-block;
-	background-color: #ffb3d9;
-	border: 1px solid #ff66b3;
-	padding: 0 4px;
-	border-radius: 2px;
-	color: #fff;
-	font-size: 9pt;
 }
 
 /* Sync dialog styles */

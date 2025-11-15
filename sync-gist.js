@@ -222,7 +222,22 @@ const GistSync = {
 					);
 
 					try {
-						const content = gist.files[filename].content;
+						let content = gist.files[filename].content;
+
+						// If content is not available in list, fetch the full gist
+						if (!content || gist.files[filename].truncated) {
+							console.log('Fetching full gist for board:', boardId);
+							const fullGistResponse = await this._apiRequest('GET', '/gists/' + gist.id);
+							if (fullGistResponse && fullGistResponse.files && fullGistResponse.files[filename]) {
+								content = fullGistResponse.files[filename].content;
+							}
+						}
+
+						if (!content) {
+							console.warn('No content available for gist ' + gist.id);
+							continue;
+						}
+
 						const boardData = JSON.parse(content);
 
 						// Board IDs are numbers (created as +new Date() in board.js)
@@ -269,7 +284,19 @@ const GistSync = {
 
 			if (gistId) {
 				// Update existing gist
-				await this.updateGist(gistId, board);
+				try {
+					await this.updateGist(gistId, board);
+				} catch (error) {
+					// If gist was deleted from GitHub, create a new one
+					if (error.message && error.message.includes('404')) {
+						console.log('Gist not found on GitHub, creating new one');
+						this.deleteGistId(boardId);
+						const newGistId = await this.createGist(boardId, board);
+						this.setGistId(boardId, newGistId);
+					} else {
+						throw error;
+					}
+				}
 			} else {
 				// Create new gist
 				const newGistId = await this.createGist(boardId, board);
@@ -278,6 +305,7 @@ const GistSync = {
 
 			// Update last synced revision
 			this.setLastSyncRev(boardId, board.revision);
+			console.log('Sync completed successfully for board:', board.title, 'revision:', board.revision);
 
 			// Clear offline flag on success
 			if (this.isOffline) {
@@ -296,12 +324,18 @@ const GistSync = {
 		}
 	},
 
-	pullAllGistsFromGitHub: async function() {
+	pullAllGistsFromGitHub: async function(isInitialSync = false) {
 		if (!this.isEnabled()) return;
+
+		console.log('Pulling all gists from GitHub...', isInitialSync ? '(initial sync)' : '(regular sync)');
 
 		try {
 			const gists = await this.listAllGists();
+			console.log('Found', gists.length, 'gists on GitHub');
 			const localBoardIndex = SKB.storage.getBoardIndex();
+
+			// Capture snapshot of local board IDs BEFORE importing
+			const localBoardIds = new Set(localBoardIndex.keys());
 			const gistBoardIds = new Set();
 
 			// Process each gist
@@ -337,23 +371,44 @@ const GistSync = {
 				}
 			}
 
-			// Check for deleted boards (local exists but gist deleted)
-			for (const [boardId, meta] of localBoardIndex) {
+			// Check for boards with missing gists (deleted from GitHub)
+			// Use the snapshot of IDs from BEFORE import to avoid checking newly imported boards
+			for (const boardId of localBoardIds) {
+				const meta = localBoardIndex.get(boardId);
+				if (!meta) continue; // Board was already deleted
 				const hasGistId = this.getGistId(boardId);
-				if (hasGistId && !gistBoardIds.has(boardId)) {
+			if (hasGistId && !gistBoardIds.has(boardId)) {
+				if (isInitialSync) {
+					// During initial sync setup - assume gist was manually deleted, keep board
+					console.log('Gist deleted from GitHub, will re-create for board:', meta.title);
+					this.deleteGistId(boardId);
+				} else {
+					// During regular sync - board was deleted on another device
 					console.log('Board deleted from GitHub, removing locally:', meta.title);
 					SKB.storage.nukeBoard(boardId);
 					this.deleteGistId(boardId);
 				}
 			}
+			}
 
 		} catch (error) {
 			console.error('Pull failed:', error);
 			// Don't throw - allow app to continue working locally
+		} finally {
+			// Always update board index UI after pull (new/updated/deleted boards)
+			console.log('Pull completed, updating board index UI');
+			if (window.updateBoardIndex) {
+				window.updateBoardIndex();
+			}
 		}
 	},
 	queueBoardForSync: function(boardId) {
 		if (!this.isEnabled()) return;
+
+		// Update indicator to show sync is pending
+		if (window.SyncUI) {
+			window.SyncUI.updateIndicator('syncing');
+		}
 
 		// Clear existing timer for THIS board only
 		if (this.syncDebounceTimers.has(boardId)) {
@@ -578,6 +633,9 @@ const GistSync = {
 		});
 	}
 };
+
+// Export to window
+window.GistSync = GistSync;
 
 // Auto-initialize when script loads
 if (document.readyState === 'loading') {

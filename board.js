@@ -176,7 +176,9 @@
 			if (! board)
 				return false;
 
-			if (board.format != SKB.blobVersion)
+			// Accept both old (20190412) and new (20251115) format versions
+			const validFormats = [20190412, 20251115];
+			if (!validFormats.includes(board.format))
 			{
 						return false;
 			}
@@ -427,11 +429,14 @@
 			this.type = 'LocalStorage';
 
 			// Pull from GitHub if sync enabled
+			console.log('Checking if sync is enabled...', 'GistSync exists:', !!window.GistSync, 'Sync enabled:', window.GistSync ? window.GistSync.isEnabled() : 'N/A');
 			if (window.GistSync && window.GistSync.isEnabled()) {
+				console.log('Sync is enabled, scheduling pull from GitHub in 100ms');
 				// Pull in background (don't block app load)
 				setTimeout(async () => {
 					try {
 						await window.GistSync.pullAllGistsFromGitHub();
+
 						// Reload current board if it was updated
 						if (this.conf.board) {
 							const currentBoardId = this.conf.board;

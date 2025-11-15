@@ -105,9 +105,7 @@ const SyncUI = {
 
 		// Disable sync (use namespaced event)
 		$(document).on('click.syncDialog', '.sync-disable-btn', function() {
-			if (confirm('Disable sync? Your boards will remain on GitHub and locally.')) {
-				self.handleDisableSync();
-			}
+			self.handleDisableSync();
 		});
 
 		// Close/Cancel (use namespaced event)
@@ -174,7 +172,7 @@ const SyncUI = {
 
 		// Initial sync - pull then push
 		try {
-			await GistSync.pullAllGistsFromGitHub();
+			await GistSync.pullAllGistsFromGitHub(true);
 
 			// Push all local boards that don't have gists
 			const boardIndex = SKB.storage.getBoardIndex();
@@ -245,7 +243,7 @@ const SyncUI = {
 				$indicator.html('✓ ').removeClass('synced error').addClass(state);
 				break;
 			case 'error':
-				$indicator.html('<span class="error-badge">⚠️</span> ').removeClass('synced syncing offline').addClass('error');
+				$indicator.html('<span class="error-badge">✗</span> ').removeClass('synced syncing offline').addClass('error');
 				break;
 		}
 	},
