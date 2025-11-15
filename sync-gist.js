@@ -195,7 +195,11 @@ const GistSync = {
 		for (const filename in result.files) {
 			if (filename.startsWith(this.FILENAME_PREFIX) && filename.endsWith(this.FILENAME_SUFFIX)) {
 				const content = result.files[filename].content;
-				return JSON.parse(content);
+				try {
+					return JSON.parse(content);
+				} catch (error) {
+					throw new Error('Invalid board data in gist ' + gistId);
+				}
 			}
 		}
 
@@ -217,14 +221,19 @@ const GistSync = {
 						filename.length - this.FILENAME_SUFFIX.length
 					);
 
-					const content = gist.files[filename].content;
-					const boardData = JSON.parse(content);
+					try {
+						const content = gist.files[filename].content;
+						const boardData = JSON.parse(content);
 
-					boards.push({
-						gistId: gist.id,
-						boardId: parseInt(boardId),
-						boardData: boardData
-					});
+						boards.push({
+							gistId: gist.id,
+							boardId: parseInt(boardId),
+							boardData: boardData
+						});
+					} catch (error) {
+						// Skip corrupted gists rather than failing completely
+						console.warn('Skipping corrupted gist ' + gist.id + ': ' + error.message);
+					}
 				}
 			}
 		}
