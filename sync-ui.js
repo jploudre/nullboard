@@ -4,33 +4,33 @@
  */
 
 const SyncUI = {
-	dialogOpen: false,
+  dialogOpen: false,
 
-	init: function() {
-		this.setupMenuHandler();
-		this.updateIndicator();
-	},
+  init() {
+    this.setupMenuHandler();
+    this.updateIndicator();
+  },
 
-	setupMenuHandler: function() {
-		// Will be connected to menu item click
-		$(document).on('click', '.sync-gists', (e) => {
-			e.preventDefault();
-			this.showSyncDialog();
-		});
-	},
+  setupMenuHandler() {
+    // Will be connected to menu item click
+    $(document).on('click', '.sync-gists', (e) => {
+      e.preventDefault();
+      this.showSyncDialog();
+    });
+  },
 
-	showSyncDialog: function() {
-		if (this.dialogOpen) return;
-		this.dialogOpen = true;
+  showSyncDialog() {
+    if (this.dialogOpen) return;
+    this.dialogOpen = true;
 
-		const isEnabled = GistSync.isEnabled();
+    const isEnabled = GistSync.isEnabled();
 
-		let dialogHTML = '';
+    let dialogHTML = '';
 
-		if (isEnabled) {
-			// Already enabled - show status
-			const boardCount = this.countSyncedBoards();
-			dialogHTML = `
+    if (isEnabled) {
+      // Already enabled - show status
+      const boardCount = this.countSyncedBoards();
+      dialogHTML = `
 				<div class="dialog-overlay">
 					<div class="dialog">
 						<div class="dialog-title">
@@ -52,9 +52,9 @@ const SyncUI = {
 					</div>
 				</div>
 			`;
-		} else {
-			// Not enabled - show setup
-			dialogHTML = `
+    } else {
+      // Not enabled - show setup
+      dialogHTML = `
 				<div class="dialog-overlay">
 					<div class="dialog">
 						<div class="dialog-title">
@@ -81,56 +81,56 @@ const SyncUI = {
 					</div>
 				</div>
 			`;
-		}
+    }
 
-		$('body').append(dialogHTML);
+    $('body').append(dialogHTML);
 
-		// Setup button handlers
-		this.setupDialogHandlers();
-	},
+    // Setup button handlers
+    this.setupDialogHandlers();
+  },
 
-	setupDialogHandlers: function() {
-		const self = this;
+  setupDialogHandlers() {
+    const self = this;
 
-		// Unbind previous handlers to prevent duplicates
-		$(document).off('click.syncDialog');
+    // Unbind previous handlers to prevent duplicates
+    $(document).off('click.syncDialog');
 
-		// Enable sync (use namespaced event)
-		$(document).on('click.syncDialog', '.sync-enable-btn', async function() {
-			const token = $('.dialog-input').val().trim();
-			if (!token) {
-				self.showDialogError('Please enter a token');
-				return;
-			}
+    // Enable sync (use namespaced event)
+    $(document).on('click.syncDialog', '.sync-enable-btn', async () => {
+      const token = $('.dialog-input').val().trim();
+      if (!token) {
+        self.showDialogError('Please enter a token');
+        return;
+      }
 
-			await self.handleEnableSync(token);
-		});
+      await self.handleEnableSync(token);
+    });
 
-		// Update token (use namespaced event)
-		$(document).on('click.syncDialog', '.sync-update-token-btn', function() {
-			self.closeDialog();
-			// Show setup dialog with pre-filled token option
-			setTimeout(() => {
-				self.showUpdateTokenDialog();
-			}, 100);
-		});
+    // Update token (use namespaced event)
+    $(document).on('click.syncDialog', '.sync-update-token-btn', () => {
+      self.closeDialog();
+      // Show setup dialog with pre-filled token option
+      setTimeout(() => {
+        self.showUpdateTokenDialog();
+      }, 100);
+    });
 
-		// Disable sync (use namespaced event)
-		$(document).on('click.syncDialog', '.sync-disable-btn', function() {
-			self.handleDisableSync();
-		});
+    // Disable sync (use namespaced event)
+    $(document).on('click.syncDialog', '.sync-disable-btn', () => {
+      self.handleDisableSync();
+    });
 
-		// Close/Cancel (use namespaced event)
-		$(document).on('click.syncDialog', '.sync-close-btn, .sync-cancel-btn, .dialog-overlay', function(e) {
-			if (e.target === e.currentTarget) {
-				self.closeDialog();
-			}
-		});
-	},
+    // Close/Cancel (use namespaced event)
+    $(document).on('click.syncDialog', '.sync-close-btn, .sync-cancel-btn, .dialog-overlay', (e) => {
+      if (e.target === e.currentTarget) {
+        self.closeDialog();
+      }
+    });
+  },
 
-	showUpdateTokenDialog: function() {
-		// Similar to setup but for updating token
-		const dialogHTML = `
+  showUpdateTokenDialog() {
+    // Similar to setup but for updating token
+    const dialogHTML = `
 			<div class="dialog-overlay">
 				<div class="dialog">
 					<div class="dialog-title">
@@ -153,144 +153,143 @@ const SyncUI = {
 			</div>
 		`;
 
-		$('body').append(dialogHTML);
-		this.dialogOpen = true;
-		this.setupDialogHandlers();
-	},
+    $('body').append(dialogHTML);
+    this.dialogOpen = true;
+    this.setupDialogHandlers();
+  },
 
-	closeDialog: function() {
-		$('.dialog-overlay').remove();
-		$(document).off('click.syncDialog'); // Clean up event handlers
-		this.dialogOpen = false;
-	},
+  closeDialog() {
+    $('.dialog-overlay').remove();
+    $(document).off('click.syncDialog'); // Clean up event handlers
+    this.dialogOpen = false;
+  },
 
-	showDialogError: function(message) {
-		$('.dialog-error').text(message).show();
-	},
+  showDialogError(message) {
+    $('.dialog-error').text(message).show();
+  },
 
-	handleEnableSync: async function(token) {
-		// Show loading state
-		$('.sync-enable-btn').prop('disabled', true).text('Validating...');
+  async handleEnableSync(token) {
+    // Show loading state
+    $('.sync-enable-btn').prop('disabled', true).text('Validating...');
 
-		// Validate token
-		const valid = await GistSync.validateToken(token);
+    // Validate token
+    const valid = await GistSync.validateToken(token);
 
-		if (!valid) {
-			this.showDialogError('Invalid token or no access to gists');
-			$('.sync-enable-btn').prop('disabled', false).text('Enable Sync');
-			return;
-		}
+    if (!valid) {
+      this.showDialogError('Invalid token or no access to gists');
+      $('.sync-enable-btn').prop('disabled', false).text('Enable Sync');
+      return;
+    }
 
-		// Enable sync
-		GistSync.setEnabled(true);
-		GistSync.setToken(token);
+    // Enable sync
+    GistSync.setEnabled(true);
+    GistSync.setToken(token);
 
-		// Update button
-		$('.sync-enable-btn').text('Syncing...');
+    // Update button
+    $('.sync-enable-btn').text('Syncing...');
 
-		// Initial sync - pull then push
-		try {
-			await GistSync.pullAllGistsFromGitHub(true);
+    // Initial sync - pull then push
+    try {
+      await GistSync.pullAllGistsFromGitHub(true);
 
-			// Push all local boards that don't have gists
-			const boardIndex = SKB.storage.getBoardIndex();
-			let uploadCount = 0;
+      // Push all local boards that don't have gists
+      const boardIndex = SKB.storage.getBoardIndex();
+      let uploadCount = 0;
 
-			for (const [boardId, meta] of boardIndex) {
-				const gistId = GistSync.getGistId(boardId);
-				if (!gistId) {
-					// No gist yet - create one
-					await GistSync.syncBoardToGist(boardId);
-					uploadCount++;
-				}
-			}
+      for (const [boardId, meta] of boardIndex) {
+        const gistId = GistSync.getGistId(boardId);
+        if (!gistId) {
+          // No gist yet - create one
+          await GistSync.syncBoardToGist(boardId);
+          uploadCount += 1;
+        }
+      }
 
-			// Update indicator
-			this.updateIndicator();
+      // Update indicator
+      this.updateIndicator();
 
-			// Close dialog and show success
-			this.closeDialog();
-			alert(`Sync enabled! ${boardIndex.size} boards are now syncing.`);
+      // Close dialog and show success
+      this.closeDialog();
+      alert(`Sync enabled! ${boardIndex.size} boards are now syncing.`);
+    } catch (error) {
+      // Rollback on failure
+      GistSync.setEnabled(false);
+      GistSync.setToken('');
+      this.showDialogError(`Sync failed: ${error.message}`);
+      $('.sync-enable-btn').prop('disabled', false).text('Enable Sync');
+    }
+  },
 
-		} catch (error) {
-			// Rollback on failure
-			GistSync.setEnabled(false);
-			GistSync.setToken('');
-			this.showDialogError('Sync failed: ' + error.message);
-			$('.sync-enable-btn').prop('disabled', false).text('Enable Sync');
-		}
-	},
+  handleDisableSync() {
+    GistSync.setEnabled(false);
+    GistSync.setToken('');
+    this.updateIndicator();
+    this.closeDialog();
+  },
 
-	handleDisableSync: function() {
-		GistSync.setEnabled(false);
-		GistSync.setToken('');
-		this.updateIndicator();
-		this.closeDialog();
-	},
+  updateIndicator(state) {
+    // state can be: 'synced', 'syncing', 'error', 'offline', or auto-detect
+    if (!state) {
+      // Auto-detect state
+      if (!GistSync.isEnabled()) {
+        state = 'disabled';
+      } else if (GistSync.isOffline) {
+        state = 'offline';
+      } else {
+        // Check if token is valid by seeing if we have it
+        const token = GistSync.getToken();
+        if (!token) {
+          state = 'error';
+        } else {
+          state = 'synced';
+        }
+      }
+    }
 
-	updateIndicator: function(state) {
-		// state can be: 'synced', 'syncing', 'error', 'offline', or auto-detect
-		if (!state) {
-			// Auto-detect state
-			if (!GistSync.isEnabled()) {
-				state = 'disabled';
-			} else if (GistSync.isOffline) {
-				state = 'offline';
-			} else {
-				// Check if token is valid by seeing if we have it
-				const token = GistSync.getToken();
-				if (!token) {
-					state = 'error';
-				} else {
-					state = 'synced';
-				}
-			}
-		}
+    const $indicator = $('.sync-indicator');
 
-		const $indicator = $('.sync-indicator');
+    switch (state) {
+    case 'disabled':
+      $indicator.html('').removeClass('synced syncing error offline');
+      break;
+    case 'synced':
+      $indicator.html('✓ ').removeClass('syncing error offline').addClass('synced');
+      break;
+    case 'syncing':
+    case 'offline':
+      $indicator.html('✓ ').removeClass('synced error').addClass(state);
+      break;
+    case 'error':
+      $indicator.html('<span class="error-badge">✗</span> ').removeClass('synced syncing offline').addClass('error');
+      break;
+    }
+  },
 
-		switch(state) {
-			case 'disabled':
-				$indicator.html('').removeClass('synced syncing error offline');
-				break;
-			case 'synced':
-				$indicator.html('✓ ').removeClass('syncing error offline').addClass('synced');
-				break;
-			case 'syncing':
-			case 'offline':
-				$indicator.html('✓ ').removeClass('synced error').addClass(state);
-				break;
-			case 'error':
-				$indicator.html('<span class="error-badge">✗</span> ').removeClass('synced syncing offline').addClass('error');
-				break;
-		}
-	},
+  countSyncedBoards() {
+    const boardIndex = SKB.storage.getBoardIndex();
+    let count = 0;
+    for (const [boardId, meta] of boardIndex) {
+      if (GistSync.getGistId(boardId)) {
+        count++;
+      }
+    }
+    return count;
+  },
 
-	countSyncedBoards: function() {
-		const boardIndex = SKB.storage.getBoardIndex();
-		let count = 0;
-		for (const [boardId, meta] of boardIndex) {
-			if (GistSync.getGistId(boardId)) {
-				count++;
-			}
-		}
-		return count;
-	},
-
-	showError: function(message) {
-		// Show error notification (could be improved with toast)
-		console.error('Sync error:', message);
-		alert(message);
-	}
+  showError(message) {
+    // Show error notification (could be improved with toast)
+    console.error('Sync error:', message);
+    alert(message);
+  },
 };
 
 // Auto-initialize when script loads
 if (document.readyState === 'loading') {
-	document.addEventListener('DOMContentLoaded', function() {
-		window.SyncUI = SyncUI;
-		SyncUI.init();
-	});
+  document.addEventListener('DOMContentLoaded', () => {
+    window.SyncUI = SyncUI;
+    SyncUI.init();
+  });
 } else {
-	window.SyncUI = SyncUI;
-	SyncUI.init();
+  window.SyncUI = SyncUI;
+  SyncUI.init();
 }
