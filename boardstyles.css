@@ -1258,7 +1258,6 @@
 	letter-spacing: 2px;
 }
 
-/* Dialog buttons - Classic Mac style */
 .dialog-buttons {
 	margin-top: 16px;
 	text-align: right;
@@ -1268,16 +1267,21 @@
 }
 
 .dialog-button {
-	background-color: #fff;
-	border: 2px solid #000;
-	border-radius: 8px;
-	padding: 4px 16px;
-	min-width: 70px;
-	cursor: pointer;
-	font-family: var(--ff);
-	font-size: 10px;
-	font-weight: bold;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 20px;
+  min-width: 59px;
+  padding: 0 20px;
+  text-align:center;
+  background: #fff;
+  border-style: solid;
+  border-width: 5.5px;
+  border-image: url("./button.svg") 30 stretch;
+  color: #000;
+  text-align: center;
+  text-decoration: none;
+  font-size: 10px;
+  font-family: 'Espy Sans Revived Ten';
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .dialog-button:hover:not(:disabled) {
@@ -1285,8 +1289,8 @@
 }
 
 .dialog-button:active:not(:disabled) {
-	background-color: #e0e0e0;
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+	background-color: #000;
+	color: #fff
 }
 
 .dialog-button:disabled {
@@ -1296,17 +1300,9 @@
 
 /* Default button (primary action) - darker/thicker appearance */
 .dialog-button.default {
-	background-color: #000;
-	color: #fff;
-	border-width: 3px;
-	border-color: #000;
-	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  border-image: url("./button-default.svg") 60 stretch;
+  border-width: 0.5em;
+  border-radius: 12px;
 }
 
-.dialog-button.default:hover:not(:disabled) {
-	background-color: #222;
-}
 
-.dialog-button.default:active:not(:disabled) {
-	background-color: #111;
-}
