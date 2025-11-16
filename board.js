@@ -120,9 +120,9 @@ class Storage {
 
     /*
 			 *	save meta
-			 */
+       */
     okMeta = this.setJson(this.bmk(board.id), meta)
-			          && this.setJson(`board.${board.id}`, meta.current); // for older versions
+      && this.setJson(`board.${board.id}`, meta.current); // for older versions
 
     board.history = meta.history; // restore
 
@@ -177,8 +177,7 @@ class Storage {
     if (window.GistSync && window.GistSync.isEnabled()) {
       const gistId = window.GistSync.getGistId(boardId);
       if (gistId) {
-        window.GistSync.deleteGist(gistId).catch((error) => {
-          console.error('Failed to delete gist:', error);
+        window.GistSync.deleteGist(gistId).catch(() => {
           // Add to retry queue
           window.GistSync.addToRetryQueue(boardId);
         });
@@ -210,7 +209,7 @@ class Storage {
     meta.current = revision;
 
     return this.setJson(this.bmk(boardId), meta)
-			       && this.setJson(this.bk(boardId), revision); // for older versions
+      && this.setJson(this.bk(boardId), revision); // for older versions
   }
 
   setBoardUiSpot(boardId, uiSpot) {
@@ -322,7 +321,7 @@ class StorageLocal extends Storage {
 
       if (!m) continue;
 
-      const boardId = parseInt(m[1]);
+      const boardId = parseInt(m[1], 10);
       let meta = this.getJson(this.bmk(boardId));
 
       if (!meta.hasOwnProperty('history')) {
@@ -352,7 +351,7 @@ class StorageLocal extends Storage {
 
       newInstall = false;
 
-      const boardId = parseInt(m[1]);
+      const boardId = parseInt(m[1], 10);
       if (this.boardIndex.has(boardId)) continue;
 
       let meta = this.rebuildMeta(boardId);
@@ -367,9 +366,7 @@ class StorageLocal extends Storage {
     this.type = 'LocalStorage';
 
     // Pull from GitHub if sync enabled
-    console.log('Checking if sync is enabled...', 'GistSync exists:', !!window.GistSync, 'Sync enabled:', window.GistSync ? window.GistSync.isEnabled() : 'N/A');
     if (window.GistSync && window.GistSync.isEnabled()) {
-      console.log('Sync is enabled, scheduling pull from GitHub in 100ms');
       // Pull in background (don't block app load)
       setTimeout(async () => {
         try {
@@ -388,7 +385,7 @@ class StorageLocal extends Storage {
             }
           }
         } catch (error) {
-          console.error('Initial sync pull failed:', error);
+          // Silently fail initial sync
         }
       }, 100);
     }
@@ -426,7 +423,7 @@ class StorageLocal extends Storage {
 
     for (let i = 0; i < localStorage.length; i += 1) {
       const m = localStorage.key(i).match(re);
-      if (m) revs.push(parseInt(m[1]));
+      if (m) revs.push(parseInt(m[1], 10));
     }
 
     if (!revs.length) {
@@ -451,3 +448,6 @@ class StorageLocal extends Storage {
     return meta;
   }
 }
+
+// Export for use in functions.js
+window.StorageLocal = StorageLocal;

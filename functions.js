@@ -97,11 +97,11 @@ function moveList($list, left) {
   const $a = $list;
   const $b = left ? $a.prev() : $a.next();
 
-  const $menuA = $a.children('.head').find('.menu .bulk');
-  const $menuB = $b.children('.head').find('.menu .bulk');
+  const _$menuA = $a.children('.head').find('.menu .bulk');
+  const _$menuB = $b.children('.head').find('.menu .bulk');
 
-  const pos_a = $a.offset().left;
-  const pos_b = $b.offset().left;
+  const _pos_a = $a.offset().left;
+  const _pos_b = $b.offset().left;
 
   // Swap lists immediately
   if (left) $list.prev().before($list);
@@ -128,7 +128,7 @@ function reopenBoard(revision) {
   openBoard(boardId);
 }
 
-function closeBoard(quick) {
+function closeBoard(_quick) {
   if (!SKB.board) return;
 
   const $board = $('.wrap .board');
@@ -151,7 +151,7 @@ function addBoard() {
   const index = SKB.storage.getBoardIndex();
   const existingTitles = [];
 
-  index.forEach((meta, boardId) => {
+  index.forEach((meta, _boardId) => {
     existingTitles.push(meta.title);
   });
 
@@ -203,7 +203,7 @@ function saveBoard() {
         color = colorClass[1];
       }
 
-      const n = l.addNote(text, color);
+      const _n = l.addNote(text, color);
     });
   });
 
@@ -215,7 +215,7 @@ function saveBoard() {
 }
 
 function deleteBoard() {
-  const $list = $('.wrap .board .list');
+  const _$list = $('.wrap .board .list');
   const boardId = SKB.board.id;
 
   closeBoard();
@@ -303,6 +303,9 @@ function showBoard(quick) {
   if (quick) $wrap.html('').append($b);
   else $wrap.html('').append($b).css({ opacity: 1 });
 
+  // Reset scroll to top when showing board
+  window.scrollTo(0, 0);
+
   updatePageTitle();
   updateUndoRedo();
   updateBoardIndex();
@@ -341,7 +344,7 @@ function exportBoard() {
     file;
 
   if (!SKB.board) {
-    const index = SKB.storage.getBoardIndex();
+    const _index = SKB.storage.getBoardIndex();
     const all = [];
 
     boards.forEach((meta, boardId) => {
@@ -370,7 +373,7 @@ function saveBoardOrder() {
   let spot = 1;
 
   $index.each(function () {
-    const id = parseInt($(this).attr('board_id'));
+    const id = parseInt($(this).attr('boardId'), 10);
     SKB.storage.setBoardUiSpot(id, spot++);
   });
 }
@@ -412,7 +415,7 @@ function updateBoardIndex() {
   const $index = $('.boards-dropdown');
   const $export = $('header .exp-board');
 
-  const $board = $('.wrap .board');
+  const _$board = $('.wrap .board');
   const idNow = SKB.board && SKB.board.id;
   let empty = true;
 
@@ -468,7 +471,7 @@ function setText($note, text) {
   if (SKB.peek('fileLinks')) {
     const xmmm = /`(.*?)`/mg;
     text = text.replace(xmmm, (full, text) => {
-      link = `file:///${text.replace('\\', '/')}`;
+      const link = `file:///${text.replace('\\', '/')}`;
       return `\`<a href="${link}" target=_blank>${text}</a>\``;
     });
   }
@@ -484,10 +487,13 @@ function removeTextSelection() {
   if (window.getSelection) { window.getSelection().removeAllRanges(); } else if (document.selection) { document.selection.empty(); }
 }
 
+// Export for use in drag.js
+window.removeTextSelection = removeTextSelection;
+
 /*
 	 *	inline editing
 	 */
-function startEditing($text, ev) {
+function startEditing($text, _ev) {
   const $note = $text.parent();
   const $edit = $note.find('.edit');
 
@@ -676,24 +682,24 @@ function initDragAndDrop() {
 }
 
 /*
-	 *	Initialize SKB object
-	 */
-const SKB =	{
-	  codeVersion: 20251115,
-	  blobVersion: 20251115, // board blob format in Storage
-	  board: null,
-	  storage: null,
-	  selectedNote: null,
+   *  Initialize SKB object
+   */
+const SKB = {
+  codeVersion: 20251115,
+  blobVersion: 20251115, // board blob format in Storage
+  board: null,
+  storage: null,
+  selectedNote: null,
 
-	  peek(name) {
-	    return this.storage.getConfig()[name];
-	  },
+  peek(name) {
+    return this.storage.getConfig()[name];
+  },
 
-	  poke(name, val) {
-	    const conf = this.storage.getConfig();
-	    conf[name] = val;
-	    return this.storage.saveConfig();
-	  },
+  poke(name, val) {
+    const conf = this.storage.getConfig();
+    conf[name] = val;
+    return this.storage.saveConfig();
+  },
 };
 
 /*
@@ -723,7 +729,7 @@ $('.wrap').on('click', '.board .text', function (ev) {
 });
 
 // Special handler for board title in window titlebar
-$('.wrap').on('click', '.board .window-title.head .text', function (ev) {
+$('.wrap').on('click', '.board .window-title.head .text', function (_ev) {
   const $head = $(this).closest('.window-title.head');
   const $edit = $head.find('.edit');
   const $text = $(this);
@@ -768,7 +774,7 @@ $('.wrap').on('keydown', '.board .window-title.head .edit', function (ev) {
 });
 
 // Board title edit blur handler
-$('.wrap').on('blur', '.board .window-title.head .edit', function (ev) {
+$('.wrap').on('blur', '.board .window-title.head .edit', function (_ev) {
   const $this = $(this);
   const $head = $this.closest('.window-title.head');
   const $text = $head.find('.text');
@@ -834,7 +840,7 @@ $('.wrap').on('keydown', '.board .edit', function (ev) {
 
   // done
   if (ev.keyCode === 13 && ev.altKey
-		    || ev.keyCode === 13 && ev.shiftKey && !ev.ctrlKey) {
+    || ev.keyCode === 13 && ev.shiftKey && !ev.ctrlKey) {
     stopEditing($this, false, false);
     return false;
   }
@@ -892,7 +898,7 @@ $('.wrap').on('keypress', '.board .edit', function (ev) {
 });
 
 //
-$('.wrap').on('blur', '.board .edit', function (ev) {
+$('.wrap').on('blur', '.board .edit', function (_ev) {
   if (document.activeElement !== this) stopEditing($(this), false, true);
   else ; // switch away from the browser window
 });
@@ -929,7 +935,7 @@ $('header').on('click', '.add-note-first', handleClick(() => {
 
 // Click handler for Windows menu dropdown
 $('header').on('click', '.load-board', handleClick(function () {
-  const boardId = parseInt($(this).attr('board_id'));
+  const boardId = parseInt($(this).attr('boardId'), 10);
   SKB.loadDrag.cancelPriming();
   if (SKB.board && (SKB.board.id === boardId)) closeBoard();
   else openBoard(boardId);
@@ -1060,7 +1066,7 @@ $('header').on('mousedown', 'a.load-board', function (ev) {
 });
 
 //
-$(document).on('mouseup', (ev) => {
+$(document).on('mouseup', (_ev) => {
   if (SKB.noteDrag) SKB.noteDrag.end();
   if (SKB.loadDrag) SKB.loadDrag.end();
   if (SKB.varAdjust) SKB.varAdjust.end();
@@ -1098,8 +1104,8 @@ if (!SKB.storage.open()) {
 
 const boards = SKB.storage.getBoardIndex();
 
-boards.forEach((meta, boardId) => {
-  const hist = meta.history.join(', ');
+boards.forEach((_meta, _boardId) => {
+  const _hist = _meta.history.join(', ');
 });
 
 //

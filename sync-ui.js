@@ -194,14 +194,14 @@ const SyncUI = {
 
       // Push all local boards that don't have gists
       const boardIndex = SKB.storage.getBoardIndex();
-      let uploadCount = 0;
+      let _uploadCount = 0;
 
-      for (const [boardId, meta] of boardIndex) {
+      for (const [boardId, _meta] of boardIndex) {
         const gistId = GistSync.getGistId(boardId);
         if (!gistId) {
           // No gist yet - create one
           await GistSync.syncBoardToGist(boardId);
-          uploadCount += 1;
+          _uploadCount += 1;
         }
       }
 
@@ -268,7 +268,7 @@ const SyncUI = {
   countSyncedBoards() {
     const boardIndex = SKB.storage.getBoardIndex();
     let count = 0;
-    for (const [boardId, meta] of boardIndex) {
+    for (const [boardId, _meta] of boardIndex) {
       if (GistSync.getGistId(boardId)) {
         count++;
       }
@@ -278,7 +278,6 @@ const SyncUI = {
 
   showError(message) {
     // Show error notification (could be improved with toast)
-    console.error('Sync error:', message);
     alert(message);
   },
 };

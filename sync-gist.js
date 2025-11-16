@@ -53,7 +53,7 @@ const GistSync = {
 
   getLastSyncRev(boardId) {
     const rev = localStorage.getItem(`stickiesboard.sync.lastSyncRev.${boardId}`);
-    return rev ? parseInt(rev) : 0;
+    return rev ? parseInt(rev, 10) : 0;
   },
 
   setLastSyncRev(boardId, revision) {
@@ -226,7 +226,6 @@ const GistSync = {
 
             // If content is not available in list, fetch the full gist
             if (!content || gist.files[filename].truncated) {
-              console.log('Fetching full gist for board:', boardId);
               const fullGistResponse = await this._apiRequest('GET', `/gists/${gist.id}`);
               if (fullGistResponse && fullGistResponse.files && fullGistResponse.files[filename]) {
                 content = fullGistResponse.files[filename].content;
@@ -234,7 +233,6 @@ const GistSync = {
             }
 
             if (!content) {
-              console.warn(`No content available for gist ${gist.id}`);
               continue;
             }
 
@@ -244,12 +242,11 @@ const GistSync = {
             // Parse to ensure type consistency with boardIndex Map keys
             boards.push({
               gistId: gist.id,
-              boardId: parseInt(boardId),
+              boardId: parseInt(boardId, 10),
               boardData,
             });
           } catch (error) {
             // Skip corrupted gists rather than failing completely
-            console.warn(`Skipping corrupted gist ${gist.id}: ${error.message}`);
           }
         }
       }
@@ -271,7 +268,6 @@ const GistSync = {
       // Check if board still exists in index (may have been deleted)
       const boardIndex = SKB.storage.getBoardIndex();
       if (!boardIndex.has(boardId)) {
-        console.log('Board no longer exists, skipping sync:', boardId);
         return;
       }
 
@@ -283,7 +279,6 @@ const GistSync = {
       // Load board from storage
       const board = SKB.storage.loadBoard(boardId);
       if (!board) {
-        console.error('Board not found:', boardId);
         return;
       }
 
@@ -296,7 +291,6 @@ const GistSync = {
         } catch (error) {
           // If gist was deleted from GitHub, create a new one
           if (error.message && error.message.includes('404')) {
-            console.log('Gist not found on GitHub, creating new one');
             this.deleteGistId(boardId);
             const newGistId = await this.createGist(boardId, board);
             this.setGistId(boardId, newGistId);
@@ -312,7 +306,6 @@ const GistSync = {
 
       // Update last synced revision
       this.setLastSyncRev(boardId, board.revision);
-      console.log('Sync completed successfully for board:', board.title, 'revision:', board.revision);
 
       // Clear offline flag on success
       if (this.isOffline) {
@@ -324,7 +317,6 @@ const GistSync = {
         window.SyncUI.updateIndicator('synced');
       }
     } catch (error) {
-      console.error('Sync failed:', error);
       // Error handling done in _apiRequest
       throw error;
     }
@@ -333,11 +325,8 @@ const GistSync = {
   async pullAllGistsFromGitHub(isInitialSync = false) {
     if (!this.isEnabled()) return;
 
-    console.log('Pulling all gists from GitHub...', isInitialSync ? '(initial sync)' : '(regular sync)');
-
     try {
       const gists = await this.listAllGists();
-      console.log('Found', gists.length, 'gists on GitHub');
       const localBoardIndex = SKB.storage.getBoardIndex();
 
       // Capture snapshot of local board IDs BEFORE importing
@@ -355,8 +344,6 @@ const GistSync = {
 
         if (!localMeta) {
           // Board doesn't exist locally - import it
-          console.log('Importing board from GitHub:', gist.boardData.title);
-
           // Restore history array
           gist.boardData.history = [gist.boardData.revision];
 
@@ -365,8 +352,6 @@ const GistSync = {
         } else {
           // Board exists - compare revisions
           if (gist.boardData.revision > localMeta.current) {
-            console.log('Updating board from GitHub (newer revision):', gist.boardData.title);
-
             // GitHub version wins - use only its revision for history
             gist.boardData.history = [gist.boardData.revision];
 
@@ -385,22 +370,18 @@ const GistSync = {
         if (hasGistId && !gistBoardIds.has(boardId)) {
           if (isInitialSync) {
             // During initial sync setup - assume gist was manually deleted, keep board
-            console.log('Gist deleted from GitHub, will re-create for board:', meta.title);
             this.deleteGistId(boardId);
           } else {
             // During regular sync - board was deleted on another device
-            console.log('Board deleted from GitHub, removing locally:', meta.title);
             SKB.storage.nukeBoard(boardId);
             this.deleteGistId(boardId);
           }
         }
       }
     } catch (error) {
-      console.error('Pull failed:', error);
       // Don't throw - allow app to continue working locally
     } finally {
       // Always update board index UI after pull (new/updated/deleted boards)
-      console.log('Pull completed, updating board index UI');
       if (window.updateBoardIndex) {
         window.updateBoardIndex();
       }
@@ -429,7 +410,6 @@ const GistSync = {
         this.retryQueue = this.retryQueue.filter((item) => item.boardId !== boardId);
         this.saveRetryQueue();
       } catch (error) {
-        console.error('Sync failed for board', boardId, ':', error);
         // Add to retry queue
         this.addToRetryQueue(boardId);
       }
@@ -485,7 +465,6 @@ const GistSync = {
       const stored = localStorage.getItem('stickiesboard.sync.queue');
       this.retryQueue = stored ? JSON.parse(stored) : [];
     } catch (error) {
-      console.error('Failed to load retry queue:', error);
       this.retryQueue = [];
       localStorage.removeItem('stickiesboard.sync.queue');
     }
@@ -494,7 +473,7 @@ const GistSync = {
     try {
       localStorage.setItem('stickiesboard.sync.queue', JSON.stringify(this.retryQueue));
     } catch (error) {
-      console.error('Failed to save retry queue:', error);
+      // Silently fail
     }
   },
 
@@ -529,10 +508,8 @@ const GistSync = {
           await this.syncBoardToGist(item.boardId);
           // Success - don't add to remaining
         } catch (error) {
-          console.error('Retry sync failed for board', item.boardId, ':', error);
           // Failed - check if should retry or go offline
           if (item.attempt >= 3) {
-            console.log('Max retries exceeded, entering offline mode');
             this.setOffline(true);
             // Keep in queue for when online
             remaining.push({
@@ -588,7 +565,7 @@ const GistSync = {
             // but still supported in beforeunload context
             this.syncBoardToGistSync(boardId);
           } catch (error) {
-            console.error('Sync during close failed:', error);
+            // Silently fail
           }
         }
 
@@ -638,7 +615,6 @@ const GistSync = {
   setupOnlineListener() {
     window.addEventListener('online', () => {
       if (this.isOffline && this.isEnabled()) {
-        console.log('Network back online, attempting to sync');
         this.setOffline(false);
 
         // Process retry queue immediately

@@ -3,7 +3,7 @@ function Drag2() {
   this.listSel = null;
   this.itemSel = null;
   this.dragster = null;
-  this.onDragging = function (started) { };
+  this.onDragging = function (_started) { };
   this.swapAnimMs = 200;
 
   // state
@@ -155,7 +155,7 @@ function Drag2() {
       $target = $(targetItem);
 
       if (!before && $target.next()[0] === drag.item
-				      || before && $target.prev()[0] === drag.item) return;
+        || before && $target.prev()[0] === drag.item) return;
     }
 
     /*
