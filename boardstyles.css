@@ -1182,10 +1182,15 @@
 	box-shadow: inset 1px 0 0 #efefef, inset -1px 0 0 #efefef;
 }
 
-.dialog-title .title-text {
+.dialog-title .title {
 	padding: 2px 7px;
 	background-color: #efefef;
 	line-height: 1;
+}
+
+.dialog-title .title .text {
+	position: relative;
+	top: 1px;
 }
 
 /* Dialog body - outer container like .list */

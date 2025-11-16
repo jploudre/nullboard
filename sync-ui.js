@@ -34,7 +34,7 @@ const SyncUI = {
 				<div class="dialog-overlay">
 					<div class="dialog">
 						<div class="dialog-title">
-							<span class="title-text">GitHub Gist Sync</span>
+							<span class="title"><div class="text">GitHub Gist Sync</div></span>
 						</div>
 						<div class="dialog-body">
 							<div class="dialog-inner">
@@ -58,7 +58,7 @@ const SyncUI = {
 				<div class="dialog-overlay">
 					<div class="dialog">
 						<div class="dialog-title">
-							<span class="title-text">GitHub Gist Sync Setup</span>
+							<span class="title"><div class="text">GitHub Gist Sync Setup</div></span>
 						</div>
 						<div class="dialog-body">
 							<div class="dialog-inner">
@@ -134,7 +134,7 @@ const SyncUI = {
 			<div class="dialog-overlay">
 				<div class="dialog">
 					<div class="dialog-title">
-						<span class="title-text">Update GitHub Token</span>
+						<span class="title"><div class="text">Update GitHub Token</div></span>
 					</div>
 					<div class="dialog-body">
 						<div class="dialog-inner">
