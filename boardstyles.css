@@ -106,7 +106,6 @@
 	}
 
 	/***/
-	/* Header/Menubar from system7css */
 	header{
 		top: 0;
 		left: 0;
@@ -135,7 +134,7 @@
 	header img.icon{
 		height: 19px;
 		width: 19px;
-		vertical-align: middle;
+		display: block;
 	}
 
 	header .menu{
@@ -153,15 +152,21 @@
 	}
 
 	header .menu li{
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		height: 19px;
+	}
+
+	header .menu li:first-child{
+		vertical-align: top;
 	}
 
 	header .menu li>a{
 		color: #000;
-		padding: 0 7px;
-		display: block;
-		height: 19px;
-		line-height: 19px;
+		padding: 3px 7px 0 7px;
+		display: flex;
+		align-items: center;
+		height: 100%;
 	}
 
 	header .menu li:hover>a {
@@ -169,11 +174,9 @@
 		color: #fff;
 	}
 
-	/* Push down text for non-icon menu items */
-	header .menu li:not(:first-child) > a,
-	header .menu.right li > a {
-		padding-top: 2px;
-		height: 17px;
+	/* Center text for all menu items */
+	header .menu li > a {
+		line-height: 1;
 	}
 
 	header .menu li.disabled a{
@@ -404,13 +407,11 @@
 		border-color: #cdcdcd;
 	}
 
-	/* Add top padding to body to account for fixed header */
 	body {
-		padding-top: 20px;
+		padding-top: 0px;
 	}
 
 	/***/
-	/* Window styles from system7css */
 	.window{
 		position: relative;
 		border: 1px solid #525252;
@@ -426,10 +427,10 @@
 	}
 
 	.window>.window-title{
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		height: 17px;
-		line-height: 17px;
-		text-align: center;
 		padding: 0 6px;
 		border-bottom: 1px solid #000;
 		color: #848484;
@@ -438,12 +439,14 @@
 	.window.window-focus>.window-title{
 		border-left: 1px solid #ceceff;
 		border-right: 1px solid #ceceff;
+		box-shadow: inset 1px 0 0 #efefef, inset -1px 0 0 #efefef;
 		color: #000;
 	}
 
 	.window.window-focus>.window-title>span.title{
-		padding: 0 7px;
+		padding: 2px 7px;
 		background-color: #efefef;
+		line-height: 1;
 	}
 
 	.window.window-focus>.window-title>a{
@@ -1175,10 +1178,10 @@
 
 /* Dialog title bar - horizontal stripes like window titlebar */
 .dialog-title {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	height: 17px;
-	line-height: 17px;
-	text-align: center;
 	padding: 0 6px;
 	border-bottom: 1px solid #000;
 	color: #000;
@@ -1188,11 +1191,13 @@
 	background-size: 1px 17px;
 	border-left: 1px solid #ceceff;
 	border-right: 1px solid #ceceff;
+	box-shadow: inset 1px 0 0 #efefef, inset -1px 0 0 #efefef;
 }
 
 .dialog-title .title-text {
-	padding: 0 7px;
+	padding: 2px 7px;
 	background-color: #efefef;
+	line-height: 1;
 }
 
 /* Dialog body - outer container like .list */
