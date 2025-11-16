@@ -53,7 +53,7 @@ function Drag2() {
     const $item = $(this.item);
     $item.addClass('dragging');
 
-    $('body').append(`<div class=${this.dragster}></div>`);
+    $('body').append(`<div class="${this.dragster}"></div>`);
     const $drag = $(`body .${this.dragster}`).last();
 
     $drag.css({ width: `${$item.outerWidth()}px`, height: `${$item.outerHeight()}px` });

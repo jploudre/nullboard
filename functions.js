@@ -228,6 +228,12 @@ function deleteBoard() {
   SKB.storage.nukeBoard(boardId);
 
   updateBoardIndex();
+
+  // If no boards remain, create the demo board
+  if (SKB.storage.getBoardIndex().size === 0) {
+    createDemoBoard();
+    showBoard(true);
+  }
 }
 
 //
@@ -321,13 +327,14 @@ function createDemoBoard() {
 
   // Add default lists
   const firstList = SKB.board.addList('Ideas/Someday');
-  firstList.addNote('Awesome running 200% Zoom and Fullscreen');
-  firstList.addNote('Lists and Boards can be retitled by clicking on them');
-  firstList.addNote('Control-Enter while editing to make a new note below');
+  firstList.addNote('Awesome running 200% Zoom and Fullscreen', 'green');
+  firstList.addNote('Board titles and list titles can be changed by clicking on them.', 'gray');
+  firstList.addNote('Control-Enter while editing to make a new note below', 'pink');
+  firstList.addNote('Organize by:\n• Dragging & Dropping notes\n• Changing colors\n• Control-Shift-8 for bullets', 'gray');
   SKB.board.addList('ToDo');
   SKB.board.addList('Doing');
   const doneList = SKB.board.addList('Done');
-  doneList.addNote('Ephemeral Process, here. Thinking not tweaking.');
+  doneList.addNote('Ephemeral Process, here. Thinking not tweaking.', 'yellow');
 
   // Save the board immediately so it persists on reload
   SKB.storage.saveBoard(SKB.board);
