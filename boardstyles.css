@@ -724,10 +724,12 @@
 		border: 1px solid #000;
 		min-height: 80px;
 		box-shadow:
-			-1px -1px 0 0 #b3b3fe,
 			1px 1px 0 0 #dadaff,
-			-1px 1px 0 0 #b3b3fe,
-			1px -1px 0 0 #b3b3fe;
+			1px 0px 0 0 #dadaff,
+			0px 1px 0 0 #dadaff,
+			-1px -1px 0 0 #8787b0,
+			-1px 1px 0 0 #8787b0,
+			1px -1px 0 0 #8787b0;
 	}
 
 	.board .list::-webkit-scrollbar {
@@ -1171,7 +1173,6 @@
 	justify-content: center;
 	height: 17px;
 	padding: 0 6px;
-	border-bottom: 1px solid #000;
 	color: #000;
 	font-weight: bold;
 	font-size: 10px;
@@ -1180,6 +1181,16 @@
 	border-left: 1px solid #ceceff;
 	border-right: 1px solid #ceceff;
 	box-shadow: inset 1px 0 0 #efefef, inset -1px 0 0 #efefef;
+	position: relative;
+}
+
+.dialog-title::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 2px;
+	right: 2px;
+	border-bottom: 1px solid #000;
 }
 
 .dialog-title .title {
@@ -1204,10 +1215,12 @@
 	border: 1px solid #000;
 	padding: 16px;
 	box-shadow:
-		-1px -1px 0 0 #b3b3fe,
 		1px 1px 0 0 #dadaff,
-		-1px 1px 0 0 #b3b3fe,
-		1px -1px 0 0 #b3b3fe;
+		1px 0px 0 0 #dadaff,
+		0px 1px 0 0 #dadaff,
+		-1px -1px 0 0 #8787b0,
+		-1px 1px 0 0 #8787b0,
+		1px -1px 0 0 #8787b0;
 }
 
 /* Dialog content */
