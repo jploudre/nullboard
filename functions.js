@@ -335,7 +335,7 @@ function createDemoBoard() {
   SKB.board.addList('ToDo');
   SKB.board.addList('Doing');
   const doneList = SKB.board.addList('Done');
-  doneList.addNote('Ephemeral Process, here. Thinking not tweaking.', 'yellow');
+  doneList.addNote('Ephemeral Process, here. Thinking not twiddling.', 'yellow');
 
   // Save the board immediately so it persists on reload
   SKB.storage.saveBoard(SKB.board);

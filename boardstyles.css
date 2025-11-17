@@ -957,7 +957,7 @@
 		margin-right: 12px;
 		min-height: 100%;
 		font-size: 10px;
-		font-family: 'Espy Sans Revived Nine', sans-serif;
+		font-family: 'Espy Sans Revived Ten', sans-serif;
 	}
 
 	.board .note .text {
@@ -1007,7 +1007,7 @@
 		cursor: move;
 		font-weight: 400;
 		font-size: 10px;
-		font-family: 'Espy Sans Revived Nine', sans-serif;
+		font-family: 'Espy Sans Revived Ten', sans-serif;
 		padding-bottom: 6px;
 		border: 1px solid var(--dark-color, #757575);
 		box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
@@ -1228,6 +1228,8 @@
 	font-size: 10px;
 	line-height: 1.6;
 	margin-bottom: 16px;
+	font-family: 'Espy Sans Revived Ten', sans-serif;
+	font-weight: bold;
 }
 
 .dialog-content p {
