@@ -70,7 +70,7 @@
 		animation: menu-flash 0.4s steps(1, end);
 	}
 
-	tt {
+	#templates {
 		display: none;
 	}
 
@@ -725,8 +725,8 @@
 		min-height: 80px;
 		box-shadow:
 			1px 1px 0 0 #dadaff,
-			1px 0px 0 0 #dadaff,
-			0px 1px 0 0 #dadaff,
+			1px 0 0 0 #dadaff,
+			0 1px 0 0 #dadaff,
 			-1px -1px 0 0 #8787b0,
 			-1px 1px 0 0 #8787b0,
 			1px -1px 0 0 #8787b0;
@@ -1109,7 +1109,7 @@
 		}
 	}
 
-@media (min-device-pixel-ratio: 2), (resolution >= 192dpi) {
+@media (resolution >= 2dppx), (resolution >= 192dpi) {
       body {
         background-size: 256px 256px;
       }
@@ -1216,8 +1216,8 @@
 	padding: 16px;
 	box-shadow:
 		1px 1px 0 0 #dadaff,
-		1px 0px 0 0 #dadaff,
-		0px 1px 0 0 #dadaff,
+		1px 0 0 0 #dadaff,
+		0 1px 0 0 #dadaff,
 		-1px -1px 0 0 #8787b0,
 		-1px 1px 0 0 #8787b0,
 		1px -1px 0 0 #8787b0;

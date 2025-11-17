@@ -16,10 +16,10 @@ window.addEventListener('error', (e) => {
 /*
 	 *	notes / lists / boards
 	 */
-const $tNote = $('tt .note');
-const $tList = $('tt .list');
-const $tBoard = $('tt .board');
-const $tLoad = $('tt .load-board');
+const $tNote = $('#templates .note');
+const $tList = $('#templates .list');
+const $tBoard = $('#templates .board');
+const $tLoad = $('#templates .load-board');
 
 function addNote($list, $after, $before, color) {
   let $note = $tNote.clone();
@@ -1074,11 +1074,13 @@ $('.wrap').on('click', (ev) => {
 //
 // Drag from anywhere when NOT editing
 $('.wrap').on('mousedown', '.board .note:not(.editing) .text', function (ev) {
+  ev.preventDefault();
   SKB.noteDrag.prime(this.parentNode, ev);
 });
 
 // Drag from titlebar only when editing
 $('.wrap').on('mousedown', '.board .note.editing .titlebar', function (ev) {
+  ev.preventDefault();
   SKB.noteDrag.prime(this.parentNode, ev);
 });
 
