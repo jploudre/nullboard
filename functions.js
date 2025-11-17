@@ -233,6 +233,7 @@ function deleteBoard() {
   if (SKB.storage.getBoardIndex().size === 0) {
     createDemoBoard();
     showBoard(true);
+    selectWelcomeBoardNote();
   }
 }
 
@@ -341,6 +342,20 @@ function createDemoBoard() {
   SKB.storage.setActiveBoard(SKB.board.id);
 
   return SKB.board;
+}
+
+/*
+	 *	select note in welcome board
+	 */
+function selectWelcomeBoardNote() {
+  const $lastList = $('.board .list').last();
+  const $lastNote = $lastList.find('.note').last();
+  if ($lastNote.length) {
+    $('.board .note').removeClass('selected');
+    $lastNote.addClass('selected');
+    SKB.selectedNote = $lastNote[0];
+    $('.color-menu').removeClass('disabled');
+  }
 }
 
 /*
@@ -1137,10 +1152,20 @@ SKB.storage.setVerLast();
 //
 if (!SKB.board && !$('.boards-dropdown .load-board').length) SKB.board = createDemoBoard();
 
-if (SKB.board) showBoard(true);
+if (SKB.board) {
+  showBoard(true);
 
-// Initialize color menu as disabled (will enable when note is selected)
-$('.color-menu').addClass('disabled');
+  // Select last note in last column if this is the welcome board
+  if (SKB.board.title === 'Welcome to Sticky Kanban Board') {
+    selectWelcomeBoardNote();
+  } else {
+    // Initialize color menu as disabled (will enable when note is selected)
+    $('.color-menu').addClass('disabled');
+  }
+} else {
+  // Initialize color menu as disabled (will enable when note is selected)
+  $('.color-menu').addClass('disabled');
+}
 
 //
 setInterval(adjustListScroller, 100);
